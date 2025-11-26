@@ -4,6 +4,8 @@
  */
 package Business.Patient;
 
+import Business.Insurance.Insurance;
+
 /**
  *
  * @author gaganaananda
@@ -23,6 +25,8 @@ public class Patient {
     private String appoitmentDate;
     private String patientMail;
     private String doctorType;
+    private InsuranceCustomer insuranceCustomer;
+
 
     public String getPatientId() {
         return patientId;
@@ -119,6 +123,16 @@ public class Patient {
     public void setDoctorType(String doctorType) {
         this.doctorType = doctorType;
     }
+
+    public InsuranceCustomer getInsuranceCustomer() {
+        return insuranceCustomer;
+    }
+
+    public void setInsuranceCustomer(InsuranceCustomer insuranceCustomer) {
+        this.insuranceCustomer = insuranceCustomer;
+    }
+    
+    
 
     @Override
     public String toString() {
