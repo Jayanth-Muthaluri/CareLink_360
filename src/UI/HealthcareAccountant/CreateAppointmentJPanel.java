@@ -87,7 +87,7 @@ public class CreateAppointmentJPanel extends javax.swing.JPanel {
 
         jLabel14.setText("Middle Name :");
 
-        setBackground(new java.awt.Color(0, 153, 255));
+        setBackground(new java.awt.Color(0, 153, 204));
 
         lblTitle.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         lblTitle.setText("CREATE APPOINTMENT");
