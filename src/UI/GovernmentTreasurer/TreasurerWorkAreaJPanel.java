@@ -29,7 +29,7 @@ public class TreasurerWorkAreaJPanel extends javax.swing.JPanel {
         btnProcessRequest = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(0, 153, 255));
+        setBackground(new java.awt.Color(0, 153, 204));
 
         lblTitle.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         lblTitle.setText("Treasurer Work Area ");
