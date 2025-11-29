@@ -9,7 +9,7 @@ package UI.HealthcareAccountant;
 
 /**
  *
- * @author bunty
+ * @author jayan
  */
 public class ProcessMedicalBillingsJPanel extends javax.swing.JPanel {
 
