@@ -37,7 +37,7 @@ public class TreasurerWorkRequestJPanel extends javax.swing.JPanel {
         lblTitle = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(0, 153, 255));
+        setBackground(new java.awt.Color(0, 153, 204));
 
         btnDisburseAmount.setBackground(new java.awt.Color(255, 102, 102));
         btnDisburseAmount.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N

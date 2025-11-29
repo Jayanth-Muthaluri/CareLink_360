@@ -43,7 +43,7 @@ public class AccountantWorkAreaJPanel extends javax.swing.JPanel {
         btnPatientReport = new javax.swing.JButton();
         lblTitle = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(0, 153, 255));
+        setBackground(new java.awt.Color(0, 153, 204));
 
         jLabel1.setBackground(new java.awt.Color(0, 153, 255));
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N

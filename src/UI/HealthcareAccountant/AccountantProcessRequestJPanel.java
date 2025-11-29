@@ -52,7 +52,7 @@ public class AccountantProcessRequestJPanel extends javax.swing.JPanel {
         btnCompleteTransaction = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(0, 153, 255));
+        setBackground(new java.awt.Color(0, 153, 204));
 
         lblTitle.setBackground(new java.awt.Color(255, 255, 255));
         lblTitle.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
