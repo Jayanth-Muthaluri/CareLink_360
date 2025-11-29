@@ -10,7 +10,7 @@ import javax.swing.event.MouseInputListener;
 
 /**
  *
- * @author saimanithkomuravelli
+ * @author jayan
  */
 public class MapJPanel extends javax.swing.JPanel {
     
