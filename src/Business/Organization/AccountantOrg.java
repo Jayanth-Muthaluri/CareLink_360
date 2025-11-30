@@ -3,22 +3,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Business.Organization;
-import Business.Role.NGODirector;
+import Business.Role.Accountant;
 import Business.Role.Roles;
 import java.util.ArrayList;
+
 /**
  *
  * @author talha
  */
-public class DirectorOrgNGO extends Organization{
-    public DirectorOrgNGO() {
-        super(Organization.Type.Director.getValue());
+public class AccountantOrg extends Organization {
+
+    public AccountantOrg() {
+        super(Organization.Type.Accountant.getValue());
+
     }
-    
+
     @Override
     public ArrayList<Roles> getSupportedRole() {
         ArrayList<Roles> roles = new ArrayList();
-        roles.add(new NGODirector());
+        roles.add(new Accountant());
         return roles;
     }
     

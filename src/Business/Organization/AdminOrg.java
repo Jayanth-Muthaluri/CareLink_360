@@ -3,11 +3,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Business.Organization;
-
+import Business.Role.EnterpriseAdmin;
+import Business.Role.Roles;
+import java.util.ArrayList;
 /**
  *
  * @author talha
  */
-public class AdminOrg {
+public class AdminOrg extends Organization{
+
+    public AdminOrg() {
+        super(Type.Admin.getValue());
+    }
+    
+    @Override
+    public ArrayList<Roles> getSupportedRole() {
+        ArrayList<Roles> roles = new ArrayList();
+        roles.add(new EnterpriseAdmin());
+        return roles;
+    }
     
 }

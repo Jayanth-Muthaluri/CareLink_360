@@ -49,7 +49,7 @@ public class UserAccount {
         this.password = password;
     }
 
-    public Role getUserRole() {
+    public Roles getUserRole() {
         return userRole;
     }
 
@@ -57,7 +57,7 @@ public class UserAccount {
         this.employee = employee;
     }
 
-    public void setUserRole(Role userRole) {
+    public void setUserRole(Roles userRole) {
         this.userRole = userRole;
     }
 
