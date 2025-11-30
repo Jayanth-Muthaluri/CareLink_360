@@ -20,7 +20,7 @@ import javax.swing.table.TableRowSorter;
 
 /**
  *
- * @author bunty
+ * @author jayan
  */
 public class AccountantWorkAreaJPanel extends javax.swing.JPanel {
 

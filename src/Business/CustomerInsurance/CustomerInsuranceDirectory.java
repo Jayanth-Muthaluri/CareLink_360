@@ -4,10 +4,31 @@
  */
 package Business.CustomerInsurance;
 
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author talha
  */
 public class CustomerInsuranceDirectory {
-    
+
+    private List<CustomerInsurance> insuranceCustomers = new ArrayList<>();
+
+    public List<CustomerInsurance> getInsuranceCustomers() {
+        return insuranceCustomers;
+    }
+
+    public void setInsuranceCustomers(List<CustomerInsurance> insuranceCustomers) {
+        this.insuranceCustomers = insuranceCustomers;
+    }
+
+    @Override
+    public String toString() {
+        return "InsuranceCustomerDirectory{" +
+                "insuranceCustomers=" + insuranceCustomers +
+                '}';
+    }
 }
+
+
+

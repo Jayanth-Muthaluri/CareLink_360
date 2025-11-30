@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author bunty
+ * @author jayan
  */
 public class AccountantProcessRequestJPanel extends javax.swing.JPanel {
 
