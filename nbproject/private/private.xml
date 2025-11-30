@@ -3,18 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/MainJFrame.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/LabAssistant/LabAssistantWAJPanel.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/Administrative/EnterpriseAdminDashboardPanel.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/Administrative/ManageEmployeeJPanel.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/Administrative/ManageUserAccountJPanel.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/GovernmentTreasurer/TreasurerWorkAreaJPanel.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/HealthcareAccountant/AccountantProcessRequestJPanel.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/Administrative/EmployeeManagementPanel.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/Administrative/OrganizationManagementJPanel.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/Administrative/UserAccountManagementJPanel.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/Administrative/NGOFundRequestJPanel.java</file>
-            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/Administrative/FundsRequestJPanel.java</file>
+            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/GovernmentSecretary/SecretaryDashboardJPanel.java</file>
+            <file>file:/Users/gaganaananda/Documents/GitHub/Group_15_Final_Project_CareLink_360/src/UI/GovernmentSecretary/SecretaryWorkRequestJPanel.java</file>
         </group>
     </open-files>
 </project-private>
