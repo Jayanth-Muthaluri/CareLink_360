@@ -9,5 +9,56 @@ package Business.Insurance;
  * @author talha
  */
 public class Insurance {
+    private String policyName;
+    private String insuranceCompany;
+    private double coverage;
+    private String policyTermsAndConditions;
+    private double monthlyPremium;
+
+    public Insurance(String policyName, String InsuranceCompany, double coverage) {
+        this.policyName = policyName;
+        this.insuranceCompany = insuranceCompany;
+        this.coverage = coverage;
+    }
+
+    public String getPolicyName() {
+        return policyName;
+    }
+
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
+    }
+
+    public String getInsuranceCompany() {
+        return insuranceCompany;
+    }
+
+    public void setInsuranceCompany(String insuranceCompany) {
+        this.insuranceCompany = insuranceCompany;
+    }
+
+    public double getCoverage() {
+        return coverage;
+    }
+
+    public void setCoverage(double coverage) {
+        this.coverage = coverage;
+    }
+
+    public String getPolicyTermsAndConditions() {
+        return policyTermsAndConditions;
+    }
+
+    public void setPolicyTermsAndConditions(String policyTermsAndConditions) {
+        this.policyTermsAndConditions = policyTermsAndConditions;
+    }
+
+    public double getMonthlyPremium() {
+        return monthlyPremium;
+    }
+
+    public void setMonthlyPremium(double monthlyPremium) {
+        this.monthlyPremium = monthlyPremium;
+    }
     
 }
