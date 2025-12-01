@@ -3,37 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package userinterface.DoctorRole;
-
-import Business.Enterprise.Enterprise;
-import Business.UserAccount.UserAccount;
-import Business.WorkQueue.PatientTreatmentWorkRequest;
-import java.awt.CardLayout;
-import java.awt.Component;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+package UI.Doctor;
 
 /**
  *
- * @author rajesh
+ * @author gaganaananda
  */
-public class ProvidePrescriptionJPanel extends javax.swing.JPanel {
-
-    private JPanel jPanel;
-    private UserAccount usrAcnt;
-    private Enterprise entrpz;
-    private PatientTreatmentWorkRequest req;
+public class PrescriptionCreationJPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form ProvidePrescriptionJPanel
+     * Creates new form PrescriptionCreationJPanel
      */
-    public ProvidePrescriptionJPanel(JPanel userProcessContainer, UserAccount userAccount, Enterprise enterprise, PatientTreatmentWorkRequest workRequest) {
+    public PrescriptionCreationJPanel() {
         initComponents();
-        this.jPanel = userProcessContainer;
-        this.usrAcnt = userAccount;
-        this.entrpz = enterprise;
-        this.req = workRequest;
-        pplTbl();
+        
     }
 
     /**
@@ -173,30 +156,11 @@ public class ProvidePrescriptionJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_ageTxtActionPerformed
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
-        String prescription = prscrptnTxt.getText();
-        if (prescription.equals("")) {
-            JOptionPane.showMessageDialog(null, "Prescription is mandatory");
-            return;
-        } else {
-            int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
-            if (dialogResult == JOptionPane.YES_OPTION) {
-                req.setPrescription(prescription);
-                req.setStatus("Prescription Provided");
-                JOptionPane.showMessageDialog(null, "Prescription submitted successfully");
-                btnSubmit.setEnabled(false);
-            }
-        }        
+               
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
 
-        jPanel.remove(this);
-        Component[] componentArray = jPanel.getComponents();
-        Component component = componentArray[componentArray.length - 1];
-        DoctorWorkAreaJPanel dwjp = (DoctorWorkAreaJPanel) component;
-        dwjp.pplReqTbl();
-        CardLayout layout = (CardLayout) jPanel.getLayout();
-        layout.previous(jPanel);
     }//GEN-LAST:event_btnBackActionPerformed
 
 
@@ -221,15 +185,4 @@ public class ProvidePrescriptionJPanel extends javax.swing.JPanel {
     private javax.swing.JTextArea prscrptnTxt;
     // End of variables declaration//GEN-END:variables
 
-
-    private void pplTbl() {
-        fstNmTxt.setText(req.getPat().getPatFrstNm());
-        lstNmTxt.setText(req.getPat().getPatLstNm());
-       // txtBirthDate1.setText(String.valueOf(request.getPatient().getDateOfBirth()));
-        ageTxt.setText(String.valueOf(req.getPat().getPatAge()));
-        medCondTxt.setText(req.getReasonForVisit());
-        asgndDocTxt.setText(req.getAssignedDoc().getEmp().getEmpName());
-
-
-    }
 }
