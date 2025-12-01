@@ -42,7 +42,7 @@ public class ManageEmployeeJPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(153, 255, 255));
+        setBackground(new java.awt.Color(0, 153, 204));
 
         organizationJTable.setBackground(new java.awt.Color(204, 204, 204));
         organizationJTable.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
