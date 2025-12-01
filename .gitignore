@@ -1,1 +1,42 @@
-/build/
+macOS Files
+
+.DS_Store .AppleDouble .LSOverride
+
+NetBeans Private Files
+
+nbproject/private/ nbproject/private/private.xml
+
+Build / Distribution Output
+
+build/ dist/ target/
+
+IDE Specific Files
+
+NetBeans
+
+nbproject/private/ nbproject/Makefile-Debug.mk
+nbproject/Makefile-Release.mk
+
+IntelliJ IDEA
+
+.idea/ *.iml out/
+
+VS Code
+
+.vscode/
+
+Logs, Backups, Temp Files
+
+.log .tmp .bak .swp
+
+Java
+
+.class .jar .war .ear
+
+System Files
+
+Thumbs.db ehthumbs.db *.stackdump
+
+Misc
+
+*.orig

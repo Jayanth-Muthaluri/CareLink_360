@@ -7,7 +7,7 @@ package UI.LabAssistant;
 
 /**
  *
- * @author bunty
+ * @author MALLESH
  */
 public class LabProcessWRJPanel extends javax.swing.JPanel {
 

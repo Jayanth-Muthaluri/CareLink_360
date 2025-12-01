@@ -7,7 +7,7 @@ package UI.NGOAdmin;
 
 /**
  *
- * @author dineshmurugesan
+ * @author MALLESH
  */
 public class NGOAdministratorWorkAreaPanel extends javax.swing.JPanel {
 
