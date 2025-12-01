@@ -20,7 +20,7 @@ public class AdminOrgNGO extends Organization{
     @Override
     public ArrayList<Roles> getSupportedRole() {
         ArrayList<Roles> roles = new ArrayList();
-        roles.add(new NGOAdminRole());
+        roles.add(new NGOAdmin());
         return roles;
     }
     
