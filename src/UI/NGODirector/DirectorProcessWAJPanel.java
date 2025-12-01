@@ -11,13 +11,13 @@ package UI.NGODirector;
  *
  * @author MALLESH
  */
-public class DirectorProcessWorkRequestJPanel extends javax.swing.JPanel {
+public class DirectorProcessWAJPanel extends javax.swing.JPanel {
 
 
     /**
      * Creates new form ProcessWorkRequestJPanel
      */
-    public DirectorProcessWorkRequestJPanel() {
+    public DirectorProcessWAJPanel() {
         
     }
 
