@@ -19,7 +19,7 @@ public class BloodBankManagerOrg extends Organization{
     @Override
     public ArrayList<Roles> getSupportedRole() {
         ArrayList<Roles> roles = new ArrayList();
-        roles.add(new BloodBankManagerRole());
+        roles.add(new BloodBankManager());
         return roles;
     }
     
