@@ -4,7 +4,7 @@
  */
 package Business.Patient;
 
-import Business.Insurance.Insurance;
+import Business.CustomerInsurance.CustomerInsurance;
 
 /**
  *
@@ -14,19 +14,18 @@ public class Patient {
     
     
     private String patientId;
-    private String patientLstNm;
-    private String patientFrstNm;
-    private String ssn;
+    private String patientFirstName;
+    private String patientLastName;
     private String patientAge;
+    private String patientEmail;
     private String contactNo;
     private String address;
     private String gender;
+    private String ssn;
     private boolean isTreatmentDone;
-    private String appoitmentDate;
-    private String patientMail;
-    private String doctorType;
-    private InsuranceCustomer insuranceCustomer;
-
+    private String dateOfAppoitment;
+    private String typeOfDoctor;
+    private CustomerInsurance customerInsurance;
 
     public String getPatientId() {
         return patientId;
@@ -36,28 +35,20 @@ public class Patient {
         this.patientId = patientId;
     }
 
-    public String getPatientLstNm() {
-        return patientLstNm;
+    public String getPatientFirstName() {
+        return patientFirstName;
     }
 
-    public void setPatientLstNm(String patientLstNm) {
-        this.patientLstNm = patientLstNm;
+    public void setPatientFirstName(String patientFirstName) {
+        this.patientFirstName = patientFirstName;
     }
 
-    public String getPatientFrstNm() {
-        return patientFrstNm;
+    public String getPatientLastName() {
+        return patientLastName;
     }
 
-    public void setPatientFrstNm(String patientFrstNm) {
-        this.patientFrstNm = patientFrstNm;
-    }
-
-    public String getSsn() {
-        return ssn;
-    }
-
-    public void setSsn(String ssn) {
-        this.ssn = ssn;
+    public void setPatientLastName(String patientLastName) {
+        this.patientLastName = patientLastName;
     }
 
     public String getPatientAge() {
@@ -66,6 +57,14 @@ public class Patient {
 
     public void setPatientAge(String patientAge) {
         this.patientAge = patientAge;
+    }
+
+    public String getPatientEmail() {
+        return patientEmail;
+    }
+
+    public void setPatientEmail(String patientEmail) {
+        this.patientEmail = patientEmail;
     }
 
     public String getContactNo() {
@@ -92,6 +91,14 @@ public class Patient {
         this.gender = gender;
     }
 
+    public String getSsn() {
+        return ssn;
+    }
+
+    public void setSsn(String ssn) {
+        this.ssn = ssn;
+    }
+
     public boolean isIsTreatmentDone() {
         return isTreatmentDone;
     }
@@ -100,39 +107,29 @@ public class Patient {
         this.isTreatmentDone = isTreatmentDone;
     }
 
-    public String getAppoitmentDate() {
-        return appoitmentDate;
+    public String getDateOfAppoitment() {
+        return dateOfAppoitment;
     }
 
-    public void setAppoitmentDate(String appoitmentDate) {
-        this.appoitmentDate = appoitmentDate;
+    public void setDateOfAppoitment(String dateOfAppoitment) {
+        this.dateOfAppoitment = dateOfAppoitment;
     }
 
-    public String getPatientMail() {
-        return patientMail;
+    public String getTypeOfDoctor() {
+        return typeOfDoctor;
     }
 
-    public void setPatientMail(String patientMail) {
-        this.patientMail = patientMail;
+    public void setTypeOfDoctor(String typeOfDoctor) {
+        this.typeOfDoctor = typeOfDoctor;
     }
 
-    public String getDoctorType() {
-        return doctorType;
+    public CustomerInsurance getCustomerInsurance() {
+        return customerInsurance;
     }
 
-    public void setDoctorType(String doctorType) {
-        this.doctorType = doctorType;
+    public void setCustomerInsurance(CustomerInsurance customerInsurance) {
+        this.customerInsurance = customerInsurance;
     }
-
-    public InsuranceCustomer getInsuranceCustomer() {
-        return insuranceCustomer;
-    }
-
-    public void setInsuranceCustomer(InsuranceCustomer insuranceCustomer) {
-        this.insuranceCustomer = insuranceCustomer;
-    }
-    
-    
 
     @Override
     public String toString() {

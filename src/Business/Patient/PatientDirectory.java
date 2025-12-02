@@ -22,4 +22,5 @@ public class PatientDirectory {
     public void setPatients(List<Patient> patients) {
         this.patients = patients;
     }
+
 }
