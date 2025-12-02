@@ -6,6 +6,9 @@
 package UI.HealthcareAccountant;
 
 
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.Organization.AccountantOrg;
 import Business.Patient.Patient;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
@@ -23,6 +26,9 @@ import javax.swing.table.TableRowSorter;
  * @author jayan
  */
 public class AccountantWorkAreaJPanel extends javax.swing.JPanel {
+
+    public AccountantWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, AccountantOrg par, Enterprise enterprise, Ecosystem ecosystem) {
+    }
 
     
 
