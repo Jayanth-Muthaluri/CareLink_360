@@ -15,7 +15,7 @@ import userinterface.BloodBankManagerRole.BloodBankManagerWorkAreaJPanel;
  *
  * @author gaganaananda
  */
-public class BloodBankManager {
+public class BloodBankManager extends Roles{
     
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization,
