@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Business.Organization;
-import Business.Role.PublicSecretaries;
+import Business.Role.Accountant;
 import Business.Role.Roles;
 import java.util.ArrayList;
 
@@ -11,18 +11,18 @@ import java.util.ArrayList;
  *
  * @author talha
  */
-public class SecretaryOrg extends Organization {
+public class AccountantOrg extends Organization {
 
-    public SecretaryOrg() {
-        super(Organization.Type.Secretary.getValue());
+    public AccountantOrg() {
+        super(Organization.Type.Accountant.getValue());
+
     }
 
     @Override
     public ArrayList<Roles> getSupportedRole() {
         ArrayList<Roles> roles = new ArrayList();
-        roles.add(new PublicSecretaries());
+        roles.add(new Accountant());
         return roles;
     }
-    
     
 }

@@ -7,15 +7,15 @@ package UI.NGOAdmin;
 
 /**
  *
- * @author dineshmurugesan
+ * @author MALLESH
  */
-public class NGOAdministratorWorkAreaPanel extends javax.swing.JPanel {
+public class NGOAdministratorWAJPanel extends javax.swing.JPanel {
 
 
     /**
      * Creates new form NGOAdministratorWorkAreaPanel
      */
-    public NGOAdministratorWorkAreaPanel() {
+    public NGOAdministratorWAJPanel() {
         
     }
 
