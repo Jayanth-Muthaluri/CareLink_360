@@ -14,7 +14,7 @@ import userinterface.AdministrativeRole.EnterpriseAdminWorkAreaJPanel;
  *
  * @author gaganaananda
  */
-public class EnterpriseAdmin {
+public class EnterpriseAdmin extends Roles{
     
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, Ecosystem ecosystem) {
