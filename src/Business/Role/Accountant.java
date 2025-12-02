@@ -4,8 +4,11 @@
  */
 package Business.Role;
 
+import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
+import Business.Organization.AccountantOrg;
 import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
 import UI.HealthcareAccountant.AccountantWorkAreaJPanel;
 import javax.swing.JPanel;
 
@@ -15,11 +18,9 @@ import javax.swing.JPanel;
  */
 public class Accountant extends Roles{
     
-    
-     @Override
-    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem ecosystem) {
-        return new AccountantWorkAreaJPanel(userProcessContainer, account, (AccountantOrganization)organization, enterprise, ecosystem);
+    @Override
+        public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, Ecosystem ecosystem) {
+        return new AccountantWorkAreaJPanel(userProcessContainer, account, (AccountantOrg)organization, enterprise, ecosystem);
     }
-    
     
 }
