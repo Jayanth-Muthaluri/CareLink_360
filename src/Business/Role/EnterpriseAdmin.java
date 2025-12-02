@@ -4,10 +4,21 @@
  */
 package Business.Role;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import javax.swing.JPanel;
+import userinterface.AdministrativeRole.EnterpriseAdminWorkAreaJPanel;
+
 /**
  *
  * @author gaganaananda
  */
 public class EnterpriseAdmin {
+    
+    @Override
+    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, Ecosystem ecosystem) {
+        return new EnterpriseAdminWorkAreaJPanel(userProcessContainer, enterprise, account,ecosystem);
+    }
     
 }
