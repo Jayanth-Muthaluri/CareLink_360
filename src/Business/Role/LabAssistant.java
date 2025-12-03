@@ -4,10 +4,21 @@
  */
 package Business.Role;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import UI.LabAssistant.LabAssistantWAJPanel;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gaganaananda
  */
-public class LabAssistant {
+public class LabAssistant extends Roles {
+
+    @Override
+    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, Ecosystem business) {
+        return new LabAssistantWAJPanel(userProcessContainer, account, organization, business);
+    }
     
 }
