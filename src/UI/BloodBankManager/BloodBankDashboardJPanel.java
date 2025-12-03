@@ -4,6 +4,18 @@
  */
 package UI.BloodBankManager;
 
+import Business.Ecosystem;
+import Business.Organization.BloodBankManagerOrg;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 
 /**
  *
@@ -12,16 +24,51 @@ package UI.BloodBankManager;
  */
 public class BloodBankDashboardJPanel extends javax.swing.JPanel {
 
+    private JPanel jPanel;
+    private Ecosystem ecosystem;
+    private UserAccount userAccount;
+    private BloodBankManagerOrg bloodBankManagerOrg;
+
 
 
     /**
      * Creates new form BloodBankDashboardJPanel
      */
-    public BloodBankDashboardJPanel() {
+    public BloodBankDashboardJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Ecosystem business) {
         initComponents();
+        
+        this.jPanel = userProcessContainer;
+        this.userAccount = account;
+        this.ecosystem = business;
+        this.bloodBankManagerOrg = (BloodBankManagerOrg) organization;
+
+        populateTable();
 
         
     }
+    
+    public void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) jTableWorkReq.getModel();
+
+        model.setRowCount(0);
+        
+        
+        for (WorkRequest request : bloodBankManagerOrg.getWrkQ().getWorkRequests()) {
+
+            Object[] row = new Object[7];
+            row[0] = request;
+            row[1] = request.getSender().getEmp().getEmpName();
+            row[2] = ((PatientTreatmentWorkRequest) request).getBloodBankManager();
+            row[3] = request.getStatus();
+            row[4] = ((PatientTreatmentWorkRequest ) request).getPat().getPatFrstNm() + " " + ((PatientTreatmentWorkRequest) request).getPat().getPatLstNm();
+            row[5] = ((PatientTreatmentWorkRequest) request).getPat().getPatId();
+            row[6]=((PatientTreatmentWorkRequest) request).getBloodUnits();
+            model.addRow(row);
+        }
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTableWorkReq.setRowSorter(sorter);
+    }
+
 
     
     /**
@@ -103,13 +150,73 @@ public class BloodBankDashboardJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignActionPerformed
+        int selectedRow = jTableWorkReq.getSelectedRow();
+
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null,"Please select a row first");
+            return;
+        }
+
+        PatientTreatmentWorkRequest request = (PatientTreatmentWorkRequest) jTableWorkReq.getValueAt(selectedRow, 0);
+        if (request.getBloodBankManager() == null) {
+            if (request.getStatus().equalsIgnoreCase("SentToBloodBank")) {
+                request.setBloodBankManager(userAccount);
+                request.setStatus("Pending on Blood Bank");
+                //  request.setReceiver(userAccount);
+                populateTable();
+                JOptionPane.showMessageDialog(null, "The request is assigned to You!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Cannot assign this lab request as the current status is: " + request.getStatus());
+            }
+        }
+        else
+        {
+
+            if(userAccount.equals(request.getLabAst()))
+
+            {
+                JOptionPane.showMessageDialog(null,"Request is already assigned to you");
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Request is assigned to other Lab Assistant");
+            }
+        }
 
         
     }//GEN-LAST:event_btnAssignActionPerformed
 
     private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
 
-       
+       int selectedRow = jTableWorkReq.getSelectedRow();
+
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row");
+            return;
+        }
+
+        PatientTreatmentWorkRequest request = (PatientTreatmentWorkRequest) jTableWorkReq.getValueAt(selectedRow, 0);
+
+       // request.setStatus("Processing");
+        BloodProcessWorkRequestJPanel processWorkRequestJPanel = new BloodProcessWorkRequestJPanel(jPanel, request);
+        if (request.getBloodBankManager() != null) {
+            if (userAccount.equals(request.getBloodBankManager())) {
+                if (request.getStatus().equalsIgnoreCase("Pending on Blood Bank")) {
+
+                    jPanel.add("processWorkRequestJPanel", processWorkRequestJPanel);
+                    CardLayout layout = (CardLayout) jPanel.getLayout();
+                    layout.next(jPanel);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cannot process the request as the status is: " + request.getStatus());
+                }
+
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Not authorised to process the request");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please assign the request first");
+        }
     }//GEN-LAST:event_btnProcessActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
