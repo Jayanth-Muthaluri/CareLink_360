@@ -4,21 +4,39 @@
  * and open the template in the editor.
  */
 package UI.NGODirector;
-
+import Business.Enterprise.Enterprise;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.NGOFundRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 
 /**
  *
  * @author MALLESH
  */
-public class NGODirectorProcessWAJPanel extends javax.swing.JPanel {
-
+public class NGODirectorWAJPanel extends javax.swing.JPanel {
+    private JPanel containerPanel;
+    private UserAccount directorAccount;
+    private NGOFundRequest ngoFundRequest;
+    private Enterprise enterpriseRef;
 
     /**
      * Creates new form ProcessWorkRequestJPanel
      */
-    public NGODirectorProcessWAJPanel() {
-        
+    public NGODirectorWAJPanel(JPanel containerPanel, UserAccount directorAccount, NGOFundRequest fundRequest, Enterprise enterpriseRef) {
+        initComponents();
+        this.containerPanel = containerPanel;
+        this.directorAccount = directorAccount;
+        this.ngoFundRequest = fundRequest;
+        this.enterpriseRef = enterpriseRef;
+
+        // populate request details
+        hospitalNameTxtBox.setText(ngoFundRequest.getHospitalName());
+        hospitalAddressTxtBox.setText(ngoFundRequest.getHospitalLocation());
+        amountRequiredTxtBox.setText(String.valueOf(ngoFundRequest.getRequestedFundAmount()));   
     }
 
     /**
@@ -80,6 +98,11 @@ public class NGODirectorProcessWAJPanel extends javax.swing.JPanel {
         jLabel4.setText("Hospital Name:");
 
         hospitalNameTxtBox.setEnabled(false);
+        hospitalNameTxtBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hospitalNameTxtBoxActionPerformed(evt);
+            }
+        });
 
         hospitalAddressTxtBox.setEnabled(false);
 
@@ -170,16 +193,75 @@ public class NGODirectorProcessWAJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void releaseAmountJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseAmountJBtnActionPerformed
-        
+    
+    String comments = commentsTxtBox.getText().trim();
+
+        if (comments.equals("")) {
+            JOptionPane.showMessageDialog(null, "Comments are mandatory!");
+            return;
+        }
+
+        ngoFundRequest.setRequestNote(comments);
+
+        int confirm = JOptionPane.showConfirmDialog(null,
+                "Are you sure you want to RELEASE this amount?",
+                "Confirm",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            ngoFundRequest.setRequestReceiver(directorAccount);
+            ngoFundRequest.setRequestStatus("Approved by Director");
+
+            JOptionPane.showMessageDialog(null, "Funds released successfully!");
+
+            releaseAmountJBtn.setEnabled(false);
+            cancelJBtn.setEnabled(false);
+            commentsTxtBox.setText("");
+        }
     }//GEN-LAST:event_releaseAmountJBtnActionPerformed
 
     private void backJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJBtnActionPerformed
+    
+        containerPanel.remove(this);
+        Component[] components = containerPanel.getComponents();
+        Component lastComponent = components[components.length - 1];
 
+        NGODirectorWAJPanel workAreaPanel = (NGODirectorWAJPanel) lastComponent;
+        workAreaPanel.populateDirectorRequestTable();
+
+        CardLayout layout = (CardLayout) containerPanel.getLayout();
+        layout.previous(containerPanel);
     }//GEN-LAST:event_backJBtnActionPerformed
 
     private void cancelJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelJBtnActionPerformed
-   
+    
+    String comments = commentsTxtBox.getText().trim();
+
+        if (comments.equals("")) {
+            JOptionPane.showMessageDialog(null, "Comments are mandatory!");
+            return;
+        }
+
+        ngoFundRequest.setRequestNote(comments);
+
+        int confirm = JOptionPane.showConfirmDialog(null,
+                "Do you want to REJECT this request?",
+                "Confirm",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            ngoFundRequest.setRequestStatus("Rejected");
+            JOptionPane.showMessageDialog(null, "Request REJECTED");
+
+            releaseAmountJBtn.setEnabled(false);
+            cancelJBtn.setEnabled(false);
+            commentsTxtBox.setText("");
+        }
     }//GEN-LAST:event_cancelJBtnActionPerformed
+
+    private void hospitalNameTxtBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hospitalNameTxtBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_hospitalNameTxtBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

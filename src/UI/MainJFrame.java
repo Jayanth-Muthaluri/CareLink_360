@@ -3,7 +3,17 @@
  * and open the template in the editor.
  */
 package UI;
-
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.Network.Network;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import Business.db4o.db4o;
+import java.awt.CardLayout;
+import java.awt.Color;
+import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 
 /**
@@ -17,10 +27,14 @@ public class MainJFrame extends javax.swing.JFrame {
      */
     
 
+    private Ecosystem ecosystem;
+    private db4o dB4oUtil = db4o.getInstance();
+
     public MainJFrame() {
        
         initComponents();
-       
+        ecosystem = dB4oUtil.retrieveSystem();
+        this.setSize(1680, 1050);
     }
 
     /**
@@ -169,20 +183,133 @@ public class MainJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        
+        btnLogout.setEnabled(false);
+        txtUsername.setEnabled(true);
+        txtPassword.setEnabled(true);
+        btnLogin1.setEnabled(true);
+        txtUsername.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        //passwordJLabel.setForeground(Color.BLACK);
+        txtPassword.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        //usernameJLabel.setForeground(Color.BLACK);
+        txtUsername.setText("");
+        txtPassword.setText("");
+
+        container.removeAll();
+        JPanel blankJP = new JPanel();
+        container.add("blank", blankJP);
+        CardLayout crdLyt = (CardLayout) container.getLayout();
+        crdLyt.next(container);
+        dB4oUtil.storeSystem(ecosystem);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnLogin1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogin1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnLogin1ActionPerformed
+        // Get user name
+        String userName = txtUsername.getText();
+        // Get Password
+        char[] passwordCharArray = txtPassword.getPassword();
+        String password = String.valueOf(passwordCharArray);
+
+        //Step1: Check in the system admin user account directory if you have the user
+        UserAccount userAccount=ecosystem.getUsrAccDir().authenticateUser(userName, password);
+
+        Enterprise inEnterprise=null;
+        Organization inOrganization=null;
+
+        if(userAccount==null){
+            //Step 2: Go inside each network and check each enterprise
+            for(Network network:ecosystem.getNetworks()){
+                //Step 2.a: check against each enterprise
+                for(Enterprise enterprise:network.getEntDir().getEntList()){
+                    userAccount=enterprise.getUsrAccDir().authenticateUser(userName, password);
+                    if(userAccount==null){
+                        //Step 3:check against each organization for each enterprise
+                        for(Organization organization:enterprise.getOrgDir().getOrganizations()){
+                            userAccount=organization.getUsrAccDir().authenticateUser(userName, password);
+                            if(userAccount!=null){
+                                inEnterprise=enterprise;
+                                inOrganization=organization;
+                                break;
+                            }
+                        }
+
+                    }
+                    else{
+                        inEnterprise=enterprise;
+                        break;
+                    }
+                    if(inOrganization!=null){
+                        break;
+                    }
+                }
+                if(inEnterprise!=null){
+                    break;
+                }
+            }
+        }
+
+        if(userAccount==null){
+            txtUsername.setBorder(BorderFactory.createLineBorder(Color.RED));
+            // passwordJLabel.setForeground(Color.RED);
+            txtPassword.setBorder(BorderFactory.createLineBorder(Color.RED));
+            //usernameJLabel.setForeground(Color.RED);
+            JOptionPane.showMessageDialog(null, "Invalid credentials");
+
+            return;
+        }
+        else{
+            txtUsername.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+            // passwordJLabel.setForeground(Color.GRAY);
+            txtPassword.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+            // usernameJLabel.setForeground(Color.GRAY);
+            CardLayout layout=(CardLayout)container.getLayout();
+            container.add("workArea",userAccount.getRole().createWorkArea(container, userAccount, inOrganization, inEnterprise, ecosystem));
+            layout.next(container);
+        }
+
+        btnLogin1.setEnabled(false);
+        btnLogout.setEnabled(true);
+        txtUsername.setEnabled(false);
+        txtPassword.setEnabled(false);
+    }                                            
 
     
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-     
-    }
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MainJFrame().setVisible(true);
+            }
+        });
+    
+    }//GEN-LAST:event_btnLogin1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin1;
     private javax.swing.JButton btnLogout;

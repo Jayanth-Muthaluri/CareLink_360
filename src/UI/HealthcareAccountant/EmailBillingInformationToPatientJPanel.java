@@ -5,19 +5,38 @@
  */
 package UI.HealthcareAccountant;
 
+import Business.WorkQueue.AccountantBillingRequest;
 import java.awt.CardLayout;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-
 /**
  *
  * @author jayan
  */
 public class EmailBillingInformationToPatientJPanel extends javax.swing.JPanel {
+
+    private JPanel userProcessContainer;
+    private AccountantBillingRequest billingRequest;
+
+    /**
+     * Creates new form EmailBillingInformationToPatientJPanel
+     */
+    public EmailBillingInformationToPatientJPanel(JPanel userProcessContainer, AccountantBillingRequest billingRequest) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.billingRequest = billingRequest;
+    }
 
 
     /**
