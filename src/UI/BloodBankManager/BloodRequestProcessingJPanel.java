@@ -8,6 +8,7 @@ import Business.WorkQueue.PatientTreatmentWorkRequest;
 import UI.Patient.PatientWAJPanel;
 import java.awt.CardLayout;
 import java.awt.Component;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import userinterface.BloodBankManagerRole.BloodBankManagerWorkAreaJPanel;
 
@@ -107,7 +108,21 @@ public class BloodRequestProcessingJPanel extends javax.swing.JPanel {
 
     private void sbmtJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sbmtJButtonActionPerformed
        
+String bloodBankMessage = rsltMsgJTextField.getText().trim();
+        if (bloodBankMessage.equals("")) {
+            JOptionPane.showMessageDialog(null, "Result is mandatory");
+            return;
+        } else {
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                patientWAJPanel.setBloodBankMessage(bloodBankMessage);
+                patientWAJPanel.setStatus("Blood Bank Request Completed");
+                JOptionPane.showMessageDialog(null, "Result submitted successfully");
+                rsltMsgJTextField.setText("");
+                sbmtJButton.setEnabled(false);
+            }
 
+        }
 
     }//GEN-LAST:event_sbmtJButtonActionPerformed
 
