@@ -3,7 +3,17 @@
  * and open the template in the editor.
  */
 package UI.LabAssistant;
-
+import Business.Ecosystem;
+import Business.Organization.LabOrg;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -11,16 +21,47 @@ package UI.LabAssistant;
  */
 public class LabAssistantWAJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private Ecosystem business;
+    private UserAccount userAccount;
+    private LabOrg labOrganization;
 
 
     /**
      * Creates new form LabAssistantWorkAreaJPanel
      */
-    public LabAssistantWAJPanel() {
+    public LabAssistantWAJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Ecosystem business) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = account;
+        this.business = business;
+        this.labOrganization = (LabOrg) organization;
 
+        populateLabRequestTable();
     }
+    
+    public void populateLabRequestTable() {
+        DefaultTableModel model = (DefaultTableModel) workRequestJTbl.getModel();
+        model.setRowCount(0);
 
+        for (WorkRequest request : labOrganization.getWorkQueue().getWorkRequests()) {
+            PatientTreatmentWorkRequest ptwr = (PatientTreatmentWorkRequest) request;
+
+            Object[] row = new Object[7];
+            row[0] = request;
+            row[1] = request.getRequestSender().getEmployee().getEmployeeName();
+            row[2] = ptwr.getLabTechnician();
+            row[3] = request.getRequestStatus();
+            row[4] = ptwr.getPatientInfo().getPatientFirstName() + " " + ptwr.getPatientInfo().getPatientLastName();
+            row[5] = ptwr.getPatientInfo().getPatientId();
+            row[6] = request.getDiagnosticType();
+
+            model.addRow(row);
+        }
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        workRequestJTbl.setRowSorter(sorter);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -140,28 +181,184 @@ public class LabAssistantWAJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void assignToMeJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assignToMeJBtnActionPerformed
+    int selectedRow = workRequestJTbl.getSelectedRow();
 
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(null,"Please select a row first");
+        return;
+    }
+
+    PatientTreatmentWorkRequest request =
+            (PatientTreatmentWorkRequest) workRequestJTbl.getValueAt(selectedRow, 0);
+
+    // If no lab technician assigned yet
+    if (request.getLabTechnician() == null) {
+
+        if (request.getRequestStatus().equalsIgnoreCase("SentToLab")) {
+
+            request.setLabTechnician(userAccount);
+            request.setRequestStatus("Pending on Lab Technician");
+
+            populateLabTable();
+            JOptionPane.showMessageDialog(null, "The request is now assigned to you!");
+
+        } else {
+            JOptionPane.showMessageDialog(null,
+                "Cannot assign because status is: " + request.getRequestStatus());
+        }
+    }
+    else {
+        if (userAccount.equals(request.getLabTechnician())) {
+            JOptionPane.showMessageDialog(null,"Request is already assigned to you");
+        } else {
+            JOptionPane.showMessageDialog(null,"Request is assigned to another Lab Technician");
+        }
+    }
 
     }//GEN-LAST:event_assignToMeJBtnActionPerformed
 
     private void processJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processJBtnActionPerformed
+    int selectedRow = workRequestJTbl.getSelectedRow();
 
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(null, "Please select a row");
+        return;
+    }
+
+    PatientTreatmentWorkRequest request =
+            (PatientTreatmentWorkRequest) workRequestJTbl.getValueAt(selectedRow, 0);
+
+    // Only assigned technician can process
+    if (request.getLabTechnician() != null) {
+
+        if (userAccount.equals(request.getLabTechnician())) {
+
+            if (request.getRequestStatus().equalsIgnoreCase("Pending on Lab Technician")) {
+
+                LabProcessWRJPanel processPanel =
+                        new LabProcessWRJPanel (userProcessContainer, request);
+
+                userProcessContainer.add("processPanel", processPanel);
+                CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+                layout.next(userProcessContainer);
+
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Cannot process because status is: " + request.getRequestStatus());
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Not authorized to process this request");
+        }
+
+    } else {
+        JOptionPane.showMessageDialog(null, "Please assign the request first");
+    }
     }//GEN-LAST:event_processJBtnActionPerformed
 
     private void BloodTestJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BloodTestJBtnActionPerformed
+    // TODO add your handling code here:
+    int selectedRow = workRequestJTbl.getSelectedRow();
 
-        // TODO add your handling code here:
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(null,"Please select a row first");
+        return;
+    }
+
+    PatientTreatmentWorkRequest request =
+            (PatientTreatmentWorkRequest) workRequestJTbl.getValueAt(selectedRow, 0);
+
+    if (userAccount.equals(request.getLabTechnician())) {
+
+        if (request.getRequestStatus().equalsIgnoreCase("Pending on Lab Technician")) {
+            request.setDiagnosticType("Blood Test");
+        } else {
+            JOptionPane.showMessageDialog(null, "Test is already done!");
+        }
+
+    } else {
+        JOptionPane.showMessageDialog(null,
+                "Lab technician is not assigned, cannot modify test type");
+    }
+
     }//GEN-LAST:event_BloodTestJBtnActionPerformed
 
     private void mriScanJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mriScanJBtnActionPerformed
-        // TODO add your handling code here
+    // TODO add your handling code here
+    int selectedRow = workRequestJTbl.getSelectedRow();
+
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(null,"Please select a row first");
+        return;
+    }
+
+    PatientTreatmentWorkRequest request =
+            (PatientTreatmentWorkRequest) workRequestJTbl.getValueAt(selectedRow, 0);
+
+    if (userAccount.equals(request.getLabTechnician())) {
+
+        if (request.getRequestStatus().equalsIgnoreCase("Pending on Lab Technician")) {
+            request.setDiagnosticType("MRI Scan");
+        } else {
+            JOptionPane.showMessageDialog(null, "Test is already done!");
+        }
+
+    } else {
+        JOptionPane.showMessageDialog(null,
+                "Lab technician is not assigned, cannot modify test type");
+    }
     }//GEN-LAST:event_mriScanJBtnActionPerformed
 
     private void xRayJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xRayJBtnActionPerformed
         // TODO add your handling code here:
+    int selectedRow = workRequestJTbl.getSelectedRow();
+
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(null,"Please select a row first");
+        return;
+    }
+
+    PatientTreatmentWorkRequest request =
+            (PatientTreatmentWorkRequest) workRequestJTbl.getValueAt(selectedRow, 0);
+
+    if (userAccount.equals(request.getLabTechnician())) {
+
+        if (request.getRequestStatus().equalsIgnoreCase("Pending on Lab Technician")) {
+            request.setDiagnosticType("X Ray");
+        } else {
+            JOptionPane.showMessageDialog(null, "Test is already done!");
+        }
+
+    } else {
+        JOptionPane.showMessageDialog(null,
+                "Lab technician is not assigned, cannot modify test type");
+    }
 
     }//GEN-LAST:event_xRayJBtnActionPerformed
+    
+    private void populateLabTable() {
 
+    DefaultTableModel model = (DefaultTableModel) workRequestJTbl.getModel();
+    model.setRowCount(0);
+
+    for (WorkRequest req : labOrganization.getWorkQueue().getWorkRequests()) {
+
+        PatientTreatmentWorkRequest request = (PatientTreatmentWorkRequest) req;
+
+        Object[] row = new Object[7];
+        row[0] = request;
+        row[1] = request.getRequestSender().getEmployee().getEmployeeName();
+        row[2] = request.getLabTechnician();
+        row[3] = request.getRequestStatus();
+        row[4] = request.getPatientInfo().getPatientFirstName() + " " +
+                 request.getPatientInfo().getPatientLastName();
+        row[5] = request.getPatientInfo().getPatientId();
+        row[6] = request.getDiagnosticType();
+
+        model.addRow(row);
+    }
+}
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BloodTestJBtn;
     private javax.swing.JButton assignToMeJBtn;
