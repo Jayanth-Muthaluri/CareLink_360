@@ -4,20 +4,39 @@
  */
 package UI.Doctor;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.BloodBankManagerOrg;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 
 /**
  *
- * @author bunty
+ * @author gaganaananda
  */
 public class BloodBankRequestJPanel extends javax.swing.JPanel {
 
-    //private BloodBankWorkRequest bloodBankWorkRequest;
-
+    private JPanel jPanel;
+    private Enterprise enterprise;
+    private UserAccount userAccount;
+    private PatientTreatmentWorkRequest patientTreatmentWorkRequest;
     /**
      * Creates new form RequestLabTestJPanel
      */
-    public BloodBankRequestJPanel() {
+    public BloodBankRequestJPanel(JPanel userProcessContainer, UserAccount account, Enterprise enterprise, PatientTreatmentWorkRequest patientTreatmentWorkRequest) {
         initComponents();
+        
+        this.jPanel = userProcessContainer;
+        this.enterprise = enterprise;
+        this.userAccount = account;
+        this.patientTreatmentWorkRequest = patientTreatmentWorkRequest;
+        valueLabel.setText(enterprise.getName());
+        btnRequest.setEnabled(true);
 
         
     }
@@ -93,6 +112,58 @@ public class BloodBankRequestJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRequestActionPerformed
+        String  bloodUnits = txtLabType.getText().trim();            
+            try {
+                Integer.parseInt(bloodUnits);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please provide numeric values in Blood Units textfield");
+                return;
+            }
+            
+        
+        String message = txtLabMessage.getText().trim();
+
+        if (bloodUnits.equals("")) {
+            JOptionPane.showMessageDialog(null, "Blood Units is mandatory!");
+            return;
+        }
+        if (message.equals("")) {
+            JOptionPane.showMessageDialog(null, "Message is mandatory");
+            return;
+        }
+
+        
+        patientTreatmentWorkRequest.setBloodBankNotes(message);
+        patientTreatmentWorkRequest.setBloodBankOfficer(userAccount);
+        patientTreatmentWorkRequest.setLabNotes("SentToBloodBank");
+        patientTreatmentWorkRequest.setAssignedDoctor(null);
+        patientTreatmentWorkRequest.setRequiredBloodUnits(Integer.valueOf(bloodUnits));
+        
+//        bloodBankWorkRequest.setMessage(message);
+//        bloodBankWorkRequest.setSender(userAccount);
+//        bloodBankWorkRequest.setStatus("SentToBloodBank");
+//        bloodBankWorkRequest.setReceiver(null);
+
+        Organization org = null;
+
+        for (Organization organization : enterprise.getOrgDir().getOrganizations()) {
+
+            if (organization instanceof BloodBankManagerOrg) {
+                org = organization;
+                break;
+            }
+        }
+        if (org != null) {
+
+            org.getWorkQueue().getWorkRequests().add(patientTreatmentWorkRequest);
+            userAccount.getWorkQueue().getWorkRequests().add(patientTreatmentWorkRequest);
+
+
+            JOptionPane.showMessageDialog(null, "Blood Bank request sent");
+            txtLabMessage.setText("");
+            txtLabType.setText("");
+            btnRequest.setEnabled(false);
+        }
 
         
 
@@ -100,7 +171,14 @@ public class BloodBankRequestJPanel extends javax.swing.JPanel {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
 
-        
+        jPanel.remove(this);
+        Component[] componentArray = jPanel.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        DoctorWorkAreaJPanel dwjp = (DoctorWorkAreaJPanel) component;
+        dwjp.populateTable();
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
+
 
     }//GEN-LAST:event_btnBackActionPerformed
 
