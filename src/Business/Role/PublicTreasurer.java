@@ -4,10 +4,22 @@
  */
 package Business.Role;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.Organization.TreasurerOrg;
+import Business.UserAccount.UserAccount;
+import UI.GovernmentTreasurer.TreasurerWorkAreaJPanel;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gaganaananda
  */
-public class PublicTreasurer {
+public class PublicTreasurer extends Roles{
+
+    @Override
+    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount userAccount, Organization organization, Enterprise enterprise, Ecosystem business) {
+        return new TreasurerWorkAreaJPanel(userProcessContainer, userAccount, (TreasurerOrg)organization, enterprise);
+    }
     
 }
