@@ -10,12 +10,16 @@ import java.util.List;
  *
  * @author talha
  */
-public class Enterprise extends Organization {
+public abstract class Enterprise extends Organization {
     private EnterpriseType enterpriseType;
     private OrganizationDirectory orgDir;
 
     public OrganizationDirectory getOrgDir() {
         return orgDir;
+    }
+
+    public String getName() {
+        return super.getOrganizationName();
     }
 
     public enum EnterpriseType {
