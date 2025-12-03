@@ -272,12 +272,17 @@ public class EmployeeManagementPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddEmpActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-
+        jPanel.remove(this);
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
      
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void comboBoxOrgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOrgActionPerformed
-        
+        Organization organization = (Organization) comboBoxOrg.getSelectedItem();
+        if (organization != null) {
+            populateTable(organization);
+        }
     }//GEN-LAST:event_comboBoxOrgActionPerformed
 
     private void comboBoxOrgdropdownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOrgdropdownActionPerformed
