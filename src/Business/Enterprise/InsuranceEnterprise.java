@@ -56,5 +56,9 @@ public class InsuranceEnterprise extends Enterprise {
     public void setInsPlcyDir(InsurancePolicyDirectory insPlcyDir) {
         this.insPlcyDir = insPlcyDir;
     }
+
+    public Object getInsPolicyDir() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }
