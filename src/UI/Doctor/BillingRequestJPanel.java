@@ -5,6 +5,15 @@
  */
 package UI.Doctor;
 
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import Business.WorkQueue.WorkRequest;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 
 /**
  *
@@ -12,14 +21,35 @@ package UI.Doctor;
  */
 public class BillingRequestJPanel extends javax.swing.JPanel {
 
- 
+ private JPanel jPanel;
+    private UserAccount userAccountt;
+    private Enterprise enterprise;
+    private PatientTreatmentWorkRequest patientTreatmentWorkRequest;
+    private Ecosystem ecosystem;
+    private double consultationCharge = 50;
 
     /**
      * Creates new form BillingRequestJPanel
      */
-    public BillingRequestJPanel() {
+    public BillingRequestJPanel(JPanel userProcessContainer, UserAccount userAccount, Enterprise enterprise, PatientTreatmentWorkRequest workRequest) {
         initComponents();
         
+        
+        this.jPanel = userProcessContainer;
+        this.userAccountt = userAccount;
+        this.enterprise = enterprise;
+        this.patientTreatmentWorkRequest = workRequest;
+        populateTable();
+        
+    }
+    
+    
+    public void populateTable() {
+        txtFirstname.setText(PatientTreatmentWorkRequest.getPat().getPatFrstNm());
+        txtLastname.setText(PatientTreatmentWorkRequest.getPat().getPatLstNm());
+        txtPatientID.setText(String.valueOf(PatientTreatmentWorkRequest.getPat().getPatId()));
+        txtAssignDoc.setText(PatientTreatmentWorkRequest.getAssignedDoc().getEmp().getEmpName());
+        txtConsulCharge.setText(String.valueOf(consultationCharge));
     }
 
     /**
@@ -33,14 +63,14 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        fstNmTxt = new javax.swing.JTextField();
+        txtFirstname = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        lstNmTxt = new javax.swing.JTextField();
+        txtLastname = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        asgndDocTxt = new javax.swing.JTextField();
+        txtAssignDoc = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        pntIdTxt = new javax.swing.JTextField();
+        txtPatientID = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtConsulCharge = new javax.swing.JTextField();
@@ -67,9 +97,9 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
         add(jLabel6);
         jLabel6.setBounds(290, 220, 180, 17);
 
-        fstNmTxt.setEditable(false);
-        add(fstNmTxt);
-        fstNmTxt.setBounds(220, 250, 131, 23);
+        txtFirstname.setEditable(false);
+        add(txtFirstname);
+        txtFirstname.setBounds(220, 250, 131, 23);
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel7.setText("First Name :");
@@ -81,27 +111,27 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
         add(jLabel10);
         jLabel10.setBounds(390, 260, 74, 17);
 
-        lstNmTxt.setEditable(false);
-        add(lstNmTxt);
-        lstNmTxt.setBounds(470, 260, 131, 23);
+        txtLastname.setEditable(false);
+        add(txtLastname);
+        txtLastname.setBounds(470, 260, 131, 23);
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel8.setText("Assigned Doctor :");
         add(jLabel8);
         jLabel8.setBounds(110, 290, 107, 17);
 
-        asgndDocTxt.setEditable(false);
-        add(asgndDocTxt);
-        asgndDocTxt.setBounds(220, 290, 130, 23);
+        txtAssignDoc.setEditable(false);
+        add(txtAssignDoc);
+        txtAssignDoc.setBounds(220, 290, 130, 23);
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel2.setText("Patient Id:");
         add(jLabel2);
         jLabel2.setBounds(390, 290, 66, 17);
 
-        pntIdTxt.setEditable(false);
-        add(pntIdTxt);
-        pntIdTxt.setBounds(470, 290, 131, 23);
+        txtPatientID.setEditable(false);
+        add(txtPatientID);
+        txtPatientID.setBounds(470, 290, 131, 23);
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel3.setText("BILLING INFORMATION");
@@ -198,10 +228,8 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField asgndDocTxt;
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnSendBillReq;
-    private javax.swing.JTextField fstNmTxt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -214,12 +242,14 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JTextField lstNmTxt;
     private javax.swing.JTextField medChrgTxt;
     private javax.swing.JTextField miscChrgTxt;
-    private javax.swing.JTextField pntIdTxt;
+    private javax.swing.JTextField txtAssignDoc;
     private javax.swing.JTextField txtConsulCharge;
+    private javax.swing.JTextField txtFirstname;
     private javax.swing.JTextField txtLabCharge;
+    private javax.swing.JTextField txtLastname;
+    private javax.swing.JTextField txtPatientID;
     // End of variables declaration//GEN-END:variables
 
     
