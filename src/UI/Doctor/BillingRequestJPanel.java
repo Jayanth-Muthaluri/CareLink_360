@@ -7,9 +7,15 @@ package UI.Doctor;
 
 import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
+import Business.Organization.AccountantOrg;
+import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.AccountantBillingRequest;
 import Business.WorkQueue.PatientTreatmentWorkRequest;
 import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -22,7 +28,7 @@ import javax.swing.table.TableRowSorter;
 public class BillingRequestJPanel extends javax.swing.JPanel {
 
  private JPanel jPanel;
-    private UserAccount userAccountt;
+    private UserAccount userAccount;
     private Enterprise enterprise;
     private PatientTreatmentWorkRequest patientTreatmentWorkRequest;
     private Ecosystem ecosystem;
@@ -36,7 +42,7 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
         
         
         this.jPanel = userProcessContainer;
-        this.userAccountt = userAccount;
+        this.userAccount = userAccount;
         this.enterprise = enterprise;
         this.patientTreatmentWorkRequest = workRequest;
         populateTable();
@@ -218,11 +224,87 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
 
     private void btnSendBillReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendBillReqActionPerformed
         
+        String consultationCharge = txtConsulCharge.getText().trim();
+        String labChargesStr = txtLabCharge.getText();
+        String miscellaneouschargesStr = miscChrgTxt.getText();
+        String medicationChargesStr = medChrgTxt.getText();
+        if (consultationCharge.equals("") || labChargesStr.equals("") || miscellaneouschargesStr.equals("") || medicationChargesStr.equals("")) {
+            JOptionPane.showMessageDialog(null, "All fields are mandatory");
+        } else {
+            
+            try {
+                Double.parseDouble(consultationCharge);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please provide a Numeric value for Consultation Charges");
+                return;
+            }
+            
+            try {
+                Integer.parseInt(labChargesStr);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please type a Numeric value for Lab Charges");
+                return;
+            }
+            try {
+                Integer.parseInt(miscellaneouschargesStr);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please type a Numeric value for Miscellaneous charges");
+                return;
+            }
+            try {
+                Integer.parseInt(medicationChargesStr);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please type numeric value for Medication charges");
+                return;
+            }
+            double labCharges = Double.parseDouble(labChargesStr);
+            double miscellaneouscharges = Double.parseDouble(miscellaneouschargesStr);
+            double medicationCharges = Double.parseDouble(medicationChargesStr);
+            double billingAmount = labCharges + consultationCharge + medicationCharges + miscellaneouscharges;
 
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                patientTreatmentWorkRequest.setStatus("Consultation Completed");
+
+                AccountantBillingRequest accountantBillingRequest = new AccountantBillingRequest();
+                accountantBillingRequest.setBillingAmt(billingAmount);
+                //  accountantBillingRequest.setPatientId(Integer.parseInt(txtPatientId.getText()));
+
+                accountantBillingRequest.setSender(userAccount);
+                accountantBillingRequest.setStatus("Sent");
+
+                accountantBillingRequest.setPatient(patientTreatmentWorkRequest.getPat());
+
+                Organization org = null;
+                for (Organization organization : entrpz.getOrgDir().getOrganizations()) {
+
+                    if (organization instanceof AccountantOrg) {
+                        org = organization;
+                        break;
+                    }
+                }
+                if (org != null) {
+
+                    org.getWrkQ().getWorkRequests().add(accountantBillingRequest);
+                    userAccount.getWrkQ().getWorkRequests().add(accountantBillingRequest);
+
+                }
+
+                JOptionPane.showMessageDialog(null, "Prescription submitted successfully");
+                btnSendBillReq.setEnabled(false);
+            }
+        }
     }//GEN-LAST:event_btnSendBillReqActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
+        jPanel.remove(this);
+        Component[] componentArray = jPanel.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        DoctorWorkAreaJPanel dwjp = (DoctorWorkAreaJPanel) component;
+        dwjp.populateTable();
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);                           
        
     }//GEN-LAST:event_btnBackActionPerformed
 
@@ -252,5 +334,4 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtPatientID;
     // End of variables declaration//GEN-END:variables
 
-    
 }
