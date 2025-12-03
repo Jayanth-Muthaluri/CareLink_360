@@ -3,24 +3,61 @@
  * and open the template in the editor.
  */
 package UI.Administrative;
-
+import Business.Employee.Employee;
+import Business.Organization.Organization;
+import Business.Organization.OrganizationDirectory;
+import Business.Organization.PatientOrg;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
  * @author gaganaananda
  */
 public class EmployeeManagementPanel extends javax.swing.JPanel {
-
+    private OrganizationDirectory orgDir;
+    private JPanel jPanel;
 
 
     /**
      * Creates new form ManageOrganizationJPanel
      */
-    public EmployeeManagementPanel() {
+    public EmployeeManagementPanel(JPanel userProcessContainer, OrganizationDirectory organizationDir) {
         initComponents();
-        
+        this.jPanel = userProcessContainer;
+        this.orgDir = organizationDir;
+
+        populateOrgCmbx();
+        populateOrgEmpCmbx();
     }
 
+    public void populateOrgCmbx() {
+        comboBoxOrg.removeAllItems();
+
+        for (Organization organization : orgDir.getOrganizations()) {
+
+            if (!(organization instanceof PatientOrg)) {
+                comboBoxOrg.addItem(organization);
+            }
+        }
+        DefaultTableModel model = (DefaultTableModel) jTableOrg.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTableOrg.setRowSorter(sorter);
+    }
+    
+    public void populateOrgEmpCmbx() {
+        comboBoxOrgdropdown.removeAllItems();
+
+        for (Organization organization : orgDir.getOrganizations()) {
+
+            if (!(organization instanceof PatientOrg)) {
+                comboBoxOrgdropdown.addItem(organization);
+            }
+        }
+    }
     
 
     /**
