@@ -4,6 +4,19 @@
  */
 package UI.Doctor;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.DoctorOrg;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import userinterface.DoctorRole.ProvidePrescriptionJPanel;
+import userinterface.DoctorRole.RequestLabTestJPanel;
+
 
 
 
@@ -13,17 +26,57 @@ package UI.Doctor;
  */
 public class DoctorWorkAreaJPanel extends javax.swing.JPanel {
 
-  
+    private JPanel jPanel;
+    private DoctorOrg docOrg;
+    private Enterprise enterprise;
+    private UserAccount userAccount;
 
     /**
      * Creates new form DoctorWorkAreaJPanel
      */
-    public DoctorWorkAreaJPanel() {
+    public DoctorWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, DoctorOrg organization, Enterprise enterprise) {
         initComponents();
 
 
-
+        this.jPanel = userProcessContainer;
+        this.docOrg = organization;
+        this.enterprise = enterprise;
+        this.userAccount = account;
+        valueLabel.setText(enterprise.getName());
+        populateTable();
      
+    }
+    
+    
+    public void populateTable() {
+
+        DefaultTableModel model = (DefaultTableModel) wrkReqJTable.getModel();
+
+        model.setRowCount(0);
+
+
+        for (WorkRequest req : docOrg.getWrkQ().getWorkRequests()) {
+            Object[] row = new Object[8];
+            
+            if(((PatientTreatmentWorkRequest) req).getPatientInfo().getTypeOfDoctor().equals(userAccount.getAccountType())){
+            
+            row[0] = ((PatientTreatmentWorkRequest) req).getRegistrationDate();
+            row[1] = String.valueOf(((PatientTreatmentWorkRequest) req).getPat().getPatId());
+            row[2] = ((PatientTreatmentWorkRequest) req).getPat().getPatFrstNm() + " " + ((PatientTreatmentWorkRequest) req).getPat().getPatLstNm();
+            row[3] = ((PatientTreatmentWorkRequest) req);
+            row[4] = ((PatientTreatmentWorkRequest) req).getAssignedDoc();
+            row[5] = ((PatientTreatmentWorkRequest) req).getLabAst();
+            row[6] = ((PatientTreatmentWorkRequest) req).getLabRslt();
+            row[7] = req.getStatus();
+
+
+            model.addRow(row);
+            }
+        }
+        
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        wrkReqJTable.setRowSorter(sorter);
+        
     }
 
     /**
@@ -220,36 +273,199 @@ public class DoctorWorkAreaJPanel extends javax.swing.JPanel {
 
     private void reqTestJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reqTestJButtonActionPerformed
 
-     
+        int selectedRow = wrkReqJTable.getSelectedRow();
+        PatientTreatmentWorkRequest wrkReq;
+
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row");
+            return;
+        } else {
+
+            wrkReq = (PatientTreatmentWorkRequest) wrkReqJTable.getValueAt(selectedRow, 3);
+            if (wrkReq.getAssignedDoc() != null) {
+                if (userAccount.equals(wrkReq.getAssignedDoc())) {
+                    if (wrkReq.getStatus().equalsIgnoreCase("Under Consultation")) {
+
+                        CardLayout layout = (CardLayout) jPanel.getLayout();
+                        jPanel.add("RequestLabTestJPanel", new RequestLabTestJPanel(jPanel, userAccount, enterprise, wrkReq));
+                        layout.next(jPanel);
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Can not create the Lab request as the current status is " + wrkReq.getStatus());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Not Authorised");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Please assign the request first");
+            }
+        }
+
 
     }//GEN-LAST:event_reqTestJButtonActionPerformed
 
     private void AsngToMeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AsngToMeBtnActionPerformed
 
        
+        int selectedRow = wrkReqJTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row");
+            return;
+        } else {
 
+
+            WorkRequest pntTrtmWrkReq = (PatientTreatmentWorkRequest) wrkReqJTable.getValueAt(selectedRow, 3);
+            if (((PatientTreatmentWorkRequest) pntTrtmWrkReq).getAssignedDoc() == null) {
+
+
+                if (pntTrtmWrkReq.getStatus().equalsIgnoreCase("Waiting for Doctor")) {
+                    //patientTreatmentWorkRequest.setReceiver(userAccount);
+
+                    ((PatientTreatmentWorkRequest) pntTrtmWrkReq).setAssignedDoc(userAccount);
+                    pntTrtmWrkReq.setStatus("Under Consultation");
+                    pplReqTbl();
+
+                    JOptionPane.showMessageDialog(null, "Success !! Request is assigned to you ");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cannot assign this patient as its current state is: " + pntTrtmWrkReq.getStatus());
+                }
+
+            } else {
+
+                if(userAccount.equals(((PatientTreatmentWorkRequest) pntTrtmWrkReq).getAssignedDoc())) {
+
+                 JOptionPane.showMessageDialog(null, "Request is already assigned to you");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Not Authorized");
+                }
+            }
+        }
 
                 
     }//GEN-LAST:event_AsngToMeBtnActionPerformed
 
     private void ViewPntBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewPntBtnActionPerformed
        
-        
+        int selectedRow = wrkReqJTable.getSelectedRow();
+        PatientTreatmentWorkRequest patientWorkRequest;
+
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row");
+            return;
+        } else {
+            patientWorkRequest = (PatientTreatmentWorkRequest) wrkReqJTable.getValueAt(selectedRow, 3);
+            CardLayout layout = (CardLayout) jPanel.getLayout();
+            jPanel.add("ViewPatientJPanel", new ViewPatientJPanel(jPanel, userAccount, enterprise, patientWorkRequest));
+            layout.next(jPanel);
+        }
     }//GEN-LAST:event_ViewPntBtnActionPerformed
 
     private void prvdPrescrptnBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prvdPrescrptnBtnActionPerformed
 
-         
+         int selectedRow = wrkReqJTable.getSelectedRow();
+        PatientTreatmentWorkRequest wrkReq;
+
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row");
+            return;
+        } else {
+            wrkReq = (PatientTreatmentWorkRequest) wrkReqJTable.getValueAt(selectedRow, 3);
+            if(wrkReq.getAssignedDoc() != null)
+            {
+            if (userAccount.equals(wrkReq.getAssignedDoc())) {
+                if (wrkReq.getStatus().equalsIgnoreCase("Lab Test Completed") || wrkReq.getStatus().equalsIgnoreCase("Under Consultation")||wrkReq.getStatus().equalsIgnoreCase("Blood Bank Request Completed")) {
+
+
+                    CardLayout layout = (CardLayout) jPanel.getLayout();
+                    jPanel.add("ProvidePrescriptionJPanel", new ProvidePrescriptionJPanel(jPanel, userAccount, enterprise, wrkReq));
+                    layout.next(jPanel);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cannot prescribe the Patient as the status is: " + wrkReq.getStatus());
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Not Authorised");
+            }
+        }
+            else {
+                JOptionPane.showMessageDialog(null, "Please assign the request first");
+            }
+        }
     }//GEN-LAST:event_prvdPrescrptnBtnActionPerformed
 
     private void cmpltBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmpltBtnActionPerformed
-        
+        int selectedRow = wrkReqJTable.getSelectedRow();
+        PatientTreatmentWorkRequest wrkReq;
+
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row");
+            return;
+        } else {
+
+            wrkReq = (PatientTreatmentWorkRequest) wrkReqJTable.getValueAt(selectedRow, 3);
+            if(wrkReq.getAssignedDoc() != null)
+            {
+            if (userAccount.equals(wrkReq.getAssignedDoc())) {
+                if (wrkReq.getStatus().equalsIgnoreCase("Prescription Provided")) {
+
+                    CardLayout layout = (CardLayout) jPanel.getLayout();
+                    jPanel.add("RequestBillingJPanel", new RequestBillingJPanel(jPanel, userAccount, enterprise, wrkReq));
+                    wrkReq.getPat().setIsTrtmntdone(true);
+                    layout.next(jPanel);
+
+                } else {
+                    if(wrkReq.getStatus().equalsIgnoreCase("Consultation Completed"))
+                    {
+                        JOptionPane.showMessageDialog(null, "Treatment is already complete!");
+                    }
+                    else
+                    {
+                    JOptionPane.showMessageDialog(null, "Cannot complete the treatment. Please provide Prescription first!");
+                }
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Not Authorised");
+            }
+        }
+            else {
+                JOptionPane.showMessageDialog(null, "Please assign the request first");
+            }
+        }
     }//GEN-LAST:event_cmpltBtnActionPerformed
 
     private void bloodBankReqJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bloodBankReqJButtonActionPerformed
         // TODO add your handling code here:
         
-      
+       int selectedRow = wrkReqJTable.getSelectedRow();
+        PatientTreatmentWorkRequest wrkReq;
+        
+
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row");
+            return;
+        } else {
+            wrkReq = (PatientTreatmentWorkRequest) wrkReqJTable.getValueAt(selectedRow, 3);
+           //request =(BloodBankWorkRequest) workRequestJTable.getValueAt(selectedRow, 3);
+
+            if (wrkReq.getAssignedDoc() != null) {
+                if (userAccount.equals(wrkReq.getAssignedDoc())) {
+                    if (wrkReq.getStatus().equalsIgnoreCase("Under Consultation")) {
+
+
+                        CardLayout layout = (CardLayout) jPanel.getLayout();
+                        jPanel.add("RequestLabTestJPanel", new BloodBankRequestJPanel(jPanel, userAccount, enterprise, wrkReq));
+                        layout.next(jPanel);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Can not create the Lab request as the current status is " + wrkReq.getStatus());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Not Authorised");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Please assign the request first");
+            }
+        }
 
     }//GEN-LAST:event_bloodBankReqJButtonActionPerformed
 
