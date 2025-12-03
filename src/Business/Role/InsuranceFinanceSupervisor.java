@@ -17,7 +17,7 @@ import javax.swing.JPanel;
  *
  * @author gaganaananda
  */
-public class InsuranceFinanceSupervisor {
+public class InsuranceFinanceSupervisor extends Roles{
     
     
     @Override
