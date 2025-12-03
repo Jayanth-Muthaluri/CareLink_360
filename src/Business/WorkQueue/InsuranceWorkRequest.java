@@ -5,7 +5,7 @@
  */
 package Business.WorkQueue;
 
-import Business.InsuranceCustomer.InsuranceCustomer;
+import Business.CustomerInsurance.CustomerInsurance;
 
 /**
  *
@@ -21,7 +21,7 @@ public class InsuranceWorkRequest extends WorkRequest {
     private String insuranceAgent;
     private String claimApprover;
     private double treatmentBill;
-    private InsuranceCustomer insuredPatient;
+    private CustomerInsurance insuredPatient;
     private String medicalCenter;
 
     public String getPolicyNumber() {
@@ -93,11 +93,11 @@ public class InsuranceWorkRequest extends WorkRequest {
         this.treatmentBill = treatmentBill;
     }
 
-    public InsuranceCustomer getInsuredPatient() {
+    public CustomerInsurance getInsuredPatient() {
         return insuredPatient;
     }
 
-    public void setInsuredPatient(InsuranceCustomer insuredPatient) {
+    public void setInsuredPatient(CustomerInsurance insuredPatient) {
         this.insuredPatient = insuredPatient;
     }
 

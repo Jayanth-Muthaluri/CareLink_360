@@ -3,19 +3,27 @@
  * and open the template in the editor.
  */
 package UI.LabAssistant;
-
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
  * @author MALLESH
  */
 public class LabProcessWRJPanel extends javax.swing.JPanel {
-
+    
+    private JPanel userProcessContainer;
+    private PatientTreatmentWorkRequest treatmentRequest;
     /**
      * Creates new form ProcessWorkRequestJPanel
      */
-    public LabProcessWRJPanel() {
+    public LabProcessWRJPanel(JPanel userProcessContainer, PatientTreatmentWorkRequest treatmentRequest) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.treatmentRequest = treatmentRequest;
     }
 
     /**
@@ -80,11 +88,39 @@ public class LabProcessWRJPanel extends javax.swing.JPanel {
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
 
+        userProcessContainer.remove(this);
+        Component[] components = userProcessContainer.getComponents();
+        Component lastComponent = components[components.length - 1];
+
+        // your updated LabAssistantWAJPanel class name
+        UI.LabAssistant.LabAssistantWAJPanel panel =
+                (UI.LabAssistant.LabAssistantWAJPanel) lastComponent;
+
+        panel.populateLabRequestTable(); // you will create this renamed method
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
 
     }//GEN-LAST:event_backJButtonActionPerformed
 
     private void submitJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitJBtnActionPerformed
+        
+        String result = resultJTxtField.getText().trim();
 
+        if (result.equals("")) {
+            JOptionPane.showMessageDialog(null, "Result is mandatory");
+            return;
+        }
+
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+        
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            treatmentRequest.setTestResult(result);
+            treatmentRequest.setRequestStatus("Lab Test Completed");
+
+            JOptionPane.showMessageDialog(null, "Result submitted successfully");
+            resultJTxtField.setText("");
+            submitJBtn.setEnabled(false);
+        }
     }//GEN-LAST:event_submitJBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
