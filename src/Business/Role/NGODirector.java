@@ -4,10 +4,21 @@
  */
 package Business.Role;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import UI.NGODirector.DirectorProcessWAJPanel;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gaganaananda
  */
-public class NGODirector {
+public class NGODirector extends Roles{
+    
+    @Override
+    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, Ecosystem business) {
+        return new DirectorProcessWAJPanel(userProcessContainer, account, (NGODirectorOrg)organization, enterprise);
+    }
     
 }
