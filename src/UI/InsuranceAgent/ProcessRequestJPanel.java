@@ -6,6 +6,7 @@
 package UI.InsuranceAgent;
 
 import Business.Enterprise.Enterprise;
+import Business.Organization.InsuranceFinanceOrg;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.InsuranceWorkRequest;
@@ -13,20 +14,28 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-
-
 /**
  *
  * @author jayan
  */
-
 public class ProcessRequestJPanel extends javax.swing.JPanel {
-
-    ProcessRequestJPanel(JPanel userProcessContainer, UserAccount account, Enterprise enterprise, InsuranceWorkRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private Enterprise enterprise;
+    private InsuranceWorkRequest request;
+    
+    /**
+     * Creates new form ProcessRequestJPanel
+     */
+    public ProcessRequestJPanel(JPanel userProcessContainer, UserAccount account, Enterprise enterprise, InsuranceWorkRequest request) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.enterprise = enterprise;
+        this.request = request;
+        this.account = account;
+        populateFields();
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -151,15 +160,66 @@ public class ProcessRequestJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_fieldMessageActionPerformed
 
     private void btnAcceptAndSendRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptAndSendRequestActionPerformed
-
+        String message = fieldMessage.getText();
+        if (message.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide a message!");
+            return;
+        } else {
+            request.setRequestNote(message);
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to approve and send this request to the Finance Department?");
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                Organization org = null;
+                for (Organization organization : enterprise.getOrgDir().getOrganizations()) {
+                    if (organization instanceof InsuranceFinanceOrg) {
+                        org = organization;
+                        break;
+                    }
+                }
+                if (org != null) {
+                    org.getWorkQueue().getWorkRequests().add(request);
+                    account.getWorkQueue().getWorkRequests().add(request);
+                }
+                JOptionPane.showMessageDialog(null, "Request has been approved and sent to the Finance Department successfully!");
+                request.setRequestStatus("Sent To Finance Department");
+                request.setInsuranceAgent(account.getEmployee().getEmployeeName());
+                request.setRequestReceiver(null);
+                fieldMessage.setText("");
+                btnRejectRequest.setEnabled(false);
+                btnAcceptAndSendRequest.setEnabled(false);
+            }
+            fieldMessage.setText("");
+        }
     }//GEN-LAST:event_btnAcceptAndSendRequestActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-    
+        userProcessContainer.remove(this);
+        Component[] componentArray = userProcessContainer.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        AllInsuranceRequestsJPanel allInsuranceRequestsJPanel = (AllInsuranceRequestsJPanel) component;
+        allInsuranceRequestsJPanel.populateTable();
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnRejectRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectRequestActionPerformed
-
+        String message = fieldMessage.getText();
+        if (message.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide a reason for rejection!");
+            return;
+        } else {
+            request.setRequestNote(message);
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to reject this request?");
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                request.setRequestStatus("Rejected");
+                request.setRequestNote(fieldMessage.getText().trim());
+                request.setInsuranceAgent(account.getEmployee().getEmployeeName());
+                fieldMessage.setText("");
+                btnRejectRequest.setEnabled(false);
+                btnAcceptAndSendRequest.setEnabled(false);
+                JOptionPane.showMessageDialog(null, "Request has been rejected successfully!");
+            }
+            fieldMessage.setText("");
+        }
     }//GEN-LAST:event_btnRejectRequestActionPerformed
 
 
@@ -180,4 +240,10 @@ public class ProcessRequestJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblTotalBillAmount;
     // End of variables declaration//GEN-END:variables
 
+    private void populateFields() {
+        fieldPolicyNumber.setText(request.getPolicyNumber());
+        fieldCustomerName.setText(request.getInsuredPatient().getCustomerFirstName() + " " + request.getInsuredPatient().getCustomerLastName());
+        fieldTotalBillAmount.setText(String.valueOf(request.getTreatmentBill()));
+        fieldClaimAmount.setText(String.valueOf(request.getClaimAmount()));
+    }
 }
