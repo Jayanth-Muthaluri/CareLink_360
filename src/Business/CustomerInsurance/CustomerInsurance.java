@@ -39,11 +39,11 @@ public class CustomerInsurance {
         this.customerFirstName = customerFirstName;
     }
 
-    public String getSsn() {
+    public String getSSN() {
         return ssn;
     }
 
-    public void setSsn(String ssn) {
+    public void setSSN(String ssn) {
         this.ssn = ssn;
     }
 
@@ -123,4 +123,5 @@ public class CustomerInsurance {
     public String toString() {
         return insurancePolicyNumber;
     }
+     
 }
