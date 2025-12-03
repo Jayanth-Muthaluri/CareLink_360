@@ -140,18 +140,55 @@ public class EmailBillingInformationToPatientJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSendEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendEmailActionPerformed
-       
+       String text = emailTxtFiled.getText();
+        if (emailTxtFiled.getText().trim().equals("")) {
+            JOptionPane.showConfirmDialog(null, "You have not typed anything");
+            return;
+        }
+        try {
+            SendMail(billingRequest.getPatientRecord().getPatientEmail(), text);
+        } catch (MessagingException ex) {
+            Logger.getLogger(EmailBillingInformationToPatientJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        JOptionPane.showMessageDialog(null, "Billing information sent to " + billingRequest.getPatientRecord().getPatientFirstName());
+        billingRequest.setRequestStatus("Patient Transaction Completed");
     }//GEN-LAST:event_btnSendEmailActionPerformed
 
     private void btnClearTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearTextActionPerformed
-    
+        emailTxtFiled.setText("");
     }//GEN-LAST:event_btnClearTextActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
     
-    
+    private void SendMail(String toMail, String text) throws MessagingException {
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.socketFactory.port", "465");
+        properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        properties.put("mail.smtp.ssl.protocols", "TLSv1.2");
+
+        String to = toMail;
+        final String from = "saimanithkomuravelli@gmail.com";
+        final String password = "Bunty@921";
+        
+        // login using this email address
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, password);
+            }
+        });
+        
+        Message message = prepareMessage(session, from, toMail, text);
+        Transport.send(message);
+        System.out.println("Message Sent Successfully");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
@@ -163,6 +200,19 @@ public class EmailBillingInformationToPatientJPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
+    private static Message prepareMessage(Session session, String myAccountEmail, String recepient, String text) {
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(myAccountEmail)); // from address
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recepient));
+            message.setSubject("Hospital Billing Statement");
+            message.setText(text);
+            return message;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null; // if some exception happens
+    }
 }
 
 
