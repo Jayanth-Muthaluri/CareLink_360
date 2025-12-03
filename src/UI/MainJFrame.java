@@ -3,7 +3,17 @@
  * and open the template in the editor.
  */
 package UI;
-
+import Business.Ecosystem;
+import Business.db40.db40;
+import Business.Enterprise.Enterprise;
+import Business.Network.Network;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
+import java.awt.Color;
+import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 
 /**
@@ -17,10 +27,14 @@ public class MainJFrame extends javax.swing.JFrame {
      */
     
 
+    private Ecosystem ecosystem;
+    private db4o dB4oUtil = db4o.getInstance();
+
     public MainJFrame() {
        
         initComponents();
-       
+        ecosystem = dB4oUtil.retrieveSystem();
+        this.setSize(1680, 1050);
     }
 
     /**
@@ -169,7 +183,23 @@ public class MainJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        
+        btnLogout.setEnabled(false);
+        txtUsername.setEnabled(true);
+        txtPassword.setEnabled(true);
+        btnLogin1.setEnabled(true);
+        txtUsername.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        //passwordJLabel.setForeground(Color.BLACK);
+        txtPassword.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        //usernameJLabel.setForeground(Color.BLACK);
+        txtUsername.setText("");
+        txtPassword.setText("");
+
+        container.removeAll();
+        JPanel blankJP = new JPanel();
+        container.add("blank", blankJP);
+        CardLayout crdLyt = (CardLayout) container.getLayout();
+        crdLyt.next(container);
+        dB4oUtil.storeSystem(ecosystem);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnLogin1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogin1ActionPerformed
