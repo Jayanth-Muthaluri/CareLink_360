@@ -7,16 +7,33 @@ package UI.InsuranceFinance;
 
 import Business.Enterprise.Enterprise;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.InsuranceWorkRequest;
 import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
 /**
  *
  * @author jayan
  */
 public class InsuranceFinanceProcessRequest extends javax.swing.JPanel {
+    
+    private JPanel userProcessContainer;
+    private Enterprise enterprise;
+    private UserAccount account;
+    private InsuranceWorkRequest request;
+    
+    /**
+     * Creates new form InsuranceFinanceProcessRequest
+     */
+    public InsuranceFinanceProcessRequest(JPanel userProcessContainer, UserAccount account, InsuranceWorkRequest request, Enterprise enterprise) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.enterprise = enterprise;
+        this.account = account;
+        this.request = request;
+        populateFields();
+    }
 
    
     /**
@@ -160,18 +177,33 @@ public class InsuranceFinanceProcessRequest extends javax.swing.JPanel {
 
     private void btnDisburseAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisburseAmountActionPerformed
 
-        
+        btnDisburseAmount.setEnabled(true);
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to approve and disburse this insurance claim?");
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            request.setRequestStatus("Insurance Claim Approved");
+            JOptionPane.showMessageDialog(null, "Insurance claim has been approved and disbursed successfully!");
+            btnDisburseAmount.setEnabled(false);
+            btnRejectClaim.setEnabled(false);
+        }
     }//GEN-LAST:event_btnDisburseAmountActionPerformed
 
     private void btnRejectClaimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectClaimActionPerformed
 
-        
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to reject this insurance claim?");
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            request.setRequestStatus("Insurance Claim Rejected");
+            JOptionPane.showMessageDialog(null, "Insurance claim has been rejected!");
+            btnRejectClaim.setEnabled(false);
+            btnDisburseAmount.setEnabled(false);
+        }
 
     }//GEN-LAST:event_btnRejectClaimActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void fieldClaimAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldClaimAmountActionPerformed
@@ -202,4 +234,13 @@ public class InsuranceFinanceProcessRequest extends javax.swing.JPanel {
     private javax.swing.JLabel lblSSN;
     private javax.swing.JLabel lblTitle;
     // End of variables declaration//GEN-END:variables
+
+    private void populateFields() {
+        fieldPolicyNumber.setText(request.getPolicyNumber());
+        fieldSSN.setText(request.getPatientSSN());
+        fieldPolicyName.setText(request.getPolicyName());
+        fieldClaimAmount.setText(String.valueOf(request.getClaimAmount()));
+        fieldBillingAmount.setText(String.valueOf(request.getTreatmentBill()));
+        fieldCoverage.setText(String.valueOf(request.getInsuredPatient().getInsurance().getCoverage()));
+    }
 }
