@@ -1,22 +1,55 @@
 
 package UI.HealthcareOfficer;
 
+import Business.EcoSystem;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
-import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
-
-
+import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.input.PanMouseInputListener;
+import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.TileFactoryInfo;
 /**
  *
  * @author jayan
  */
 public class MapJPanel extends javax.swing.JPanel {
     
-
-
-
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private EcoSystem ecosystem;
+     
+    /**
+     * Creates new form MapJPanel
+     */
+    public MapJPanel(JPanel userProcessContainer, UserAccount account, EcoSystem ecosystem) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.ecosystem = ecosystem;
+        init();
+    }
+    
+    private void init() {
+        TileFactoryInfo info = new OSMTileFactoryInfo();
+        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+          
+        jXMapViewer.setTileFactory(tileFactory);
+        
+        // Default location: Boston, MA (Northeastern University area)
+        GeoPosition geo = new GeoPosition(42.3398, -71.0892);
+        jXMapViewer.setAddressLocation(geo);
+        jXMapViewer.setZoom(12);
+        
+        // Create event mouse move
+        MouseInputListener mm = new PanMouseInputListener(jXMapViewer);
+        jXMapViewer.addMouseListener(mm);
+        jXMapViewer.addMouseMotionListener(mm);
+        jXMapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer));
+    }
    
     /**
      * This method is called from within the constructor to initialize the form.
@@ -73,7 +106,9 @@ public class MapJPanel extends javax.swing.JPanel {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
 
