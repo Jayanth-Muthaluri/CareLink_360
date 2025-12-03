@@ -4,10 +4,21 @@
  */
 package Business.Role;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import UI.GovernmentSecretary.SecretaryDashboardJPanel;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gaganaananda
  */
-public class PublicSecretaries {
+public class PublicSecretaries extends Roles{
+
+    @Override
+    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount userAccount, Organization organization, Enterprise enterprise, EcoSystem business) {
+        return new SecretaryDashboardJPanel(userProcessContainer, userAccount, (SecretaryOrg)organization, enterprise);
+    }
     
 }
