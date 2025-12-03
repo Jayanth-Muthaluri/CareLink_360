@@ -7,17 +7,39 @@ package UI.HealthcareOfficer;
 
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
+import Business.Organization.SecretaryOrg;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.GovernmentFundRequest;
 import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
 /**
  *
  * @author jayan
  */
 public class OfficerProcessRequestJPanel extends javax.swing.JPanel {
+    
+    private JPanel userProcessContainer;
+    private Enterprise enterprise;
+    private UserAccount account;
+    private GovernmentFundRequest request;
+    
+    /**
+     * Creates new form ProcessWorkRequestJPanel
+     */
+    public OfficerProcessRequestJPanel(JPanel userProcessContainer, UserAccount account, GovernmentFundRequest request, Enterprise enterprise) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.enterprise = enterprise;
+        this.account = account;
+        this.request = request;
+        
+        // Populate fields with request data
+        fieldAmount.setText(String.valueOf(request.getRequiredFunding()));
+        fieldLocation.setText(request.getRegionName());
+        fieldPopulation.setText(String.valueOf(request.getPatientCount()));
+    }
 
     /**
      * Creates new form ProcessWorkRequestJPanel
@@ -178,18 +200,64 @@ public class OfficerProcessRequestJPanel extends javax.swing.JPanel {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnSendRequestToApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendRequestToApproveActionPerformed
         // TODO add your handling code here:
 
-        
+        String message = fieldMessage.getText();
+        if (message.equals("")) {
+            JOptionPane.showMessageDialog(null, "Message is mandatory!");
+            return;
+        } else {
+            request.setRequestNote(message);
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                request.setRequestSender(account);
+                request.setRequestStatus("Sent to Secretary");
+                
+                Organization org = null;
+                for (Organization organization : enterprise.getOrgDir().getOrganizations()) {
+                    if (organization instanceof SecretaryOrg) {
+                        org = organization;
+                        break;
+                    }
+                }
+                
+                if (org != null) {
+                    org.getWorkQueue().getWorkRequests().add(request);
+                    account.getWorkQueue().getWorkRequests().add(request);
+                }
+                
+                JOptionPane.showMessageDialog(null, "Request to Secretary Successful!!!");
+                fieldMessage.setText("");
+                Reject.setEnabled(false);
+                btnSendRequestToApprove.setEnabled(false);
+            }
+            fieldMessage.setText("");
+        }
 
     }//GEN-LAST:event_btnSendRequestToApproveActionPerformed
 
     private void RejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RejectActionPerformed
-        
+        String message = fieldMessage.getText();
+        if (message.equals("")) {
+            JOptionPane.showMessageDialog(null, "Message is mandatory!");
+            return;
+        } else {
+            request.setRequestNote(message);
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                request.setRequestStatus("Rejected");
+                fieldMessage.setText("");
+                Reject.setEnabled(false);
+                btnSendRequestToApprove.setEnabled(false);
+            }
+            fieldMessage.setText("");
+        }
     }//GEN-LAST:event_RejectActionPerformed
 
 
