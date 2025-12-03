@@ -4,6 +4,14 @@
  */
 package UI.BloodBankManager;
 
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import UI.Patient.PatientWAJPanel;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import userinterface.BloodBankManagerRole.BloodBankManagerWorkAreaJPanel;
+
 
 
 
@@ -13,14 +21,17 @@ package UI.BloodBankManager;
  */
 public class BloodRequestProcessingJPanel extends javax.swing.JPanel {
 
- 
+    JPanel jPanel;
+    PatientWAJPanel patientWAJPanel;
 
     /**
      * Creates new form BloodRequestProcessingJPanel
      */
-    public BloodRequestProcessingJPanel() {
+    public BloodRequestProcessingJPanel(JPanel userProcessContainer, PatientWAJPanel patientWAJPanel) {
         initComponents();
         
+        this.jPanel = userProcessContainer;
+        this.patientWAJPanel = patientWAJPanel;
     }
 
     /**
@@ -86,12 +97,32 @@ public class BloodRequestProcessingJPanel extends javax.swing.JPanel {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
 
-      
+      jPanel.remove(this);
+        Component[] componentArray = jPanel.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        BloodBankManagerWorkAreaJPanel dwjp = (BloodBankManagerWorkAreaJPanel) component;
+        dwjp.pplTbl();
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void sbmtJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sbmtJButtonActionPerformed
        
+String bloodBankMessage = rsltMsgJTextField.getText().trim();
+        if (bloodBankMessage.equals("")) {
+            JOptionPane.showMessageDialog(null, "Result is mandatory");
+            return;
+        } else {
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                patientWAJPanel.setBloodBankMessage(bloodBankMessage);
+                patientWAJPanel.setStatus("Blood Bank Request Completed");
+                JOptionPane.showMessageDialog(null, "Result submitted successfully");
+                rsltMsgJTextField.setText("");
+                sbmtJButton.setEnabled(false);
+            }
 
+        }
 
     }//GEN-LAST:event_sbmtJButtonActionPerformed
 
