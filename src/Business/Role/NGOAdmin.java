@@ -6,9 +6,11 @@ package Business.Role;
 
 import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
+import Business.Organization.DirectorOrgNGO;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
-import UI.NGOAdmin.NGOAdministratorWAJPanel;
+import UI.NGOAdmin.NGOAdminWAJPanel;
+import UI.NGOAdmin.NGOAdminWAJPanel;
 import javax.swing.JPanel;
 
 /**
@@ -19,7 +21,7 @@ public class NGOAdmin extends Roles{
     
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, Ecosystem business) {
-        return new NGOAdministratorWAJPanel(userProcessContainer, account, (NGOAdminOrg)organization, enterprise);
+        return new NGOAdminWAJPanel(userProcessContainer, account, (DirectorOrgNGO)organization, enterprise);
     }
     
 }
