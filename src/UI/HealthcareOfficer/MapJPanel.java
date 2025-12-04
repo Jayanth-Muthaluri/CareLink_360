@@ -1,7 +1,7 @@
 
 package UI.HealthcareOfficer;
 
-import Business.EcoSystem;
+import Business.Ecosystem;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
 import javax.swing.JPanel;
@@ -20,12 +20,12 @@ public class MapJPanel extends javax.swing.JPanel {
     
     private JPanel userProcessContainer;
     private UserAccount account;
-    private EcoSystem ecosystem;
+    private Ecosystem ecosystem;
      
     /**
      * Creates new form MapJPanel
      */
-    public MapJPanel(JPanel userProcessContainer, UserAccount account, EcoSystem ecosystem) {
+    public MapJPanel(JPanel userProcessContainer, UserAccount account, Ecosystem ecosystem) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.account = account;
