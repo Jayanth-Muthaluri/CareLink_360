@@ -15,17 +15,10 @@ import java.awt.CardLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
-
-
-
 /**
  *
  * @author jayan
@@ -201,7 +194,6 @@ public class AccountantWorkAreaJPanel extends javax.swing.JPanel {
     private void btnPatientReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPatientReportActionPerformed
         List<Patient> underTreatmentPatients = new ArrayList<>();
         List<Patient> treatedPatients = new ArrayList<>();
-        DefaultPieDataset defaultPieDataset = new DefaultPieDataset();
         List<Patient> patients = ((HealthCareEnterprise) enterprise).getPatientDir().getPatients();
         
         for (Patient patient : patients) {
@@ -212,13 +204,15 @@ public class AccountantWorkAreaJPanel extends javax.swing.JPanel {
             }
         }
         
-        defaultPieDataset.setValue("Patient still under treatment", underTreatmentPatients.size());
-        defaultPieDataset.setValue("Patient Treated Successfully", treatedPatients.size());
-        JFreeChart chart = ChartFactory.createPieChart("Patient Status Pie Chart", defaultPieDataset, true, true, true);
-        PiePlot piePlot = (PiePlot) chart.getPlot();
-        ChartFrame frame = new ChartFrame("Patient Status Pie Chart", chart);
-        frame.setVisible(true);
-        frame.setSize(500, 500);
+        // Display patient statistics in a message dialog
+        String reportMessage = "=== Patient Status Report ===\n\n" +
+                              "Total Patients: " + patients.size() + "\n" +
+                              "Patients Under Treatment: " + underTreatmentPatients.size() + "\n" +
+                              "Patients Treated Successfully: " + treatedPatients.size() + "\n\n" +
+                              "Treatment Completion Rate: " + 
+                              String.format("%.2f", (treatedPatients.size() * 100.0 / patients.size())) + "%";
+        
+        JOptionPane.showMessageDialog(null, reportMessage, "Patient Status Report", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnPatientReportActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
