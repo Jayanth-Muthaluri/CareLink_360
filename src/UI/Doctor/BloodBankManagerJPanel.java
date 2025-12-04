@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package UI.Doctor;
 
@@ -14,33 +14,32 @@ import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
 /**
  *
  * @author gaganaananda
  */
-public class BloodBankRequestJPanel extends javax.swing.JPanel {
+public class BloodBankManagerJPanel extends javax.swing.JPanel {
 
+    /**
+     * Creates new form BloodBankManagerJPanel
+     */
+    
     private JPanel jPanel;
     private Enterprise enterprise;
     private UserAccount userAccount;
     private PatientTreatmentWorkRequest patientTreatmentWorkRequest;
-    /**
-     * Creates new form RequestLabTestJPanel
-     */
-    public BloodBankRequestJPanel(JPanel userProcessContainer, UserAccount account, Enterprise enterprise, PatientTreatmentWorkRequest patientTreatmentWorkRequest) {
+
+    public BloodBankManagerJPanel(JPanel userProcessContainer, UserAccount account, Enterprise enterprise, PatientTreatmentWorkRequest patientTreatmentWorkRequest) {
         initComponents();
         
         this.jPanel = userProcessContainer;
         this.enterprise = enterprise;
         this.userAccount = account;
         this.patientTreatmentWorkRequest = patientTreatmentWorkRequest;
-        valueLabel.setText(enterprise.getName());
+        txtValue.setText(enterprise.getName());
         btnRequest.setEnabled(true);
-
-        
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,68 +49,68 @@ public class BloodBankRequestJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnRequest = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        txtLabMessage = new javax.swing.JTextField();
         btnBack = new javax.swing.JButton();
-        valueLabel = new javax.swing.JLabel();
-        enterpriseLabel = new javax.swing.JLabel();
+        title = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        txtLabType = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        txtValue = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtLabMessage = new javax.swing.JTextField();
+        txtLabType = new javax.swing.JTextField();
+        btnRequest = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 153, 204));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnRequest.setBackground(new java.awt.Color(255, 102, 102));
-        btnRequest.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnRequest.setText("Request ");
-        btnRequest.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRequestActionPerformed(evt);
-            }
-        });
-        add(btnRequest, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 240, 130, 30));
-
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel1.setText("Message:");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, 100, -1));
-        add(txtLabMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 180, 130, 30));
-
         btnBack.setBackground(new java.awt.Color(255, 102, 102));
-        btnBack.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         btnBack.setText(">>Back");
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
-            }
-        });
-        add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, 30));
+        btnBack.addActionListener(this::btnBackActionPerformed);
+        add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
-        valueLabel.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        valueLabel.setText("<value>");
-        add(valueLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 80, 130, 20));
+        title.setText("Blood Bank Request");
+        add(title, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 20, 170, 30));
 
-        enterpriseLabel.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        enterpriseLabel.setText("Enterprise :");
-        add(enterpriseLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 110, 20));
+        jLabel2.setText("Enterprise: ");
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 80, -1, -1));
 
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel2.setText("Units of Blood:");
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 150, 140, -1));
-        add(txtLabType, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 140, 130, 30));
+        txtValue.setText("<value>");
+        add(txtValue, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 80, -1, -1));
 
-        jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        jLabel3.setText("Blood Bank Request ");
-        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 30, -1, -1));
+        jLabel4.setText("Message");
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 210, -1, -1));
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/blood bank request.gif"))); // NOI18N
-        jLabel4.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 70, 490, 320));
+        jLabel5.setText("Unit of Blood");
+        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 170, -1, -1));
+        add(txtLabMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 210, -1, -1));
+
+        txtLabType.addActionListener(this::txtLabTypeActionPerformed);
+        add(txtLabType, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 170, -1, -1));
+
+        btnRequest.setBackground(new java.awt.Color(255, 102, 102));
+        btnRequest.setText("Request Button");
+        btnRequest.addActionListener(this::btnRequestActionPerformed);
+        add(btnRequest, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtLabTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLabTypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtLabTypeActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        
+        jPanel.remove(this);
+        Component[] componentArray = jPanel.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        DoctorWorkAreaJPanel dwjp = (DoctorWorkAreaJPanel) component;
+        dwjp.populateTable();
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
+    }//GEN-LAST:event_btnBackActionPerformed
+
     private void btnRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRequestActionPerformed
+        // TODO add your handling code here:
+        
         String  bloodUnits = txtLabType.getText().trim();            
             try {
                 Integer.parseInt(bloodUnits);
@@ -165,33 +164,19 @@ public class BloodBankRequestJPanel extends javax.swing.JPanel {
             btnRequest.setEnabled(false);
         }
 
-        
-
     }//GEN-LAST:event_btnRequestActionPerformed
 
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-
-        jPanel.remove(this);
-        Component[] componentArray = jPanel.getComponents();
-        Component component = componentArray[componentArray.length - 1];
-        DoctorWorkAreaJPanel dwjp = (DoctorWorkAreaJPanel) component;
-        dwjp.populateTable();
-        CardLayout layout = (CardLayout) jPanel.getLayout();
-        layout.previous(jPanel);
-
-
-    }//GEN-LAST:event_btnBackActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnRequest;
-    private javax.swing.JLabel enterpriseLabel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel title;
     private javax.swing.JTextField txtLabMessage;
     private javax.swing.JTextField txtLabType;
-    private javax.swing.JLabel valueLabel;
+    private javax.swing.JLabel txtValue;
     // End of variables declaration//GEN-END:variables
+
 }
