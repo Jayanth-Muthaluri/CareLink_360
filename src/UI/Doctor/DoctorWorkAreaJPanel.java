@@ -14,8 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import userinterface.DoctorRole.ProvidePrescriptionJPanel;
-import userinterface.DoctorRole.RequestLabTestJPanel;
+import UI.Doctor.PrescriptionCreationJPanel;
+import UI.Doctor.PrescriptionCreationJPanel;
 
 
 
@@ -287,7 +287,7 @@ public class DoctorWorkAreaJPanel extends javax.swing.JPanel {
                     if (wrkReq.getRequestStatus().equalsIgnoreCase("Under Consultation")) {
 
                         CardLayout layout = (CardLayout) jPanel.getLayout();
-                        jPanel.add("RequestLabTestJPanel", new RequestLabTestJPanel(jPanel, userAccount, enterprise, wrkReq));
+                        jPanel.add("RequestLabTestJPanel", new LabTestRequestJPanel(jPanel, userAccount, enterprise, wrkReq));
                         layout.next(jPanel);
 
                     } else {
@@ -377,7 +377,7 @@ public class DoctorWorkAreaJPanel extends javax.swing.JPanel {
 
 
                     CardLayout layout = (CardLayout) jPanel.getLayout();
-                    jPanel.add("ProvidePrescriptionJPanel", new ProvidePrescriptionJPanel(jPanel, userAccount, enterprise, wrkReq));
+                    jPanel.add("ProvidePrescriptionJPanel", new PrescriptionCreationJPanel(jPanel, userAccount, enterprise, wrkReq));
                     layout.next(jPanel);
                 } else {
                     JOptionPane.showMessageDialog(null, "Cannot prescribe the Patient as the status is: " + wrkReq.getRequestStatus());

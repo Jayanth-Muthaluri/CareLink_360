@@ -10,7 +10,7 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import userinterface.BloodBankManagerRole.BloodBankManagerWorkAreaJPanel;
+import UI.BloodBankManager.BloodBankManagerDashboardJPanel;
 
 
 
@@ -100,8 +100,8 @@ public class BloodRequestProcessingJPanel extends javax.swing.JPanel {
       jPanel.remove(this);
         Component[] componentArray = jPanel.getComponents();
         Component component = componentArray[componentArray.length - 1];
-        BloodBankManagerWorkAreaJPanel dwjp = (BloodBankManagerWorkAreaJPanel) component;
-        dwjp.pplTbl();
+        BloodBankManagerDashboardJPanel dwjp = (BloodBankManagerDashboardJPanel) component;
+        dwjp.populateTable();
         CardLayout layout = (CardLayout) jPanel.getLayout();
         layout.previous(jPanel);
     }//GEN-LAST:event_btnBackActionPerformed
