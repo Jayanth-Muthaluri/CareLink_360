@@ -4,9 +4,12 @@
  */
 package Business.Role;
 
+import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
+import Business.Organization.InsurancePolicyPlannerOrg;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
+import UI.InsurancePolicyPlanner.InsurancePolicyPlannerWAJPanel;
 import javax.swing.JPanel;
 
 /**
@@ -17,6 +20,6 @@ public class InsurancePolicyManager extends Roles{
     
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, Ecosystem business) {
-        return new InsurancePolicyPlannerWorkAreaJPanel(userProcessContainer, account, (InsurancePolicyPlannerOrg)organization, enterprise);
+        return new InsurancePolicyPlannerWAJPanel(userProcessContainer, account, (InsurancePolicyPlannerOrg)organization, enterprise);
     }
 }
