@@ -202,12 +202,40 @@ public class NGODirectorProcessWRJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_disburseAmountJBtnActionPerformed
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
+   containerPanel.remove(this);
 
+        Component[] components = containerPanel.getComponents();
+        Component previous = components[components.length - 1];
+
+        if (previous instanceof NGODirectorWAJPanel) {
+            NGODirectorWAJPanel directorPanel = (NGODirectorWAJPanel) previous;
+            directorPanel.populateDirectorRequestTable();
+        }
+
+        CardLayout layout = (CardLayout) containerPanel.getLayout();
+        layout.previous(containerPanel);
 
     }//GEN-LAST:event_backJButtonActionPerformed
-
+    // reject button functionality
     private void rejectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectBtnActionPerformed
+       String message = messageTxtBox.getText().trim();
 
+        if (message.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Message is mandatory!");
+            return;
+        }
+
+        ngoFundRequest.setRequestNote(message);
+
+        int confirm = JOptionPane.showConfirmDialog(null, "Reject this request?");
+        if (confirm == JOptionPane.YES_OPTION) {
+            ngoFundRequest.setRequestStatus("Rejected");
+            JOptionPane.showMessageDialog(null, "Request Rejected");
+
+            rejectBtn.setEnabled(false);
+            disburseAmountJBtn.setEnabled(false);
+            messageTxtBox.setText("");
+        }
     }//GEN-LAST:event_rejectBtnActionPerformed
 
 
