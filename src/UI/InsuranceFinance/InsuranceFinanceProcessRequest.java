@@ -7,6 +7,7 @@ package UI.InsuranceFinance;
 
 import Business.Enterprise.Enterprise;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.InsuranceWorkRequest;
 import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.JOptionPane;
@@ -17,6 +18,9 @@ import javax.swing.JPanel;
  * @author jayan
  */
 public class InsuranceFinanceProcessRequest extends javax.swing.JPanel {
+
+    public InsuranceFinanceProcessRequest(JPanel userProcessContainer, UserAccount account, InsuranceWorkRequest request, Enterprise enterprise) {
+    }
 
    
     /**
