@@ -22,9 +22,9 @@ public class SystemConfiguration {
         //create user account
         
         
-        Employee employee = ecosystem.getEmpDir().createEmployee("admin");
+        Employee employee = ecosystem.getEmployeeDirectory().createEmployee("admin");
         
-        UserAccount userAccount = ecosystem.getUsrAccDir().createUserAccount("admin", "admin", employee, new Admin());
+        UserAccount userAccount = ecosystem.getUserAccountDirectory().createUserAccount("admin", "admin", employee, new Admin());
         
         return ecosystem;
     }

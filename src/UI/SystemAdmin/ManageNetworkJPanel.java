@@ -203,7 +203,7 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
 
         ArrayList<String> names = new ArrayList<>();
         for (Network n : ecosystem.getNetworks()) {
-            names.add(n.getNetwrkNm());
+            names.add(n.getNetworkName());
         }
 
         if (name == null || name.trim().equals("")) {
@@ -217,8 +217,8 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
             return;
         }
 
-        Network network = ecosystem.createAndAddNetwork();
-        network.setNetwrkNm(name);
+        Network network = ecosystem.createAddNetworks();
+        network.setNetworkName(name);
 
         JOptionPane.showMessageDialog(null, "Network added successfully!");
         nmJTxtField.setText("");
