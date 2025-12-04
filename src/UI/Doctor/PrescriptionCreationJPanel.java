@@ -5,18 +5,48 @@
  */
 package UI.Doctor;
 
+import Business.Enterprise.Enterprise;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gaganaananda
  */
 public class PrescriptionCreationJPanel extends javax.swing.JPanel {
-
+    private JPanel jPanel;
+    private UserAccount userAccount;
+    private Enterprise enterprise;
+    private PatientTreatmentWorkRequest patientTreatmentWorkRequest;
+    
+    
     /**
      * Creates new form PrescriptionCreationJPanel
      */
-    public PrescriptionCreationJPanel() {
+    public PrescriptionCreationJPanel(JPanel userProcessContainer, UserAccount userAccount, Enterprise enterprise, PatientTreatmentWorkRequest workRequest) {
         initComponents();
         
+        this.jPanel = userProcessContainer;
+        this.userAccount = userAccount;
+        this.enterprise = enterprise;
+        this.patientTreatmentWorkRequest = workRequest;
+        populateTable();
+        
+    }
+    
+    
+    private void populateTable() {
+        fstNmTxt.setText(patientTreatmentWorkRequest.getPatientInfo().getPatientFirstName());
+        lstNmTxt.setText(patientTreatmentWorkRequest.getPatientInfo().getPatientLastName());
+        ageTxt.setText(String.valueOf(patientTreatmentWorkRequest.getPatientInfo().getPatientAge()));
+        medCondTxt.setText(patientTreatmentWorkRequest.getVisitReason());
+        asgndDocTxt.setText(patientTreatmentWorkRequest.getAssignedDoctor().getEmployee().getEmployeeName());
+
+
     }
 
     /**
@@ -156,11 +186,29 @@ public class PrescriptionCreationJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_ageTxtActionPerformed
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
-               
+        String prescription = prscrptnTxt.getText();
+        if (prescription.equals("")) {
+            JOptionPane.showMessageDialog(null, "Prescription is mandatory");
+            return;
+        } else {
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                patientTreatmentWorkRequest.setPrescribedMedication(prescription);
+                patientTreatmentWorkRequest.setRequestStatus("Prescription Provided");
+                JOptionPane.showMessageDialog(null, "Prescription submitted successfully");
+                btnSubmit.setEnabled(false);
+            }
+        } 
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-
+        jPanel.remove(this);
+        Component[] componentArray = jPanel.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        DoctorWorkAreaJPanel dwjp = (DoctorWorkAreaJPanel) component;
+        dwjp.populateTable();
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
     }//GEN-LAST:event_btnBackActionPerformed
 
 
