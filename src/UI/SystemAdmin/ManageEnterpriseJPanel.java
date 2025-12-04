@@ -4,7 +4,6 @@
  */
 package UI.SystemAdmin;
 
-import Business.EcoSystem;
 import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
 import Business.Network.Network;
@@ -248,7 +247,7 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
 
     private void submitJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitJBtnActionPerformed
         Network network = (Network) netwrkJComboBox.getSelectedItem();
-        Enterprise.EntType type = (Enterprise.EntType) entTypeJComboBox.getSelectedItem();
+        Enterprise.EnterpriseType type = (Enterprise.EnterpriseType) entTypeJComboBox.getSelectedItem();
 
         if (network == null || type == null) {
             JOptionPane.showMessageDialog(null, "Invalid Input!");
@@ -258,7 +257,7 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
         String enterpriseName = nameJTextField.getText();
 
         // Check duplicate enterprise name
-        List<Enterprise> enterpriseList = network.getEntDir().getEntList();
+        List<Enterprise> enterpriseList = network.getEnterpriseDirectory().getEnterpriseList();
         List<String> names = new ArrayList<>();
 
         for (Enterprise ent : enterpriseList) {
@@ -276,7 +275,7 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
         }
 
         // CREATE ENTERPRISE
-        network.getEntDir().crtAndAddEnt(enterpriseName, type);
+        network.getEnterpriseDirectory().createtAndAddEnterprise(enterpriseName, type);
         JOptionPane.showMessageDialog(null, "Enterprise Added Successfully!");
 
         nameJTextField.setText("");
@@ -298,7 +297,7 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
         int dialog = JOptionPane.showConfirmDialog(null, "Do you want to delete?", "Warning", JOptionPane.YES_NO_OPTION);
 
         if (dialog == JOptionPane.YES_OPTION) {
-            network.getEntDir().getEntList().remove(enterprise);
+            network.getEnterpriseDirectory().getEnterpriseList().remove(enterprise);
             populateEnterpriseTable();
             JOptionPane.showMessageDialog(null, "Enterprise deleted successfully.");
         }
