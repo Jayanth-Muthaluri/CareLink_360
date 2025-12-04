@@ -53,14 +53,14 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
         model.setRowCount(0);
 
         for (Network network : system.getNetworks()) {
-            for (Enterprise enterprise : network.getEntDir().getEntList()) {
-                for (UserAccount userAcc : enterprise.getUsrAccDir().getUsrAccList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                for (UserAccount userAcc : enterprise.getUserAccountDirectory().getUserAccountList()) {
 
                     Object[] row = new Object[4];
                     row[0] = enterprise.getName();
-                    row[1] = network.getNetwrkNm();
-                    row[2] = userAcc.getUname();
-                    row[3] = enterprise.getEntType().getValue();
+                    row[1] = network.getNetworkName();
+                    row[2] = userAcc.getUsername();
+                    row[3] = enterprise.getEnterpriseType().getValue();
 
                     model.addRow(row);
                 }
@@ -79,7 +79,7 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
     }
         private void populateEnterpriseComboBox(Network network) {
         enterprisesJCmboBox.removeAllItems();
-        for (Enterprise enterprise : network.getEntDir().getEntList()) {
+        for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
             enterprisesJCmboBox.addItem(enterprise);
         }
     }
@@ -234,19 +234,77 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void networkJCmboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_networkJCmboBoxActionPerformed
-      
-
+        Network network = (Network) networkJCmboBox.getSelectedItem();
+        if (network != null) {
+            populateEnterpriseComboBox(network);
+        }
     }//GEN-LAST:event_networkJCmboBoxActionPerformed
 
     private void submitJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitJBtnActionPerformed
+        Enterprise enterprise = (Enterprise) enterprisesJCmboBox.getSelectedItem();
+        if (enterprise == null) {
+            JOptionPane.showMessageDialog(null, "Please select an enterprise");
+            return;
+        }
 
+        String username = usernameJTxtField.getText().trim();
+        String password = String.valueOf(passwordJTxtField.getPassword());
+        String rePassword = String.valueOf(reenterPasswordJTxtField.getPassword());
+        String name = nameJTxtField.getText().trim();
+
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Username cannot be empty");
+            return;
+        }
+
+        if (!password.equals(rePassword)) {
+            JOptionPane.showMessageDialog(null, "Passwords do not match");
+            return;
+        }
+
+        if (!passwordPatternCorrect(password)) {
+            JOptionPane.showMessageDialog(null,
+                    "Password must have: \n"
+                    + "• Min 6 characters\n"
+                    + "• 1 digit\n"
+                    + "• 1 uppercase\n"
+                    + "• 1 lowercase\n"
+                    + "• Only $, +, _ as special characters");
+            return;
+        }
+
+        // check if username exists
+        List<UserAccount> list = enterprise.getUserAccountDirectory().getUserAccountList();
+        for (UserAccount ua : list) {
+            if (ua.getUsername().equals(username)) {
+                JOptionPane.showMessageDialog(null, "Username already taken!");
+                return;
+            }
+        }
+
+        Employee emp = enterprise.getEmployeeDirectory().createEmployee(name);
+        enterprise.getUserAccountDirectory().createUserAccount(username, password, emp, new EnterpriseAdmin());
+
+        JOptionPane.showMessageDialog(null, "Enterprise Admin Created");
+
+        populateEnterpriseAdminTable();
+        usernameJTxtField.setText("");
+        passwordJTxtField.setText("");
+        reenterPasswordJTxtField.setText("");
+        nameJTxtField.setText("");
+    }
+
+    private boolean passwordPatternCorrect(String pwd) {
+        Pattern p = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[$+_])(?=\\S+$).{6,}$");
+        Matcher m = p.matcher(pwd);
+        return m.matches();
 
     }//GEN-LAST:event_submitJBtnActionPerformed
 
-
-
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
-
+        containerPanel.remove(this);
+        CardLayout layout = (CardLayout) containerPanel.getLayout();
+        layout.previous(containerPanel);
     }//GEN-LAST:event_backJButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
