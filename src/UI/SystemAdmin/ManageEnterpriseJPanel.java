@@ -4,21 +4,68 @@
  */
 package UI.SystemAdmin;
 
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.Network.Network;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 /**
  *
  * @author MALLESH
  */
 
 public class ManageEnterpriseJPanel extends javax.swing.JPanel {
-
+    private JPanel userProcessContainer; 
+    private Ecosystem ecosystem; 
 
     /**
      * Creates new form ManageEnterpriseJPanel
      */
-    public ManageEnterpriseJPanel() {
+    public ManageEnterpriseJPanel(JPanel userProcessContainer, Ecosystem ecosystem) {
         initComponents();
-    }
+              this.userProcessContainer = userProcessContainer; 
+        this.ecosystem = ecosystem;                     
 
+        populateEnterpriseTable();  
+        populateComboBoxes();
+    }
+        private void populateEnterpriseTable() {
+        DefaultTableModel model = (DefaultTableModel) entJTbl.getModel();
+        model.setRowCount(0);
+
+        for (Network network : ecosystem.getNetworks()) {
+            for (Enterprise enterprise : network.getEntDir().getEntList()) {
+
+                Object[] row = new Object[3];
+                row[0] = enterprise;
+                row[1] = network;
+                row[2] = enterprise.getEntType().getValue();
+
+                model.addRow(row);
+            }
+        }
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        entJTbl.setRowSorter(sorter);
+    }
+        private void populateComboBoxes() {
+        netwrkJComboBox.removeAllItems();
+        entTypeJComboBox.removeAllItems();
+
+        for (Network network : ecosystem.getNetworks()) {
+            netwrkJComboBox.addItem(network);
+        }
+
+        for (Enterprise.EntType type : Enterprise.EntType.values()) {
+            entTypeJComboBox.addItem(type);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -199,12 +246,61 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitJBtnActionPerformed
+        Network network = (Network) netwrkJComboBox.getSelectedItem();
+        Enterprise.EnterpriseType type = (Enterprise.EnterpriseType) entTypeJComboBox.getSelectedItem();
 
+        if (network == null || type == null) {
+            JOptionPane.showMessageDialog(null, "Invalid Input!");
+            return;
+        }
+
+        String enterpriseName = nameJTextField.getText();
+
+        // Check duplicate enterprise name
+        List<Enterprise> enterpriseList = network.getEnterpriseDirectory().getEnterpriseList();
+        List<String> names = new ArrayList<>();
+
+        for (Enterprise ent : enterpriseList) {
+            names.add(ent.getName());
+        }
+
+        if (names.contains(enterpriseName)) {
+            JOptionPane.showMessageDialog(null, "Enterprise Already Exists!", "Warning!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (enterpriseName == null || enterpriseName.equals("")) {
+            JOptionPane.showMessageDialog(null, "Name cannot be empty!");
+            return;
+        }
+
+        // CREATE ENTERPRISE
+        network.getEnterpriseDirectory().createtAndAddEnterprise(enterpriseName, type);
+        JOptionPane.showMessageDialog(null, "Enterprise Added Successfully!");
+
+        nameJTextField.setText("");
+        populateEnterpriseTable();
         
     }//GEN-LAST:event_submitJBtnActionPerformed
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
+        int selectedRow = entJTbl.getSelectedRow();
 
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Select row to delete!", "Warning!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Enterprise enterprise = (Enterprise) entJTbl.getValueAt(selectedRow, 0);
+        Network network = (Network) entJTbl.getValueAt(selectedRow, 1);
+
+        int dialog = JOptionPane.showConfirmDialog(null, "Do you want to delete?", "Warning", JOptionPane.YES_NO_OPTION);
+
+        if (dialog == JOptionPane.YES_OPTION) {
+            network.getEnterpriseDirectory().getEnterpriseList().remove(enterprise);
+            populateEnterpriseTable();
+            JOptionPane.showMessageDialog(null, "Enterprise deleted successfully.");
+        }
     }//GEN-LAST:event_backJButtonActionPerformed
 
     private void netwrkJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netwrkJComboBoxActionPerformed
@@ -212,7 +308,15 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_netwrkJComboBoxActionPerformed
 
     private void btnDlt2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDlt2ActionPerformed
+        userProcessContainer.remove(this);
+        Component[] components = userProcessContainer.getComponents();
+        Component previous = components[components.length - 1];
 
+        SystemAdminWorkAreaJPanel sysPanel = (SystemAdminWorkAreaJPanel) previous;
+        sysPanel.populateTree();
+
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
 
     }//GEN-LAST:event_btnDlt2ActionPerformed
 
