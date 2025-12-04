@@ -33,10 +33,30 @@ public class NGODirectorWAJPanel extends javax.swing.JPanel {
         this.ngoFundRequest = fundRequest;
         this.enterpriseRef = enterpriseRef;
 
-        // populate request details
-        hospitalNameTxtBox.setText(ngoFundRequest.getHospitalName());
-        hospitalAddressTxtBox.setText(ngoFundRequest.getHospitalLocation());
-        amountRequiredTxtBox.setText(String.valueOf(ngoFundRequest.getRequestedFundAmount()));   
+
+        populateDirectorTable(); 
+    }
+        public void populateDirectorTable() {
+        DefaultTableModel model = (DefaultTableModel) directorWorkRequestJTable.getModel();
+        model.setRowCount(0);
+
+        for (WorkRequest request : directorOrg.getWorkQueue().getWorkRequests()) {
+
+            Object[] row = new Object[6];
+
+            row[0] = request.getRequestSender().getEmployee().getEmployeeName();
+            row[1] = request.getRequestReceiver() == null
+                    ? "Not Assigned"
+                    : request.getRequestReceiver().getEmployee().getEmployeeName();
+
+            row[2] = request.getRequestStatus();
+            row[3] = ((NGOFundRequest) request).getRequestedFundAmount();
+            row[4] = request.getRequestNote();
+            row[5] = request; // IMPORTANT for processing
+
+            model.addRow(row);
+        }
+
     }
 
     /**
