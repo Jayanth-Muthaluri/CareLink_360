@@ -18,7 +18,7 @@ import javax.swing.table.TableRowSorter;
 
 /**
  *
- * @author rajesh
+ * @author MALLESH
  */
 public class InsurancePolicyPlannerWAJPanel extends javax.swing.JPanel {
 
