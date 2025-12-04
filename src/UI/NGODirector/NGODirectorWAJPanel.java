@@ -38,7 +38,7 @@ public class NGODirectorWAJPanel extends javax.swing.JPanel {
         this.directorOrg = directorOrg;
         this.enterpriseRef = enterpriseRef;
 
-        populateDirectorTable(); // load table
+        populateDirectorTable(); 
     }
         public void populateDirectorTable() {
         DefaultTableModel model = (DefaultTableModel) directorWorkRequestJTable.getModel();
