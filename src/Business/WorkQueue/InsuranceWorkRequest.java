@@ -64,48 +64,48 @@ public class InsuranceWorkRequest extends WorkRequest {
         this.claimAmount = claimAmount;
     }
 
-    public String getInsuranceAgent() {
-        return insuranceAgent;
-    }
-    
-    public void setInsuranceAgent(String insuranceAgent) {
-        this.insuranceAgent = insuranceAgent;
-    }
-    
-    public String getClaimApprover() {
-        return claimApprover;
-    }
-    
-    public void setClaimApprover(String claimApprover) {
-        this.claimApprover = claimApprover;
-    }
-    
-    public double getTreatmentBill() {
-        return treatmentBill;
-    }
-    
-    public void setTreatmentBill(double treatmentBill) {
-        this.treatmentBill = treatmentBill;
-    }
-    
-    public CustomerInsurance getInsuredPatient() {
-        return insuredPatient;
-    }
-    
-    public void setInsuredPatient(CustomerInsurance insuredPatient) {
-        this.insuredPatient = insuredPatient;
-    }
-    
-    public String getMedicalCenter() {
-        return medicalCenter;
-    }
-    
-    public void setMedicalCenter(String medicalCenter) {
-        this.medicalCenter = medicalCenter;
-    }
-    
     @Override
     public String toString() {
         return policyNumber;
+    }
+
+    public String getInsuranceAgent() {
+        return insuranceAgent;
+    }
+
+    public void setInsuranceAgent(String insuranceAgent) {
+        this.insuranceAgent = insuranceAgent;
+    }
+
+    public String getClaimApprover() {
+        return claimApprover;
+    }
+
+    public void setClaimApprover(String claimApprover) {
+        this.claimApprover = claimApprover;
+    }
+
+    public double getTreatmentBill() {
+        return treatmentBill;
+    }
+
+    public void setTreatmentBill(double treatmentBill) {
+        this.treatmentBill = treatmentBill;
+    }
+
+    public CustomerInsurance getInsuredPatient() {
+        return insuredPatient;
+    }
+
+    public void setInsuredPatient(CustomerInsurance insuredPatient) {
+        this.insuredPatient = insuredPatient;
+    }
+
+    public String getMedicalCenter() {
+        return medicalCenter;
+    }
+
+    public void setMedicalCenter(String medicalCenter) {
+        this.medicalCenter = medicalCenter;
     }
 }

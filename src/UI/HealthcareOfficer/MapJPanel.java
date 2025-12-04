@@ -1,7 +1,7 @@
 
 package UI.HealthcareOfficer;
 
-import Business.Ecosystem;
+import Business.EcoSystem;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
 import javax.swing.JPanel;

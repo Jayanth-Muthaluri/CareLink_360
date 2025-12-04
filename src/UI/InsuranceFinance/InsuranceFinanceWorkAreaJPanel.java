@@ -6,38 +6,22 @@
 package UI.InsuranceFinance;
 
 import Business.Enterprise.Enterprise;
-import Business.Organization.InsuranceFinanceOrg;
 import Business.UserAccount.UserAccount;
-import Business.WorkQueue.InsuranceWorkRequest;
-import Business.WorkQueue.WorkRequest;
 import java.awt.CardLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author jayan
  */
 public class InsuranceFinanceWorkAreaJPanel extends javax.swing.JPanel {
+
+    private JPanel jPanel;
     
-    private JPanel userProcessContainer;
-    private UserAccount account;
-    private InsuranceFinanceOrg organization;
-    private Enterprise enterprise;
-    
-    /**
-     * Creates new form InsuranceFinanceWorkAreaJPanel
-     */
-    public InsuranceFinanceWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, InsuranceFinanceOrg organization, Enterprise enterprise) {
-        initComponents();
-        this.userProcessContainer = userProcessContainer;
-        this.account = account;
-        this.organization = organization;
-        this.enterprise = enterprise;
-        populateTable();
-    }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -141,58 +125,12 @@ public class InsuranceFinanceWorkAreaJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAssignToMeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignToMeActionPerformed
-        int selectedRow = tblInsuranceFinanceWorkArea.getSelectedRow();
-        if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(null, "Please select a row from the table to assign!");
-            return;
-        } else {
-            WorkRequest request = (InsuranceWorkRequest) tblInsuranceFinanceWorkArea.getValueAt(selectedRow, 0);
-            if (request.getRequestStatus().equals("Sent To Finance Department")) {
-                request.setRequestReceiver(account);
-                request.setRequestStatus("Pending on " + request.getRequestReceiver().getEmployee().getEmployeeName());
-                populateTable();
-                JOptionPane.showMessageDialog(null, "Request has been successfully assigned to you!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Cannot assign this request as it is currently in '" + request.getRequestStatus() + "' status.", "Warning!", JOptionPane.WARNING_MESSAGE);
-            }
-        }
+        
     }//GEN-LAST:event_btnAssignToMeActionPerformed
 
     private void btnProcessRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessRequestActionPerformed
         // TODO add your handling code here:
-        int selectedRow = tblInsuranceFinanceWorkArea.getSelectedRow();
-        if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(null, "Please select a row from the table to process!");
-            return;
-        } else {
-            InsuranceWorkRequest request = (InsuranceWorkRequest) tblInsuranceFinanceWorkArea.getValueAt(selectedRow, 0);
-            
-            if (request.getRequestStatus().equalsIgnoreCase("Sent To Finance Department")) {
-                JOptionPane.showMessageDialog(null, "Please assign the request to yourself first!");
-                return;
-            }
-            if (request.getRequestStatus().equalsIgnoreCase("Insurance Claim Approved")) {
-                JOptionPane.showMessageDialog(null, "This request has already been completed!", "Warning!", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if (!account.equals(request.getRequestReceiver())) {
-                JOptionPane.showMessageDialog(null, "You are not authorized to process this request!", "Warning!", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if (!account.getEmployee().equals(request.getRequestReceiver().getEmployee())) {
-                JOptionPane.showMessageDialog(null, "This request is assigned to another Finance Officer!", "Warning!", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if (request.getRequestStatus().equals("Insurance Claim Rejected")) {
-                JOptionPane.showMessageDialog(null, "Cannot process a rejected request!", "Warning!", JOptionPane.WARNING_MESSAGE);
-                return;
-            } else {
-                InsuranceFinanceProcessRequest panel = new InsuranceFinanceProcessRequest(userProcessContainer, account, request, enterprise);
-                userProcessContainer.add("InsuranceFinanceProcessRequest", panel);
-                CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-                layout.next(userProcessContainer);
-            }
-        }
+        
     }//GEN-LAST:event_btnProcessRequestActionPerformed
 
 
@@ -205,24 +143,4 @@ public class InsuranceFinanceWorkAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JTable tblInsuranceFinanceWorkArea;
     // End of variables declaration//GEN-END:variables
 
-    public void populateTable() {
-        DefaultTableModel model = (DefaultTableModel) tblInsuranceFinanceWorkArea.getModel();
-        model.setRowCount(0);
-        for (WorkRequest workRequest : organization.getWorkQueue().getWorkRequests()) {
-            InsuranceWorkRequest request = ((InsuranceWorkRequest) workRequest);
-            Object[] row = new Object[8];
-            row[0] = request;
-            row[1] = request.getPolicyName();
-            row[2] = request.getInsuredPatient().getInsurance().getCoverage();
-            row[3] = request.getClaimAmount();
-            row[4] = request.getTreatmentBill();
-            row[5] = request.getRequestStatus();
-            row[6] = request.getInsuranceProvider();
-            row[7] = request.getRequestReceiver() == null ? "" : request.getRequestReceiver().getEmployee().getEmployeeName();
-            model.addRow(row);
-        }
-        
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-        tblInsuranceFinanceWorkArea.setRowSorter(sorter);
-    }
 }
