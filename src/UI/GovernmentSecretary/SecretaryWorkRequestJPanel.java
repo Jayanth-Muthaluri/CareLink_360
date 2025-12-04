@@ -5,6 +5,11 @@
  */
 package UI.GovernmentSecretary;
 
+import Business.Enterprise.Enterprise;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.GovernmentFundRequest;
+import javax.swing.JPanel;
+
 
 /**
  *
@@ -16,7 +21,7 @@ public class SecretaryWorkRequestJPanel extends javax.swing.JPanel {
      * Creates new form SecretaryProcessWorkRequestJPanel
      */
 
-    public SecretaryWorkRequestJPanel() {
+    public SecretaryWorkRequestJPanel(JPanel jPanel, UserAccount userAccount, GovernmentFundRequest fundReq, Enterprise enterprise) {
         initComponents();
 
 
