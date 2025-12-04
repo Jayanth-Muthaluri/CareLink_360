@@ -51,10 +51,10 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
     
     
     public void populateTable() {
-        txtFirstname.setText(PatientTreatmentWorkRequest.getPat().getPatFrstNm());
-        txtLastname.setText(PatientTreatmentWorkRequest.getPat().getPatLstNm());
-        txtPatientID.setText(String.valueOf(PatientTreatmentWorkRequest.getPat().getPatId()));
-        txtAssignDoc.setText(PatientTreatmentWorkRequest.getAssignedDoc().getEmp().getEmpName());
+        txtFirstname.setText(patientTreatmentWorkRequest.getPatientInfo().getPatientFirstName());
+        txtLastname.setText(patientTreatmentWorkRequest.getPatientInfo().getPatientLastName());
+        txtPatientID.setText(String.valueOf(patientTreatmentWorkRequest.getPatientInfo().getPatientId()));
+        txtAssignDoc.setText(patientTreatmentWorkRequest.getAssignedDoctor().getEmployee().getEmployeeName());
         txtConsulCharge.setText(String.valueOf(consultationCharge));
     }
 
@@ -224,16 +224,16 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
 
     private void btnSendBillReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendBillReqActionPerformed
         
-        String consultationCharge = txtConsulCharge.getText().trim();
+        String consulCharge = txtConsulCharge.getText().trim();
         String labChargesStr = txtLabCharge.getText();
         String miscellaneouschargesStr = miscChrgTxt.getText();
         String medicationChargesStr = medChrgTxt.getText();
-        if (consultationCharge.equals("") || labChargesStr.equals("") || miscellaneouschargesStr.equals("") || medicationChargesStr.equals("")) {
+        if (consulCharge.equals("") || labChargesStr.equals("") || miscellaneouschargesStr.equals("") || medicationChargesStr.equals("")) {
             JOptionPane.showMessageDialog(null, "All fields are mandatory");
         } else {
             
             try {
-                Double.parseDouble(consultationCharge);
+                Double.parseDouble(consulCharge);
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Please provide a Numeric value for Consultation Charges");
                 return;
@@ -264,19 +264,19 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
 
             int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
             if (dialogResult == JOptionPane.YES_OPTION) {
-                patientTreatmentWorkRequest.setStatus("Consultation Completed");
+                patientTreatmentWorkRequest.setRequestStatus("Consultation Completed");
 
                 AccountantBillingRequest accountantBillingRequest = new AccountantBillingRequest();
-                accountantBillingRequest.setBillingAmt(billingAmount);
+                accountantBillingRequest.setTotalBillAmount(billingAmount);
                 //  accountantBillingRequest.setPatientId(Integer.parseInt(txtPatientId.getText()));
 
-                accountantBillingRequest.setSender(userAccount);
-                accountantBillingRequest.setStatus("Sent");
+                accountantBillingRequest.setRequestSender(userAccount);
+                accountantBillingRequest.setRequestStatus("Sent");
 
-                accountantBillingRequest.setPatient(patientTreatmentWorkRequest.getPat());
+                accountantBillingRequest.setPatientRecord(patientTreatmentWorkRequest.getPatientInfo());
 
                 Organization org = null;
-                for (Organization organization : entrpz.getOrgDir().getOrganizations()) {
+                for (Organization organization : enterprise.getOrgDir().getOrganizations()) {
 
                     if (organization instanceof AccountantOrg) {
                         org = organization;
@@ -285,8 +285,8 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
                 }
                 if (org != null) {
 
-                    org.getWrkQ().getWorkRequests().add(accountantBillingRequest);
-                    userAccount.getWrkQ().getWorkRequests().add(accountantBillingRequest);
+                    org.getWorkQueue().getWorkRequests().add(accountantBillingRequest);
+                    userAccount.getWorkQueue().getWorkRequests().add(accountantBillingRequest);
 
                 }
 
