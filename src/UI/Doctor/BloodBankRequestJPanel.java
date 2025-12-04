@@ -134,9 +134,9 @@ public class BloodBankRequestJPanel extends javax.swing.JPanel {
 
         
         patientTreatmentWorkRequest.setBloodBankNotes(message);
-        patientTreatmentWorkRequest.setBloodBankOfficer(userAccount);
-        patientTreatmentWorkRequest.setLabNotes("SentToBloodBank");
-        patientTreatmentWorkRequest.setAssignedDoctor(null);
+        patientTreatmentWorkRequest.setRequestSender(userAccount);
+        patientTreatmentWorkRequest.setRequestStatus("SentToBloodBank");
+        patientTreatmentWorkRequest.setRequestReceiver(null);
         patientTreatmentWorkRequest.setRequiredBloodUnits(Integer.valueOf(bloodUnits));
         
 //        bloodBankWorkRequest.setMessage(message);
