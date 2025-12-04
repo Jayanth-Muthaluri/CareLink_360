@@ -5,21 +5,71 @@
  */
 package UI.GovernmentSecretary;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.Organization.SecretaryOrg;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.GovernmentFundRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 
 /**
  *
  * @author gaganaananda
  */
 public class SecretaryDashboardJPanel extends javax.swing.JPanel {
+    
+    private JPanel jPanel;
+    private UserAccount userAccount;
+    private SecretaryOrg secOrg;
+    private Enterprise enterprise;
 
     /**
-     * Creates new form SecretaryWorkAreaJPanel
+     * Creates new form SecretaryDashboardJPanel
      */
    
 
-    public SecretaryDashboardJPanel() {
+    public SecretaryDashboardJPanel(JPanel jpanel, UserAccount userAccount, Organization organization, Enterprise enterprise) {
         initComponents();
         
+        this.enterprise = enterprise;
+        this.jPanel = jpanel;
+        this.secOrg = (SecretaryOrg) organization;
+        this.userAccount = userAccount;
+
+        populateTable();
+        
+    }
+    
+    
+    public void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) wrkReJqTable.getModel();
+
+        model.setRowCount(0);
+
+        for (WorkRequest req : secOrg.getWorkQueue().getWorkRequests()) {
+            String status = req.getRequestStatus();
+            Object[] row = new Object[6];
+            row[0] = ((GovernmentFundRequest) req);
+            row[1] = req.getRequestSender().getEmployee().getEmployeeName();
+            if (status.equalsIgnoreCase("Sent to Treasurer") || status.equalsIgnoreCase("Sent to Secretary")) {
+                row[2] = null;
+            } else {
+                row[2] = req.getRequestReceiver() == null ? null : req.getRequestReceiver().getEmployee().getEmployeeName();
+            }
+            row[3] = status;
+            row[4] = ((GovernmentFundRequest) req).getRequiredFunding();
+            row[5] = ((GovernmentFundRequest) req).getRequestNote();
+
+            model.addRow(row);
+        }
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        wrkReJqTable.setRowSorter(sorter);
     }
 
     /**
@@ -138,13 +188,61 @@ public class SecretaryDashboardJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignActionPerformed
-        
+        int selectedRow = wrkReJqTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row first from the table to view details");
+            return;
+        } else {
+            WorkRequest req = (GovernmentFundRequest) wrkReJqTable.getValueAt(selectedRow, 0);
+            if (req.getRequestStatus().equals("Sent to Secretary")) {
+                req.setRequestReceiver(userAccount);
+                req.setRequestStatus("Pending on " + req.getRequestReceiver().getEmployee().getEmployeeName());
+                populateTable();
+                JOptionPane.showMessageDialog(null, "Success !! Request is assigned to you ");
+            } else {
+                JOptionPane.showMessageDialog(null, "Can't assign this work request, as the work request is in " + req.getRequestStatus() + " status", "Warning!", JOptionPane.WARNING_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnAssignActionPerformed
 
     private void btnProcessReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessReqActionPerformed
         // TODO add your handling code here:
 
-       
+       int selectedRow = wrkReJqTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row first from the table to view details");
+            return;
+        } else {
+            GovernmentFundRequest fundReq = (GovernmentFundRequest) wrkReJqTable.getValueAt(selectedRow, 0);
+            if (fundReq.getRequestStatus().equals("Rejected")) {
+                JOptionPane.showMessageDialog(null, "Cannot process a Rejected Request", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            if (fundReq.getRequestStatus().equalsIgnoreCase("Sent to Treasurer")) {
+                JOptionPane.showMessageDialog(null, "Request already processed" , "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (fundReq.getRequestStatus().equalsIgnoreCase("Sent to Secretary")) {
+                JOptionPane.showMessageDialog(null, "Please assign selected request first");
+                return;
+            }
+             if(!userAccount.equals(fundReq.getRequestReceiver())){
+             JOptionPane.showMessageDialog(null, "Not Authorized", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (!userAccount.getEmployee().equals(fundReq.getRequestReceiver().getEmployee())) {
+                JOptionPane.showMessageDialog(null, "Request assigned to other Officer", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            
+            SecretaryWorkRequestJPanel secretaryWorkRequestJPanel = new SecretaryWorkRequestJPanel(jPanel, userAccount, fundReq, enterprise);
+            jPanel.add("secretaryProcessWorkRequestJPanel", secretaryWorkRequestJPanel);
+            CardLayout layout = (CardLayout) jPanel.getLayout();
+            layout.next(jPanel);
+
+        }
     }//GEN-LAST:event_btnProcessReqActionPerformed
 
     
