@@ -22,16 +22,16 @@ import userinterface.BloodBankManagerRole.BloodBankManagerWorkAreaJPanel;
 public class BloodRequestProcessingJPanel extends javax.swing.JPanel {
 
     JPanel jPanel;
-    PatientWAJPanel patientWAJPanel;
+    PatientTreatmentWorkRequest patientTreatmentWorkRequest;
 
     /**
      * Creates new form BloodRequestProcessingJPanel
      */
-    public BloodRequestProcessingJPanel(JPanel userProcessContainer, PatientWAJPanel patientWAJPanel) {
+    public BloodRequestProcessingJPanel(JPanel userProcessContainer, PatientTreatmentWorkRequest patientTreatmentWorkRequest) {
         initComponents();
         
         this.jPanel = userProcessContainer;
-        this.patientWAJPanel = patientWAJPanel;
+        this.patientTreatmentWorkRequest = patientTreatmentWorkRequest;
     }
 
     /**
@@ -115,8 +115,8 @@ String bloodBankMessage = rsltMsgJTextField.getText().trim();
         } else {
             int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
             if (dialogResult == JOptionPane.YES_OPTION) {
-                patientWAJPanel.setBloodBankMessage(bloodBankMessage);
-                patientWAJPanel.setStatus("Blood Bank Request Completed");
+                patientTreatmentWorkRequest.setBloodBankNotes(bloodBankMessage);
+                patientTreatmentWorkRequest.setRequestStatus("Blood Bank Request Completed");
                 JOptionPane.showMessageDialog(null, "Result submitted successfully");
                 rsltMsgJTextField.setText("");
                 sbmtJButton.setEnabled(false);
