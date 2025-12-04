@@ -4,8 +4,10 @@
  */
 package Business.Role;
 
+import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
+import Business.Organization.SecretaryOrg;
 import Business.UserAccount.UserAccount;
 import UI.GovernmentSecretary.SecretaryDashboardJPanel;
 import javax.swing.JPanel;
@@ -17,7 +19,7 @@ import javax.swing.JPanel;
 public class PublicSecretaries extends Roles{
 
     @Override
-    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount userAccount, Organization organization, Enterprise enterprise, EcoSystem business) {
+    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount userAccount, Organization organization, Enterprise enterprise, Ecosystem business) {
         return new SecretaryDashboardJPanel(userProcessContainer, userAccount, (SecretaryOrg)organization, enterprise);
     }
     
