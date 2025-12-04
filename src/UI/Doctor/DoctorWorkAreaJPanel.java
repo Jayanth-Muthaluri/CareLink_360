@@ -454,7 +454,7 @@ public class DoctorWorkAreaJPanel extends javax.swing.JPanel {
 
 
                         CardLayout layout = (CardLayout) jPanel.getLayout();
-                        jPanel.add("RequestLabTestJPanel", new BloodBankRequestJPanel(jPanel, userAccount, enterprise, wrkReq));
+                        jPanel.add("RequestLabTestJPanel", new BloodBankManagerJPanel(jPanel, userAccount, enterprise, wrkReq));
                         layout.next(jPanel);
                     } else {
                         JOptionPane.showMessageDialog(null, "Can not create the Lab request as the current status is " + wrkReq.getRequestStatus());
