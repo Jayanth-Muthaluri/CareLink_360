@@ -519,7 +519,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
     
     private void populateFields() {
         fieldPolicyNumber.setText(policyNumber);
-        List<Insurance> policies = enterprise.getInsPolicyDir().getPolicies();
+        List<Insurance> policies = enterprise.getInsPlcyDir().getPolicies();
         for (Insurance policy : policies) {
             comboBoxInsurancePolicyName.addItem(policy);
         }
