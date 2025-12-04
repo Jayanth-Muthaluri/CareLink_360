@@ -6,6 +6,7 @@ package Business.Role;
 
 import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
+import Business.Organization.InsuranceFinanceOrg;
 import Business.Organization.Organization;
 import static Business.Organization.Organization.Type.InsuranceFinanceOrganization;
 import Business.UserAccount.UserAccount;
@@ -22,7 +23,7 @@ public class InsuranceFinanceSupervisor extends Roles{
     
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, Ecosystem business) {
-        return new InsuranceFinanceWorkAreaJPanel(userProcessContainer, account, (InsuranceFinanceProcessRequest)organization, enterprise);
+        return new InsuranceFinanceWorkAreaJPanel(userProcessContainer, account, (InsuranceFinanceOrg)organization, enterprise);
     }
     
     
