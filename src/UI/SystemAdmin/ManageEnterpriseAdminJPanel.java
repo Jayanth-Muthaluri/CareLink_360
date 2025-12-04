@@ -4,22 +4,85 @@
  */
 package UI.SystemAdmin;
 
+import Business.Ecosystem;
+import Business.Employee.Employee;
+import Business.Enterprise.Enterprise;
+import Business.Network.Network;
+import Business.Role.EnterpriseAdmin;
+import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 
 /**
  *
  * @author MALLESH
  */
 public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
-
+    private JPanel containerPanel;
+    private Ecosystem system;
 
     /**
      * Creates new form ManageEnterpriseJPanel
      */
-    public ManageEnterpriseAdminJPanel() {
+    public ManageEnterpriseAdminJPanel(JPanel containerPanel, Ecosystem system) {
         initComponents();
-   
-    }
+       
+        this.containerPanel = containerPanel;
+        this.system = system;
 
+        usernameJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        passwordJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        reenterPasswordJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        nameJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        populateEnterpriseAdminTable();
+        populateNetworkComboBox();
+    }
+    private void populateEnterpriseAdminTable() {
+        DefaultTableModel model = (DefaultTableModel) enterpriseNameJTable.getModel();
+        model.setRowCount(0);
+
+        for (Network network : system.getNetworks()) {
+            for (Enterprise enterprise : network.getEntDir().getEntList()) {
+                for (UserAccount userAcc : enterprise.getUsrAccDir().getUsrAccList()) {
+
+                    Object[] row = new Object[4];
+                    row[0] = enterprise.getName();
+                    row[1] = network.getNetwrkNm();
+                    row[2] = userAcc.getUname();
+                    row[3] = enterprise.getEntType().getValue();
+
+                    model.addRow(row);
+                }
+            }
+        }
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        enterpriseNameJTable.setRowSorter(sorter);
+    }
+        private void populateNetworkComboBox() {
+        networkJCmboBox.removeAllItems();
+
+        for (Network network : system.getNetworks()) {
+            networkJCmboBox.addItem(network);
+        }
+    }
+        private void populateEnterpriseComboBox(Network network) {
+        enterprisesJCmboBox.removeAllItems();
+        for (Enterprise enterprise : network.getEntDir().getEntList()) {
+            enterprisesJCmboBox.addItem(enterprise);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -171,7 +234,7 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void networkJCmboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_networkJCmboBoxActionPerformed
-
+      
 
     }//GEN-LAST:event_networkJCmboBoxActionPerformed
 
