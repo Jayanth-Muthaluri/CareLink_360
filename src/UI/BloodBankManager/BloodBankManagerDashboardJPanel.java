@@ -22,7 +22,7 @@ import javax.swing.table.TableRowSorter;
  * @author gaganaananda
  * 
  */
-public class BloodBankDashboardJPanel extends javax.swing.JPanel {
+public class BloodBankManagerDashboardJPanel extends javax.swing.JPanel {
 
     private JPanel jPanel;
     private Ecosystem ecosystem;
@@ -34,7 +34,7 @@ public class BloodBankDashboardJPanel extends javax.swing.JPanel {
     /**
      * Creates new form BloodBankDashboardJPanel
      */
-    public BloodBankDashboardJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Ecosystem business) {
+    public BloodBankManagerDashboardJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Ecosystem business) {
         initComponents();
         
         this.jPanel = userProcessContainer;
@@ -53,16 +53,16 @@ public class BloodBankDashboardJPanel extends javax.swing.JPanel {
         model.setRowCount(0);
         
         
-        for (WorkRequest request : bloodBankManagerOrg.getWrkQ().getWorkRequests()) {
+        for (WorkRequest request : bloodBankManagerOrg.getWorkQueue().getWorkRequests()) {
 
             Object[] row = new Object[7];
             row[0] = request;
-            row[1] = request.getSender().getEmp().getEmpName();
-            row[2] = ((PatientTreatmentWorkRequest) request).getBloodBankManager();
-            row[3] = request.getStatus();
-            row[4] = ((PatientTreatmentWorkRequest ) request).getPat().getPatFrstNm() + " " + ((PatientTreatmentWorkRequest) request).getPat().getPatLstNm();
-            row[5] = ((PatientTreatmentWorkRequest) request).getPat().getPatId();
-            row[6]=((PatientTreatmentWorkRequest) request).getBloodUnits();
+            row[1] = request.getRequestSender().getEmployee().getEmployeeName();
+            row[2] = ((PatientTreatmentWorkRequest) request).getBloodBankOfficer();
+            row[3] = request.getRequestStatus();
+            row[4] = ((PatientTreatmentWorkRequest ) request).getPatientInfo().getPatientFirstName() + " " + ((PatientTreatmentWorkRequest) request).getPatientInfo().getPatientLastName();
+            row[5] = ((PatientTreatmentWorkRequest) request).getPatientInfo().getPatientId();
+            row[6]=((PatientTreatmentWorkRequest) request).getRequiredBloodUnits();
             model.addRow(row);
         }
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
@@ -158,21 +158,21 @@ public class BloodBankDashboardJPanel extends javax.swing.JPanel {
         }
 
         PatientTreatmentWorkRequest request = (PatientTreatmentWorkRequest) jTableWorkReq.getValueAt(selectedRow, 0);
-        if (request.getBloodBankManager() == null) {
-            if (request.getStatus().equalsIgnoreCase("SentToBloodBank")) {
-                request.setBloodBankManager(userAccount);
-                request.setStatus("Pending on Blood Bank");
+        if (request.getBloodBankOfficer() == null) {
+            if (request.getRequestStatus().equalsIgnoreCase("SentToBloodBank")) {
+                request.setBloodBankOfficer(userAccount);
+                request.setRequestNote("Pending on Blood Bank");
                 //  request.setReceiver(userAccount);
                 populateTable();
                 JOptionPane.showMessageDialog(null, "The request is assigned to You!");
             } else {
-                JOptionPane.showMessageDialog(null, "Cannot assign this lab request as the current status is: " + request.getStatus());
+                JOptionPane.showMessageDialog(null, "Cannot assign this lab request as the current status is: " + request.getRequestStatus());
             }
         }
         else
         {
 
-            if(userAccount.equals(request.getLabAst()))
+            if(userAccount.equals(request.getLabTechnician()))
 
             {
                 JOptionPane.showMessageDialog(null,"Request is already assigned to you");
@@ -198,16 +198,16 @@ public class BloodBankDashboardJPanel extends javax.swing.JPanel {
         PatientTreatmentWorkRequest request = (PatientTreatmentWorkRequest) jTableWorkReq.getValueAt(selectedRow, 0);
 
        // request.setStatus("Processing");
-        BloodProcessWorkRequestJPanel processWorkRequestJPanel = new BloodProcessWorkRequestJPanel(jPanel, request);
-        if (request.getBloodBankManager() != null) {
-            if (userAccount.equals(request.getBloodBankManager())) {
-                if (request.getStatus().equalsIgnoreCase("Pending on Blood Bank")) {
+        BloodRequestProcessingJPanel processWorkRequestJPanel = new BloodRequestProcessingJPanel(jPanel, request);
+        if (request.getBloodBankOfficer() != null) {
+            if (userAccount.equals(request.getBloodBankOfficer())) {
+                if (request.getRequestStatus().equalsIgnoreCase("Pending on Blood Bank")) {
 
                     jPanel.add("processWorkRequestJPanel", processWorkRequestJPanel);
                     CardLayout layout = (CardLayout) jPanel.getLayout();
                     layout.next(jPanel);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Cannot process the request as the status is: " + request.getStatus());
+                    JOptionPane.showMessageDialog(null, "Cannot process the request as the status is: " + request.getRequestStatus());
                 }
 
             } else {
