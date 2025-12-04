@@ -32,6 +32,12 @@ public class MapJPanel extends javax.swing.JPanel {
         this.ecosystem = ecosystem;
         init();
     }
+        // New Contructor added by MALLESH
+    public MapJPanel(JPanel userProcessContainer) {
+    initComponents();
+    this.userProcessContainer = userProcessContainer;
+    init();
+}
     
     private void init() {
         TileFactoryInfo info = new OSMTileFactoryInfo();
