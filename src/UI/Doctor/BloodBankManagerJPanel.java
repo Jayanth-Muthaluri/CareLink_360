@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 public class BloodBankManagerJPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form BloodBankManagerJPanel
+     * Creates new form BloodBankManagerJPanel fixing
      */
     
     private JPanel jPanel;
