@@ -1,5 +1,10 @@
 package UI.Administrative;
 
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.UserAccount.UserAccount;
+import javax.swing.JPanel;
+
 
 
 /**
@@ -13,7 +18,7 @@ public class EnterpriseAdminDashboardPanel extends javax.swing.JPanel {
     /**
      * Creates new form AdminWorkAreaJPanel
      */
-    public EnterpriseAdminDashboardPanel() {
+    public EnterpriseAdminDashboardPanel(JPanel userProcessContainer, Enterprise enterprise, UserAccount account, Ecosystem ecosystem) {
         initComponents();
         
     }
