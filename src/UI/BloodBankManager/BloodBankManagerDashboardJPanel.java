@@ -197,7 +197,6 @@ public class BloodBankManagerDashboardJPanel extends javax.swing.JPanel {
 
         PatientTreatmentWorkRequest request = (PatientTreatmentWorkRequest) jTableWorkReq.getValueAt(selectedRow, 0);
 
-       // request.setStatus("Processing");
         BloodRequestProcessingJPanel processWorkRequestJPanel = new BloodRequestProcessingJPanel(jPanel, request);
         if (request.getBloodBankOfficer() != null) {
             if (userAccount.equals(request.getBloodBankOfficer())) {
