@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package UI.NGODirector;
+
 import Business.WorkQueue.NGOFundRequest;
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -30,7 +31,6 @@ public class NGODirectorProcessWRJPanel extends javax.swing.JPanel {
         amountRequiredTxtBox.setText(String.valueOf(selectedRequest.getRequestedFundAmount()));
         hospitalNameTxtBox.setText(selectedRequest.getHospitalName());
         hospitalLocationTxtBox.setText(selectedRequest.getHospitalLocation());
-
     }
 
     /**
@@ -182,32 +182,73 @@ public class NGODirectorProcessWRJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void disburseAmountJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disburseAmountJBtnActionPerformed
-        String message = messageTxtBox.getText();
-        if (message.isBlank()) {
-            JOptionPane.showMessageDialog(null, "Comments Required!");
-            return;
-    }
-       ngoFundRequest.setRequestNote(message);
+String message = messageTxtBox.getText().trim();
 
-        int confirm = JOptionPane.showConfirmDialog(null, "Disburse funds?");
+        if (message.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Message is required!");
+            return;
+        }
+
+        // Save comments
+        ngoFundRequest.setRequestNote(message);
+
+        int confirm = JOptionPane.showConfirmDialog(null, 
+                "Are you sure you want to disburse the amount?", 
+                "Confirm", 
+                JOptionPane.YES_NO_OPTION);
+
         if (confirm == JOptionPane.YES_OPTION) {
             ngoFundRequest.setRequestStatus("Accepted");
+
             JOptionPane.showMessageDialog(null, "Funds Released Successfully!");
 
             disburseAmountJBtn.setEnabled(false);
             rejectBtn.setEnabled(false);
             messageTxtBox.setText("");
         }
-
     }//GEN-LAST:event_disburseAmountJBtnActionPerformed
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
 
+        containerPanel.remove(this);
+
+        Component[] list = containerPanel.getComponents();
+        Component lastComponent = list[list.length - 1];
+
+        // Navigate back to Director Work Area
+        NGODirectorWAJPanel directorPanel = (NGODirectorWAJPanel) lastComponent;
+        directorPanel.populateDirectorRequestTable(); // <--- THIS IS WHERE IT COMES FROM
+
+        CardLayout layout = (CardLayout) containerPanel.getLayout();
+        layout.previous(containerPanel);
 
     }//GEN-LAST:event_backJButtonActionPerformed
 
     private void rejectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectBtnActionPerformed
+        String message = messageTxtBox.getText().trim();
 
+        if (message.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Message is required!");
+            return;
+        }
+
+        ngoFundRequest.setRequestNote(message);
+
+        int confirm = JOptionPane.showConfirmDialog(null, 
+                "Reject this funding request?", 
+                "Warning", 
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+
+            ngoFundRequest.setRequestStatus("Rejected");
+
+            JOptionPane.showMessageDialog(null, "Request Rejected!");
+
+            rejectBtn.setEnabled(false);
+            disburseAmountJBtn.setEnabled(false);
+            messageTxtBox.setText("");
+        }
     }//GEN-LAST:event_rejectBtnActionPerformed
 
 
