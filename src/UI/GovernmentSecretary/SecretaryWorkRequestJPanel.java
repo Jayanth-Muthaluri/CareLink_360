@@ -6,8 +6,13 @@
 package UI.GovernmentSecretary;
 
 import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.Organization.TreasurerOrg;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.GovernmentFundRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -16,15 +21,26 @@ import javax.swing.JPanel;
  * @author gaganaananda
  */
 public class SecretaryWorkRequestJPanel extends javax.swing.JPanel {
+    private JPanel jPanel;
+    private Enterprise enterprise;
+    private UserAccount userAccount;
+    private GovernmentFundRequest governmentFundRequest;
 
     /**
      * Creates new form SecretaryProcessWorkRequestJPanel
      */
 
-    public SecretaryWorkRequestJPanel(JPanel jPanel, UserAccount userAccount, GovernmentFundRequest fundReq, Enterprise enterprise) {
+    public SecretaryWorkRequestJPanel(JPanel jPanel, UserAccount userAccount, GovernmentFundRequest fundRequest, Enterprise enterprise) {
         initComponents();
 
-
+        this.jPanel = jPanel;
+        this.enterprise = enterprise;
+        this.userAccount = userAccount;
+        this.governmentFundRequest = fundRequest;
+        amountTxt.setText(String.valueOf(governmentFundRequest.getRequiredFunding()));
+        locationTxt.setText(governmentFundRequest.getRegionName());
+        populationTxt.setText(String.valueOf(governmentFundRequest.getPatientCount()));
+        
     }
 
     /**
@@ -189,13 +205,51 @@ public class SecretaryWorkRequestJPanel extends javax.swing.JPanel {
 
     private void sendRequestToTreasurerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendRequestToTreasurerBtnActionPerformed
         // TODO add your handling code here:
+        String message = messageTxt.getText();
+        if (message.equals("")) {
+            JOptionPane.showMessageDialog(null, "Message is mandatory!");
+            return;
+        }
+        else{
+        governmentFundRequest.setRequestNote(message);
+        
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+            
+         if (dialogResult == JOptionPane.YES_OPTION) {
+        governmentFundRequest.setRequestSender(userAccount);
+        governmentFundRequest.setRequestStatus("Sent to Treasurer");
 
+        Organization org = null;
+        for (Organization organization : enterprise.getOrgDir().getOrganizations()) {
+            if (organization instanceof TreasurerOrg) {
+                org = organization;
+                break;
+            }
+        }
+        if (org != null) {
+            org.getWorkQueue().getWorkRequests().add(governmentFundRequest);
+            userAccount.getWorkQueue().getWorkRequests().add(governmentFundRequest);
+        }
+        JOptionPane.showMessageDialog(null, "Request to Treasurer Successful!!!");
+        messageTxt.setText("");
+            btnReject.setEnabled(false);
+            sendRequestToTreasurerBtn.setEnabled(false);
+        }
+
+        messageTxt.setText("");
+        }
         
     }//GEN-LAST:event_sendRequestToTreasurerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         // TODO add your handling code here:
-      
+        jPanel.remove(this);
+        Component[] componentArray = jPanel.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        SecretaryDashboardJPanel swjp = (SecretaryDashboardJPanel) component;
+        swjp.populateTable();
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
     }//GEN-LAST:event_backBtnActionPerformed
 
     private void messageTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageTxtActionPerformed
@@ -203,7 +257,22 @@ public class SecretaryWorkRequestJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_messageTxtActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
+        String message = messageTxt.getText();
+         if (message.equals("")) {
+            JOptionPane.showMessageDialog(null, "Message is mandatory!");
+            return;
+        } else {
+        governmentFundRequest.setRequestStatus(message);
         
+         int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                governmentFundRequest.setRequestStatus("Rejected");
+                messageTxt.setText("");
+            btnReject.setEnabled(false);
+            sendRequestToTreasurerBtn.setEnabled(false);
+            }
+            messageTxt.setText("");
+         }
     }//GEN-LAST:event_btnRejectActionPerformed
 
 
