@@ -44,12 +44,12 @@ public class Ecosystem extends Organization{
         return networks;
     }
 
-    public void setNetworks(ArrayList<Network> networks) {
+    public void setNetworkName(ArrayList<Network> networks) {
         this.networks = networks;
     }
     
     public boolean checkIfUserIsUnique(String userName){
-        if(!this.getUsrAccDir().checkIfUsernameIsUnique(userName)){
+        if(!this.getUserAccountDirectory().checkIfUsernameIsUnique(userName)){
             return false;
         }
         for(Network network:networks){

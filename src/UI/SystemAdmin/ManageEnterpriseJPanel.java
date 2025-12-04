@@ -40,12 +40,12 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
         model.setRowCount(0);
 
         for (Network network : ecosystem.getNetworks()) {
-            for (Enterprise enterprise : network.getEntDir().getEntList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
 
                 Object[] row = new Object[3];
                 row[0] = enterprise;
                 row[1] = network;
-                row[2] = enterprise.getEntType().getValue();
+                row[2] = enterprise.getEnterpriseType().getValue();
 
                 model.addRow(row);
             }
@@ -62,7 +62,7 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
             netwrkJComboBox.addItem(network);
         }
 
-        for (Enterprise.EntType type : Enterprise.EntType.values()) {
+        for (Enterprise.EnterpriseType type : Enterprise.EnterpriseType.values()) {
             entTypeJComboBox.addItem(type);
         }
     }

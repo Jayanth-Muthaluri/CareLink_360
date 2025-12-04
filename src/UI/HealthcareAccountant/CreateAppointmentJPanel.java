@@ -816,7 +816,7 @@ public class CreateAppointmentJPanel extends javax.swing.JPanel {
         for (InsuranceEnterprise insuranceEnterprise : insuranceEnterprises) {
             List<CustomerInsurance> customerInsurances = insuranceEnterprise.getcustInsDir().getInsuranceCustomers();
             for (CustomerInsurance customerInsurance : customerInsurances) {
-                if (insurancePolicyNumber.equals(customerInsurance.getInsurancePolicyNumber()) && ssn.equals(customerInsurance.getSSN())) {
+                if (insurancePolicyNumber.equals(customerInsurance.getInsurancePolicyNumber()) && ssn.equals(customerInsurance.getSsn())) {
                     matchedCustomer = customerInsurance;
                 }
             }

@@ -5,6 +5,15 @@
  */
 package UI.SystemAdmin;
 
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.Network.Network;
+import Business.Organization.Organization;
+import java.awt.CardLayout;
+import java.util.ArrayList;
+import javax.swing.JPanel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 
 /**
@@ -12,14 +21,63 @@ package UI.SystemAdmin;
  * @author MALLESH
  */
 public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
-
+    private JPanel userProcessContainer;
+    private Ecosystem system;
     /**
      * Creates new form SystemAdminWorkAreaJPanel
      */
 
-    public SystemAdminWorkAreaJPanel() {
+    public SystemAdminWorkAreaJPanel(JPanel userProcessContainer, Ecosystem system) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.system = system;
+        populateTree();
     }
+    
+        public void populateTree() {
+
+        DefaultTreeModel model = (DefaultTreeModel) jTree.getModel();
+
+        ArrayList<Network> networkList = system.getNetworks();
+        ArrayList<Enterprise> enterpriseList;
+        ArrayList<Organization> organizationList;
+
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        root.removeAllChildren();
+
+        // Root child: Networks
+        DefaultMutableTreeNode networksNode = new DefaultMutableTreeNode("Networks");
+        root.insert(networksNode, 0);
+
+        // Create nodes
+        int networkIndex = 0;
+        for (Network network : networkList) {
+
+            DefaultMutableTreeNode networkNode = new DefaultMutableTreeNode(network.getNetworkName());
+            networksNode.insert(networkNode, networkIndex++);
+
+            enterpriseList = network.getEnterpriseDirectory().getEnterpriseList();
+
+            int enterpriseIndex = 0;
+            for (Enterprise enterprise : enterpriseList) {
+
+                DefaultMutableTreeNode enterpriseNode = new DefaultMutableTreeNode(enterprise.getName());
+                networkNode.insert(enterpriseNode, enterpriseIndex++);
+
+                organizationList = enterprise.getOrgDir().getOrganizations();
+
+                int orgIndex = 0;
+                for (Organization organization : organizationList) {
+
+                    DefaultMutableTreeNode orgNode = new DefaultMutableTreeNode(organization.getName());
+                    enterpriseNode.insert(orgNode, orgIndex++);
+                }
+            }
+        }
+
+        model.reload();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -162,19 +220,33 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void manageNetworkJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageNetworkJBtnActionPerformed
-
+      ManageNetworkJPanel panel = new ManageNetworkJPanel(userProcessContainer, system);
+        userProcessContainer.add("ManageNetworkJPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_manageNetworkJBtnActionPerformed
 
     private void manageEnterpriseJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageEnterpriseJBtnActionPerformed
-
+        ManageEnterpriseJPanel panel = new ManageEnterpriseJPanel(userProcessContainer, system);
+        userProcessContainer.add("ManageEnterpriseJPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_manageEnterpriseJBtnActionPerformed
 
     private void manageAdminJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageAdminJBtnActionPerformed
-
+        ManageEnterpriseAdminJPanel panel = new ManageEnterpriseAdminJPanel(userProcessContainer, system);
+        userProcessContainer.add("ManageEnterpriseAdminJPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_manageAdminJBtnActionPerformed
 
     private void jTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTreeValueChanged
+        DefaultMutableTreeNode selectedNode = 
+                (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
 
+        if (selectedNode != null) {
+            lblSelectedNode.setText(selectedNode.toString());
+        }
     }//GEN-LAST:event_jTreeValueChanged
 
 

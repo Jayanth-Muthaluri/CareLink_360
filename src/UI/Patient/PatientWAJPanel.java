@@ -4,10 +4,7 @@
  * and open the template in the editor.
  */
 package UI.Patient;
-import Business.Ecosystem;
-import Business.Organization.Organization;
-import Business.UserAccount.UserAccount;
-import javax.swing.JPanel;
+
 
 /**
  *
@@ -20,10 +17,6 @@ public class PatientWAJPanel extends javax.swing.JPanel {
      */
     public PatientWAJPanel() {
         initComponents();
-    }
-    
-       public PatientWAJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Ecosystem business) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
