@@ -4,6 +4,7 @@
  */
 package Business.Role;
 
+import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.Organization.TreasurerOrg;
