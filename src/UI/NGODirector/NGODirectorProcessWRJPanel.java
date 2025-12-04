@@ -217,7 +217,7 @@ String message = messageTxtBox.getText().trim();
 
         // Navigate back to Director Work Area
         NGODirectorWAJPanel directorPanel = (NGODirectorWAJPanel) lastComponent;
-        directorPanel.populateDirectorRequestTable(); // <--- THIS IS WHERE IT COMES FROM
+        directorPanel.populateDirectorTable();
 
         CardLayout layout = (CardLayout) containerPanel.getLayout();
         layout.previous(containerPanel);
