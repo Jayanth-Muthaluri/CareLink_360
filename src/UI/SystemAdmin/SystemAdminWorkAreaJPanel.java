@@ -69,7 +69,7 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
                 int orgIndex = 0;
                 for (Organization organization : organizationList) {
 
-                    DefaultMutableTreeNode orgNode = new DefaultMutableTreeNode(organization.getName());
+                    DefaultMutableTreeNode orgNode = new DefaultMutableTreeNode(organization.getOrganizationName());
                     enterpriseNode.insert(orgNode, orgIndex++);
                 }
             }

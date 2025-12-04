@@ -1,25 +1,93 @@
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
- */
+*/
+
 package UI.SystemAdmin;
-
-
+import Business.Ecosystem;
+import Business.Employee.Employee;
+import Business.Enterprise.Enterprise;
+import Business.Network.Network;
+import Business.Role.EnterpriseAdmin;
+import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 /**
  *
  * @author MALLESH
  */
 public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
-
-
+    private JPanel userProcessContainer;
+    private Ecosystem system;
     /**
      * Creates new form ManageEnterpriseJPanel
      */
-    public ManageEnterpriseAdminJPanel() {
+    public ManageEnterpriseAdminJPanel(JPanel userProcessContainer, Ecosystem system) {
         initComponents();
-   
-    }
+        usernameJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        passwordJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        reenterPasswordJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        nameJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+        this.userProcessContainer = userProcessContainer;
+        this.system = system;
+
+        populateTable();
+        populateNetworkComboBox();
+    
+    }
+    
+        private void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) enterpriseNameJTable.getModel();
+        model.setRowCount(0);
+
+        for (Network network : system.getNetworks()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                for (UserAccount ua : enterprise.getUserAccountDirectory().getUserAccountList()) {
+                    Object[] row = new Object[4];
+                    row[0] = enterprise.getName();
+                    row[1] = network.getNetworkName();
+                    row[2] = ua.getUsername();
+                    row[3] = enterprise.getEnterpriseType().getValue();
+
+                    model.addRow(row);
+                }
+            }
+        }
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        enterpriseNameJTable.setRowSorter(sorter);
+    }
+        
+        private void populateNetworkComboBox() {
+        networkJCmboBox.removeAllItems();
+
+        for (Network network : system.getNetworks()) {
+            networkJCmboBox.addItem(network);
+        }
+    }
+        
+    private void populateEnterpriseComboBox(Network network) {
+        enterprisesJCmboBox.removeAllItems();
+
+        for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+            enterprisesJCmboBox.addItem(enterprise);
+        }
+    }     
+
+    private boolean isPasswordValid() {
+        Pattern p = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[$+_])(?=\\S+$).{6,}$");
+        Matcher m = p.matcher(String.valueOf(passwordJTxtField.getPassword()));
+        return m.matches();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -171,19 +239,95 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void networkJCmboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_networkJCmboBoxActionPerformed
-
+        Network network = (Network) networkJCmboBox.getSelectedItem();
+        if (network != null) {
+            populateEnterpriseComboBox(network);
+        }
 
     }//GEN-LAST:event_networkJCmboBoxActionPerformed
 
     private void submitJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitJBtnActionPerformed
 
+        Enterprise enterprise = (Enterprise) enterprisesJCmboBox.getSelectedItem();
+
+        String username = usernameJTxtField.getText().trim();
+        String password = String.valueOf(passwordJTxtField.getPassword());
+        String rePassword = String.valueOf(reenterPasswordJTxtField.getPassword());
+        String name = nameJTxtField.getText().trim();
+
+        // VALIDATIONS ---------------------------------------------------------
+        if (username.isEmpty()) {
+            usernameJTxtField.setBorder(BorderFactory.createLineBorder(Color.RED));
+            JOptionPane.showMessageDialog(null, "Username cannot be empty");
+            return;
+        }
+
+        if (password.isEmpty()) {
+            passwordJTxtField.setBorder(BorderFactory.createLineBorder(Color.RED));
+            JOptionPane.showMessageDialog(null, "Password cannot be empty");
+            return;
+        }
+
+        if (!isPasswordValid()) {
+            JOptionPane.showMessageDialog(null,
+                    "Password must:\n"
+                    + "• Be at least 6 char\n"
+                    + "• Include 1 number\n"
+                    + "• Include 1 lowercase\n"
+                    + "• Include 1 uppercase\n"
+                    + "• Include only $, +, _ as special chars");
+            return;
+        }
+
+        if (!password.equals(rePassword)) {
+            JOptionPane.showMessageDialog(null, "Passwords do not match!");
+            return;
+        }
+
+        if (name.isEmpty()) {
+            nameJTxtField.setBorder(BorderFactory.createLineBorder(Color.RED));
+            JOptionPane.showMessageDialog(null, "Name cannot be empty");
+            return;
+        }
+
+        // CHECK IF USERNAME EXISTS
+        List<UserAccount> uaList = enterprise.getUserAccountDirectory().getUserAccountList();
+        for (UserAccount ua : uaList) {
+            if (ua.getUsername().equals(username)) {
+                JOptionPane.showMessageDialog(null, "Username already exists!");
+                return;
+            }
+        }
+
+        // CREATION LOGIC ------------------------------------------------------
+        Employee emp = enterprise.getEmployeeDirectory().createEmployee(name);
+        enterprise.getUserAccountDirectory().createUserAccount(username, password, emp, new EnterpriseAdmin());
+
+        JOptionPane.showMessageDialog(null, "Enterprise Admin Created Successfully!");
+
+        // REFRESH TABLE
+        populateTable();
+
+        // RESET FIELDS
+        usernameJTxtField.setText("");
+        passwordJTxtField.setText("");
+        reenterPasswordJTxtField.setText("");
+        nameJTxtField.setText("");
+
+        // Restore UI borders
+        usernameJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        passwordJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        reenterPasswordJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        nameJTxtField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
     }//GEN-LAST:event_submitJBtnActionPerformed
 
 
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
-
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_backJButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
