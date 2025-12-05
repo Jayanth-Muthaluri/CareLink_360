@@ -8,8 +8,9 @@ package UI.InsuranceAgent;
 import Business.Enterprise.Enterprise;
 import Business.Enterprise.InsuranceEnterprise;
 import Business.Insurance.Insurance;
-import Business.UserAccount.UserAccount;
 import Business.CustomerInsurance.CustomerInsurance;
+import Business.UserAccount.UserAccount;
+import com.toedter.calendar.JDateChooser;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
@@ -32,6 +33,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
     private UserAccount account;
     private InsuranceEnterprise enterprise;
     private String policyNumber;
+    private JDateChooser dateChooserDOB;
     
     /**
      * Creates new form CreateNewUserJPanel
@@ -43,6 +45,9 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         this.account = account;
         this.policyNumber = policyNumber;
         
+        // Add JDateChooser for DOB
+        dateChooserDOB = new JDateChooser();
+        dateChooserDOB.setDateFormatString("MM-dd-yyyy");
         
         populateFields();
         populateTable();
@@ -84,7 +89,6 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         lblAllCustomers = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
-        fieldDOB = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(0, 153, 204));
 
@@ -201,12 +205,6 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/patient details.gif"))); // NOI18N
 
-        fieldDOB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fieldDOBActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -231,8 +229,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                                         .addGroup(layout.createSequentialGroup()
                                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                                 .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(fieldSSN, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(fieldDOB, javax.swing.GroupLayout.Alignment.LEADING))
+                                                .addComponent(fieldSSN, javax.swing.GroupLayout.Alignment.LEADING))
                                             .addGap(28, 28, 28)
                                             .addComponent(lblLastName))))
                                 .addGap(18, 18, 18)
@@ -317,8 +314,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                         .addComponent(lblGender))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(lblDOB))
-                    .addComponent(fieldDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblDOB)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPhone)
@@ -364,8 +360,8 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Please provide last name");
             return;
         }
-        if (fieldDOB.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please provide Date of birth in MM-dd-yyyy format");
+        if (dateChooserDOB.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Please provide Date of birth");
             return;
         }
         if (comboBoxGender.getItemCount() == 0) {
@@ -390,15 +386,20 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         } else {
             String firstName = fieldFirstName.getText().trim();
             String lastName = fieldLastName.getText().trim();
-            String dateOfBirth = fieldDOB.getText().trim();
-            
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+            String dateOfBirth = "";
+            try {
+                dateOfBirth = sdf.format(dateChooserDOB.getDate());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Please select customer's dob");
+            }
             String gender = comboBoxGender.getSelectedItem().toString();
             String ssn = fieldSSN.getText().trim();
             if (!validateSSN()) {
-                JOptionPane.showMessageDialog(null, "Invalid SSN format!\n\nUnited States Social Security numbers must be in format AAA-GG-SSSS with following rules:\n"
-                        + "- The first three digits (area number) cannot be 000, 666, or between 900-999\n"
-                        + "- Digits four and five (group number) must be between 01-99\n"
-                        + "- The last four digits (serial numbers) must be between 0001-9999");
+                JOptionPane.showMessageDialog(null, "/* United States Social Security numbers are nine-digit numbers in the format AAA-GG-SSSS with following rules. */             \n"
+                        + "              \"The first three digits called the area number. The area number cannot be 000, 666, or between 900 and 999\",\n"
+                        + "                \" Digits four and five are called the group number and range from 01 to 99\",\n"
+                        + "              \"The last four digits are serial numbers from 0001 to 9999.\"");
                 fieldSSN.setBorder(BorderFactory.createLineBorder(Color.RED));
                 return;
             }
@@ -408,11 +409,10 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
             String address = fieldAddress.getText().trim();
             String phone = fieldPhone.getText().trim();
             if (!validatePhone()) {
-                JOptionPane.showMessageDialog(null, "Invalid phone number format!\n\nValid formats:\n"
-                        + "- 1234567890\n"
-                        + "- 123-456-7890\n"
-                        + "- (123)4567890\n"
-                        + "- (123)456-7890");
+                JOptionPane.showMessageDialog(null, "/* Following are valid phone number examples */             \n"
+                        + "              \"1234567890\", \"123-456-7890\", \"(123)4567890\", \"(123)456-7890\",\n"
+                        + "              /* Following are invalid phone numbers */ \n"
+                        + "              \"(1234567890)\",\"123)4567890\", \"12345678901\", \"(1)234567890\",");
                 fieldPhone.setBorder(BorderFactory.createLineBorder(Color.RED));
                 return;
             }
@@ -425,7 +425,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
             try {
                 Double.parseDouble(fieldInsuranceCoverage.getText().trim());
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Please provide numeric values in coverage textfield");
+                JOptionPane.showMessageDialog(null, "Please provide integer values in coverage textfield");
                 return;
             }
             Insurance insurance = new Insurance(insurancePolicyName, enterprise.getName(), coverage);
@@ -442,9 +442,8 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
             enterprise.getcustInsDir().getInsuranceCustomers();
             populateTable();
             resetFields();
-            JOptionPane.showMessageDialog(null, "Customer has been added successfully!");
+            JOptionPane.showMessageDialog(null, "Customer is added");
         }
-
             
     }//GEN-LAST:event_btnAddCustomerActionPerformed
 
@@ -463,10 +462,6 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
-    private void fieldDOBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldDOBActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fieldDOBActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddCustomer;
@@ -474,7 +469,6 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox comboBoxGender;
     private javax.swing.JComboBox comboBoxInsurancePolicyName;
     private javax.swing.JTextField fieldAddress;
-    private javax.swing.JTextField fieldDOB;
     private javax.swing.JTextField fieldFirstName;
     private javax.swing.JTextField fieldInsuranceCoverage;
     private javax.swing.JTextField fieldLastName;
@@ -500,7 +494,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
     private javax.swing.JTable tblCustomers;
     // End of variables declaration//GEN-END:variables
 
-   private boolean validatePhone() {
+    private boolean validatePhone() {
         Pattern pattern = Pattern.compile("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}");
         Matcher matcher = pattern.matcher(fieldPhone.getText());
         return matcher.matches();
@@ -518,7 +512,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         fieldLastName.setText("");
         fieldPhone.setText("");
         fieldSSN.setText("");
-        fieldDOB.setText("");
+        dateChooserDOB.setDate(null);
         fieldAddress.setText("");
     }
     
