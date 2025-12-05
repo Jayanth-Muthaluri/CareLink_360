@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class GovtEnterprise extends Enterprise {
 
-    public GovernmentEnterprise(String name) {
+    public GovtEnterprise(String name) {
         super(name, EnterpriseType.Government);
     }
 
