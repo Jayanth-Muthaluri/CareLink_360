@@ -5,6 +5,15 @@
  */
 package UI.Administrative;
 
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.GovernmentFundRequest;
+import Business.WorkQueue.WorkRequest;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 
 /**
  *
@@ -12,15 +21,48 @@ package UI.Administrative;
  */
 public class FundsRequestJPanel extends javax.swing.JPanel {
 
-
+    private JPanel jPanel;
+    private Enterprise enterpz;
+    private UserAccount userAcc;
+    private Ecosystem ecosys;
 
     /**
      * Creates new form FundsRequestJPanel
      */
-    public FundsRequestJPanel() {
+    public FundsRequestJPanel(JPanel jPanel, Enterprise enterprise, UserAccount userAccount, Ecosystem ecosystem) {
         initComponents();
-       
+       this.jPanel = jPanel;
+        this.enterpz = enterprise;
+        this.userAcc = userAccount;
+        this.ecosys = ecosystem;
+        pplTbl();
     }
+
+    public void pplTbl() {
+        DefaultTableModel model = (DefaultTableModel) workRequestJTable.getModel();
+        double totalFunds = 0;
+        model.setRowCount(0);
+
+        for (WorkRequest request : userAcc.getWorkQueue().getWorkRequests()) {
+
+            if(request instanceof GovernmentFundRequest){
+            Object[] row = new Object[4];
+            row[0] = String.valueOf(((GovernmentFundRequest) request).getRegionName());
+            row[1] = request.getRequestReceiver();
+            row[2] = request.getRequestStatus();
+            row[3] = String.valueOf(((GovernmentFundRequest) request).getRequiredFunding());
+            model.addRow(row);
+            if (request.getRequestStatus().equalsIgnoreCase("Accepted")) {
+                totalFunds += ((GovernmentFundRequest) request).getRequiredFunding();
+            }
+            }
+        }
+
+        txtFundsReceived.setText(String.valueOf(totalFunds));
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        workRequestJTable.setRowSorter(sorter);
+    }
+    
 
 
      
