@@ -43,7 +43,6 @@
                                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                               <Component id="fieldFirstName" alignment="1" min="-2" pref="137" max="-2" attributes="0"/>
                                               <Component id="fieldSSN" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="fieldDOB" alignment="0" max="32767" attributes="0"/>
                                           </Group>
                                           <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                                           <Component id="lblLastName" min="-2" max="-2" attributes="0"/>
@@ -161,7 +160,6 @@
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Component id="lblDOB" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="fieldDOB" min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -485,11 +483,6 @@
           <Image iconType="3" name="/Images/patient details.gif"/>
         </Property>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="fieldDOB">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldDOBActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>

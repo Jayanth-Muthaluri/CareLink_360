@@ -4,11 +4,15 @@ package UI.HealthcareOfficer;
 import Business.Ecosystem;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
 import javax.swing.JPanel;
-
+import javax.swing.event.MouseInputListener;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.input.PanMouseInputListener;
+import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.TileFactoryInfo;
 /**
  *
  * @author jayan
@@ -18,69 +22,44 @@ public class MapJPanel extends javax.swing.JPanel {
     private JPanel userProcessContainer;
     private UserAccount account;
     private Ecosystem ecosystem;
+    private JXMapViewer actualMapViewer;  // ADD THIS LINE
      
-    /**
-     * Creates new form MapJPanel
-     */
     public MapJPanel(JPanel userProcessContainer, UserAccount account, Ecosystem ecosystem) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.account = account;
         this.ecosystem = ecosystem;
-        setupMapDisplay();
+        initMap();  // CHANGED from init() to initMap()
     }
     
-    // New Constructor added by MALLESH
     public MapJPanel(JPanel userProcessContainer) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
-        setupMapDisplay();
+        initMap();  // CHANGED from init() to initMap()
     }
     
-    private void setupMapDisplay() {
-        // Create custom panel with map visualization
-        JPanel mapPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                // Draw a simple map representation
-                g.setColor(new Color(200, 230, 255));
-                g.fillRect(0, 0, getWidth(), getHeight());
-                
-                // Draw grid lines
-                g.setColor(new Color(180, 180, 180));
-                for (int i = 0; i < getWidth(); i += 50) {
-                    g.drawLine(i, 0, i, getHeight());
-                }
-                for (int i = 0; i < getHeight(); i += 50) {
-                    g.drawLine(0, i, getWidth(), i);
-                }
-                
-                // Draw location marker for Boston
-                g.setColor(Color.RED);
-                int centerX = getWidth() / 2;
-                int centerY = getHeight() / 2;
-                g.fillOval(centerX - 10, centerY - 10, 20, 20);
-                
-                // Draw location label
-                g.setColor(Color.BLACK);
-                g.setFont(new Font("Arial", Font.BOLD, 14));
-                g.drawString("Boston, MA", centerX + 15, centerY);
-                g.drawString("(Northeastern University Area)", centerX + 15, centerY + 15);
-                
-                // Draw coordinates
-                g.setFont(new Font("Arial", Font.PLAIN, 12));
-                g.drawString("Latitude: 42.3398°N", 10, 20);
-                g.drawString("Longitude: 71.0892°W", 10, 35);
-            }
-        };
+    private void initMap() {
+        // Create the actual JXMapViewer
+        actualMapViewer = new JXMapViewer();
         
-        // Add the custom map panel to jXMapViewer container
+        TileFactoryInfo info = new OSMTileFactoryInfo();
+        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        actualMapViewer.setTileFactory(tileFactory);
+        
+        // Default location: Boston, MA
+        GeoPosition geo = new GeoPosition(42.3398, -71.0892);
+        actualMapViewer.setAddressLocation(geo);
+        actualMapViewer.setZoom(12);
+        
+        // Add mouse controls
+        MouseInputListener mm = new PanMouseInputListener(actualMapViewer);
+        actualMapViewer.addMouseListener(mm);
+        actualMapViewer.addMouseMotionListener(mm);
+        actualMapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(actualMapViewer));
+        
+        // Replace the JPanel with the actual map viewer
         jXMapViewer.setLayout(new java.awt.BorderLayout());
-        jXMapViewer.removeAll();
-        jXMapViewer.add(mapPanel, java.awt.BorderLayout.CENTER);
-        jXMapViewer.revalidate();
-        jXMapViewer.repaint();
+        jXMapViewer.add(actualMapViewer, java.awt.BorderLayout.CENTER);
     }
    
     /**
