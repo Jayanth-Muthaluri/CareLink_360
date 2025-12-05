@@ -2,6 +2,9 @@ package UI.Administrative;
 
 import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
+import Business.Enterprise.GovtEnterprise;
+import Business.Enterprise.InsuranceEnterprise;
+import Business.Enterprise.NGOEnterprise;
 import Business.UserAccount.UserAccount;
 import javax.swing.JPanel;
 
@@ -12,16 +15,34 @@ import javax.swing.JPanel;
  * @author gaganaananda
  */
 public class EnterpriseAdminDashboardPanel extends javax.swing.JPanel {
-
+    JPanel jPanel;
+    Enterprise enterpz;
+    UserAccount userAcc;
+    Ecosystem ecosys;
     
 
     /**
      * Creates new form AdminWorkAreaJPanel
      */
-    public EnterpriseAdminDashboardPanel(JPanel userProcessContainer, Enterprise enterprise, UserAccount account, Ecosystem ecosystem) {
+    public EnterpriseAdminDashboardPanel(JPanel userProcessContainer, Enterprise enterprise, UserAccount userAccount, Ecosystem ecosystem) {
         initComponents();
+        this.jPanel = userProcessContainer;
+        this.enterpz = enterprise;
+        this.userAcc = userAccount;
+        this.ecosys = ecosystem;
+        valueLabel.setText(enterprise.getName());
+
+        if (enterprise instanceof GovtEnterprise || enterprise instanceof InsuranceEnterprise
+            || enterprise instanceof NGOEnterprise ) {
+            btnGovtFundReq.setVisible(false);
+        }
         
+        if (enterprise instanceof GovtEnterprise || enterprise instanceof InsuranceEnterprise
+            || enterprise instanceof NGOEnterprise ) {
+            btnGovtFundReq.setVisible(false);
+        }
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
