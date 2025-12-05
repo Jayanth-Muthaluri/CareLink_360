@@ -6,14 +6,14 @@
 package UI.InsuranceAgent;
 
 import Business.Enterprise.Enterprise;
+import Business.Enterprise.InsuranceEnterprise;
 import Business.Insurance.Insurance;
+import Business.CustomerInsurance.CustomerInsurance;
 import Business.UserAccount.UserAccount;
+import com.toedter.calendar.JDateChooser;
 import java.awt.CardLayout;
 import java.awt.Color;
-
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -23,19 +23,35 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
 /**
  *
  * @author jayan
  */
-
 public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
-
+    
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private InsuranceEnterprise enterprise;
+    private String policyNumber;
+    private JDateChooser dateChooserDOB;
+    
     /**
      * Creates new form CreateNewUserJPanel
      */
-    
-
+    public AddNewPolicyHolderJPanel(JPanel userProcessContainer, UserAccount account, Enterprise enterprise, String policyNumber) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.enterprise = (InsuranceEnterprise) enterprise;
+        this.account = account;
+        this.policyNumber = policyNumber;
+        
+        // Add JDateChooser for DOB
+        dateChooserDOB = new JDateChooser();
+        dateChooserDOB.setDateFormatString("MM-dd-yyyy");
+        
+        populateFields();
+        populateTable();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -211,9 +227,9 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(fieldPolicyNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(fieldSSN, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(fieldSSN, javax.swing.GroupLayout.Alignment.LEADING))
                                             .addGap(28, 28, 28)
                                             .addComponent(lblLastName))))
                                 .addGap(18, 18, 18)
@@ -336,21 +352,114 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
 
     private void btnAddCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCustomerActionPerformed
 
-        
-
+        if (fieldFirstName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide first name");
+            return;
+        }
+        if (fieldLastName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide last name");
+            return;
+        }
+        if (dateChooserDOB.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Please provide Date of birth");
+            return;
+        }
+        if (comboBoxGender.getItemCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Please provide Gender");
+            return;
+        }
+        if (fieldSSN.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide SSN");
+            return;
+        }
+        if (fieldPhone.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide phone");
+            return;
+        }
+        if (fieldAddress.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide address");
+            return;
+        }
+        if (fieldInsuranceCoverage.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide Insurance Coverage");
+            return;
+        } else {
+            String firstName = fieldFirstName.getText().trim();
+            String lastName = fieldLastName.getText().trim();
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+            String dateOfBirth = "";
+            try {
+                dateOfBirth = sdf.format(dateChooserDOB.getDate());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Please select customer's dob");
+            }
+            String gender = comboBoxGender.getSelectedItem().toString();
+            String ssn = fieldSSN.getText().trim();
+            if (!validateSSN()) {
+                JOptionPane.showMessageDialog(null, "/* United States Social Security numbers are nine-digit numbers in the format AAA-GG-SSSS with following rules. */             \n"
+                        + "              \"The first three digits called the area number. The area number cannot be 000, 666, or between 900 and 999\",\n"
+                        + "                \" Digits four and five are called the group number and range from 01 to 99\",\n"
+                        + "              \"The last four digits are serial numbers from 0001 to 9999.\"");
+                fieldSSN.setBorder(BorderFactory.createLineBorder(Color.RED));
+                return;
+            }
+            if (validateSSN()) {
+                fieldSSN.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+            }
+            String address = fieldAddress.getText().trim();
+            String phone = fieldPhone.getText().trim();
+            if (!validatePhone()) {
+                JOptionPane.showMessageDialog(null, "/* Following are valid phone number examples */             \n"
+                        + "              \"1234567890\", \"123-456-7890\", \"(123)4567890\", \"(123)456-7890\",\n"
+                        + "              /* Following are invalid phone numbers */ \n"
+                        + "              \"(1234567890)\",\"123)4567890\", \"12345678901\", \"(1)234567890\",");
+                fieldPhone.setBorder(BorderFactory.createLineBorder(Color.RED));
+                return;
+            }
+            if (validatePhone()) {
+                fieldPhone.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+            }
+            String policyNum = fieldPolicyNumber.getText().trim();
+            String insurancePolicyName = comboBoxInsurancePolicyName.getSelectedItem().toString();
+            double coverage = Double.parseDouble(fieldInsuranceCoverage.getText().trim());
+            try {
+                Double.parseDouble(fieldInsuranceCoverage.getText().trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please provide integer values in coverage textfield");
+                return;
+            }
+            Insurance insurance = new Insurance(insurancePolicyName, enterprise.getName(), coverage);
+            CustomerInsurance customer = new CustomerInsurance(insurance, policyNum);
+            customer.setCustomerFirstName(firstName);
+            customer.setCustomerLastName(lastName);
+            customer.setDateOfBirth(dateOfBirth);
+            customer.setGender(gender);
+            customer.setSSN(ssn);
+            customer.setPhoneNumber(phone);
+            customer.setAddress(address);
+            customer.setInsurance(insurance);
+            enterprise.getcustInsDir().getInsuranceCustomers().add(customer);
+            enterprise.getcustInsDir().getInsuranceCustomers();
+            populateTable();
+            resetFields();
+            JOptionPane.showMessageDialog(null, "Customer is added");
+        }
             
     }//GEN-LAST:event_btnAddCustomerActionPerformed
 
     private void comboBoxInsurancePolicyNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comboBoxInsurancePolicyNameFocusGained
-       
+       System.out.println("Gained");
     }//GEN-LAST:event_comboBoxInsurancePolicyNameFocusGained
 
     private void comboBoxInsurancePolicyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxInsurancePolicyNameActionPerformed
-
+        Insurance selectedPolicy = (Insurance) comboBoxInsurancePolicyName.getSelectedItem();
+        fieldInsuranceCoverage.setText(String.valueOf(selectedPolicy.getCoverage()));
     }//GEN-LAST:event_comboBoxInsurancePolicyNameActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
 
@@ -385,5 +494,57 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
     private javax.swing.JTable tblCustomers;
     // End of variables declaration//GEN-END:variables
 
-   
+    private boolean validatePhone() {
+        Pattern pattern = Pattern.compile("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}");
+        Matcher matcher = pattern.matcher(fieldPhone.getText());
+        return matcher.matches();
+    }
+    
+    private boolean validateSSN() {
+        Pattern pattern = Pattern.compile("^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$");
+        Matcher matcher = pattern.matcher(fieldSSN.getText());
+        return matcher.matches();
+    }
+    
+    private void resetFields() {
+        fieldPolicyNumber.setText(UUID.randomUUID().toString().substring(0, 7));
+        fieldFirstName.setText("");
+        fieldLastName.setText("");
+        fieldPhone.setText("");
+        fieldSSN.setText("");
+        dateChooserDOB.setDate(null);
+        fieldAddress.setText("");
+    }
+    
+    private void populateFields() {
+        fieldPolicyNumber.setText(policyNumber);
+        List<Insurance> policies = enterprise.getInsPlcyDir().getPolicies();
+        for (Insurance policy : policies) {
+            comboBoxInsurancePolicyName.addItem(policy);
+        }
+        Insurance selectedPolicy = (Insurance) comboBoxInsurancePolicyName.getSelectedItem();
+        
+        if (selectedPolicy != null) {
+            fieldInsuranceCoverage.setText(String.valueOf(selectedPolicy.getCoverage()));
+        } else {
+            JOptionPane.showMessageDialog(null, "No Existing policy!");
+            return;
+        }
+    }
+    
+    private void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblCustomers.getModel();
+        model.setRowCount(0);
+        List<CustomerInsurance> customers = enterprise.getcustInsDir().getInsuranceCustomers();
+        for (CustomerInsurance customer : customers) {
+            Object[] row = new Object[4];
+            row[0] = customer.getCustomerFirstName() + " " + customer.getCustomerLastName();
+            row[1] = customer;
+            row[2] = customer.getInsurance().getPolicyName();
+            row[3] = customer.getInsurance().getCoverage();
+            model.addRow(row);
+        }
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        tblCustomers.setRowSorter(sorter);
+    }
 }

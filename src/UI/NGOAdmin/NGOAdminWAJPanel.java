@@ -4,20 +4,71 @@
  */
 package UI.NGOAdmin;
 
+import javax.swing.JPanel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.CardLayout;
+
+import Business.UserAccount.UserAccount;
+import Business.Enterprise.Enterprise;
+import Business.Organization.AdminOrgNGO;
+import Business.Organization.Organization;
+import Business.WorkQueue.NGOFundRequest;
+import Business.WorkQueue.WorkRequest;
+import UI.HealthcareOfficer.MapJPanel;
+
 
 /**
  *
  * @author MALLESH
  */
-public class NGOAdministratorWAJPanel extends javax.swing.JPanel {
-
+public class NGOAdminWAJPanel extends javax.swing.JPanel {
+private JPanel userContainer;
+private UserAccount userAccount;
+private AdminOrgNGO ngoAdminOrg;
+private Enterprise enterprise;
 
     /**
      * Creates new form NGOAdministratorWorkAreaPanel
      */
-    public NGOAdministratorWAJPanel() {
-        
+    public NGOAdminWAJPanel(JPanel userContainer, UserAccount userAccount, Organization organization, Enterprise enterprise) {
+    initComponents();  
+    this.userContainer = userContainer;
+    this.userAccount = userAccount;
+    this.ngoAdminOrg = (AdminOrgNGO) organization;
+    this.enterprise = enterprise;
+    populateRequestTable();
     }
+    public void populateRequestTable() {
+
+    DefaultTableModel model = (DefaultTableModel) workRequestJTable.getModel();
+    model.setRowCount(0);
+
+    for (WorkRequest request : ngoAdminOrg.getWorkQueue().getWorkRequests()) {
+
+        Object[] row = new Object[5];
+
+        row[0] = (NGOFundRequest) request;
+        row[1] = request.getRequestSender().getEmployee().getEmployeeName();
+
+        if (request.getRequestStatus().equalsIgnoreCase("Sent to Director")) {
+            row[2] = null;
+        } else {
+            row[2] = request.getRequestReceiver() == null
+                    ? null
+                    : request.getRequestReceiver().getEmployee().getEmployeeName();
+        }
+
+        row[3] = request.getRequestStatus();
+        row[4] = ((NGOFundRequest) request).getRequestedFundAmount();
+
+        model.addRow(row);
+    }
+
+    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+    workRequestJTable.setRowSorter(sorter);
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -154,17 +205,81 @@ public class NGOAdministratorWAJPanel extends javax.swing.JPanel {
 
     private void assignJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assignJBtnActionPerformed
         // TODO add your handling code here:
+    int selectedRow = workRequestJTable.getSelectedRow();
 
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(null, "Please select a row!");
+        return;
+    }
+
+    NGOFundRequest request = (NGOFundRequest) workRequestJTable.getValueAt(selectedRow, 0);
+
+    if (request.getRequestStatus().equals("Sent")) {
+
+        request.setRequestReceiver(userAccount);
+        request.setRequestStatus("Pending on " + userAccount.getEmployee().getEmployeeName());
+
+        populateRequestTable();
+        JOptionPane.showMessageDialog(null, "Request assigned to you!");
+
+    } else {
+        JOptionPane.showMessageDialog(
+                null,
+                "Cannot assign. Status: " + request.getRequestStatus(),
+                "Warning",
+                JOptionPane.WARNING_MESSAGE
+        );
+    }
     }//GEN-LAST:event_assignJBtnActionPerformed
 
     private void processRequestJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processRequestJBtnActionPerformed
         
      // TODO add your handling code here:
+     int selectedRow = workRequestJTable.getSelectedRow();
+
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(null, "Select a row first!");
+        return;
+    }
+
+    NGOFundRequest request = (NGOFundRequest) workRequestJTable.getValueAt(selectedRow, 0);
+
+    if (request.getRequestStatus().equalsIgnoreCase("Rejected")) {
+        JOptionPane.showMessageDialog(null, "Cannot process a rejected request!");
+        return;
+    }
+
+    if (request.getRequestStatus().equalsIgnoreCase("Sent to Director")) {
+        JOptionPane.showMessageDialog(null, "Already processed!");
+        return;
+    }
+
+    if (request.getRequestStatus().equalsIgnoreCase("Sent")) {
+        JOptionPane.showMessageDialog(null, "Assign the request first!");
+        return;
+    }
+
+    if (!userAccount.equals(request.getRequestReceiver())) {
+        JOptionPane.showMessageDialog(null, "Not Authorized!");
+        return;
+    }
+
+    NGOAdminProcessWRJPanel processPanel =
+            new NGOAdminProcessWRJPanel(userContainer, userAccount, request, enterprise);
+
+    userContainer.add("NGOAdminProcessWRJPanel", processPanel);
+
+    CardLayout layout = (CardLayout) userContainer.getLayout();
+    layout.next(userContainer);
     }//GEN-LAST:event_processRequestJBtnActionPerformed
 
     private void verificationMapJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verificationMapJBtnActionPerformed
         // TODO add your handling code here:
-        
+    MapJPanel mapPanel = new MapJPanel(userContainer);
+    userContainer.add("MapJPanel", mapPanel);
+
+    CardLayout layout = (CardLayout) userContainer.getLayout();
+    layout.next(userContainer); 
     }//GEN-LAST:event_verificationMapJBtnActionPerformed
 
 

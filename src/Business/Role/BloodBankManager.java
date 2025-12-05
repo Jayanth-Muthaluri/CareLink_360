@@ -8,8 +8,9 @@ import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
+import UI.BloodBankManager.BloodBankManagerDashboardJPanel;
 import javax.swing.JPanel;
-import userinterface.BloodBankManagerRole.BloodBankManagerWorkAreaJPanel;
+import UI.BloodBankManager.BloodBankManagerDashboardJPanel;
 
 /**
  *
@@ -20,7 +21,7 @@ public class BloodBankManager extends Roles{
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization,
             Enterprise enterprise, Ecosystem ecosystem) {
-        return new BloodBankManagerWorkAreaJPanel(userProcessContainer, account, organization, business);
+        return new BloodBankManagerDashboardJPanel(userProcessContainer, account, organization, ecosystem);
     }
     
 }

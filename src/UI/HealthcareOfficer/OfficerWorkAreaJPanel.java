@@ -6,22 +6,38 @@
 package UI.HealthcareOfficer;
 
 import Business.Enterprise.Enterprise;
+import Business.Organization.HealthCareOfficerOrg;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.GovernmentFundRequest;
+import Business.WorkQueue.WorkRequest;
 import java.awt.CardLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
 /**
  *
  * @author jayan
  */
 public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
-
     
-
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private HealthCareOfficerOrg organization;
+    private Enterprise enterprise;
+    
+    /**
+     * Creates new form OfficerWorkAreaJPanel1
+     */
+    public OfficerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
+        initComponents();
+        this.enterprise = enterprise;
+        this.userProcessContainer = userProcessContainer;
+        this.organization = (HealthCareOfficerOrg) organization;
+        this.account = account;
+        populateTable();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,10 +50,10 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
         lblTitle = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblWorkRequest = new javax.swing.JTable();
-        btnAssignToMe = new javax.swing.JButton();
         btnProcessRequest = new javax.swing.JButton();
         btnVerificationOnMap = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        btnAssignToMe = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 153, 204));
 
@@ -74,15 +90,6 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblWorkRequest);
 
-        btnAssignToMe.setBackground(new java.awt.Color(255, 102, 102));
-        btnAssignToMe.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        btnAssignToMe.setText("Assign To Me");
-        btnAssignToMe.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAssignToMeActionPerformed(evt);
-            }
-        });
-
         btnProcessRequest.setBackground(new java.awt.Color(255, 102, 102));
         btnProcessRequest.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         btnProcessRequest.setText("Process Request");
@@ -103,6 +110,15 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/emp2.gif"))); // NOI18N
 
+        btnAssignToMe.setBackground(new java.awt.Color(255, 102, 102));
+        btnAssignToMe.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        btnAssignToMe.setText("Assign To Me");
+        btnAssignToMe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAssignToMeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -117,9 +133,9 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(btnAssignToMe, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(171, 171, 171)
+                        .addGap(92, 92, 92)
+                        .addComponent(btnAssignToMe)
+                        .addGap(193, 193, 193)
                         .addComponent(btnVerificationOnMap))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(208, 208, 208)
@@ -139,9 +155,9 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAssignToMe, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnVerificationOnMap))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnVerificationOnMap)
+                            .addComponent(btnAssignToMe))
+                        .addGap(18, 18, 18)
                         .addComponent(btnProcessRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
@@ -151,14 +167,67 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
     
     private void btnProcessRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessRequestActionPerformed
         // TODO add your handling code here:
-        
+        int selectedRow = tblWorkRequest.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row first from the table to view details");
+            return;
+        } else {
+            GovernmentFundRequest request = (GovernmentFundRequest) tblWorkRequest.getValueAt(selectedRow, 0);
+            if (request.getRequestStatus().equals("Rejected")) {
+                JOptionPane.showMessageDialog(null, "Cannot process a Rejected Request", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (request.getRequestStatus().equalsIgnoreCase("Sent to Secretary")) {
+                JOptionPane.showMessageDialog(null, "Request already processed", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (request.getRequestStatus().equalsIgnoreCase("Sent")) {
+                JOptionPane.showMessageDialog(null, "Assign the request first");
+                return;
+            }
+            if (!account.equals(request.getRequestReceiver())) {
+                JOptionPane.showMessageDialog(null, "Not Authorized", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (!account.getEmployee().equals(request.getRequestReceiver().getEmployee())) {
+                JOptionPane.showMessageDialog(null, "Request assigned to other Officer", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            } else {
+                OfficerProcessRequestJPanel panel = new OfficerProcessRequestJPanel(userProcessContainer, account, request, enterprise);
+                userProcessContainer.add("OfficerProcessRequestJPanel", panel);
+                CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+                layout.next(userProcessContainer);
+            }
+        }
     }//GEN-LAST:event_btnProcessRequestActionPerformed
     
     private void btnVerificationOnMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerificationOnMapActionPerformed
         // TODO add your handling code here:
-        
+        MapJPanel mapJPanel = new MapJPanel(userProcessContainer, account, null);
+        userProcessContainer.add("MapJPanel", mapJPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
 
     }//GEN-LAST:event_btnVerificationOnMapActionPerformed
+
+    private void btnAssignToMeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignToMeActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblWorkRequest.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row first from the table to view details");
+            return;
+        } else {
+            WorkRequest request = (GovernmentFundRequest) tblWorkRequest.getValueAt(selectedRow, 0);
+            if (request.getRequestStatus().equals("Sent")) {
+                request.setRequestReceiver(account);
+                request.setRequestStatus("Pending on " + request.getRequestReceiver().getEmployee().getEmployeeName());
+                populateTable();
+                JOptionPane.showMessageDialog(null, "Success !! Request is assigned to you ");
+            } else {
+                JOptionPane.showMessageDialog(null, "Can't assign this work request, as the work request is in " + request.getRequestStatus() + " status", "Warning!", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnAssignToMeActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -170,4 +239,26 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JTable tblWorkRequest;
     // End of variables declaration//GEN-END:variables
+
+    public void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblWorkRequest.getModel();
+        model.setRowCount(0);
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequests()) {
+            Object[] row = new Object[5];
+            String status = request.getRequestStatus();
+            row[0] = ((GovernmentFundRequest) request);
+            row[1] = request.getRequestSender().getEmployee().getEmployeeName();
+            if (status.equalsIgnoreCase("Sent to Treasurer") || status.equalsIgnoreCase("Sent to Secretary")) {
+                row[2] = null;
+            } else {
+                row[2] = request.getRequestReceiver() == null ? null : request.getRequestReceiver().getEmployee().getEmployeeName();
+            }
+            row[3] = request.getRequestStatus();
+            row[4] = ((GovernmentFundRequest) request).getRequiredFunding();
+            model.addRow(row);
+        }
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        tblWorkRequest.setRowSorter(sorter);
+    }
+    
 }

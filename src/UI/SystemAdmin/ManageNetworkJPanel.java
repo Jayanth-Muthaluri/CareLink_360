@@ -3,22 +3,46 @@
  * and open the template in the editor.
  */
 package UI.SystemAdmin;
-
+import Business.Ecosystem;
+import Business.Network.Network;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
  * @author MALLESH
  */
 public class ManageNetworkJPanel extends javax.swing.JPanel {
-
+    private Ecosystem ecosystem;
+    private JPanel userProcessContainer;
 
     /**
      *
      * Creates new form ManageNetworkJPanel
      */
-    public ManageNetworkJPanel() {
+    public ManageNetworkJPanel(JPanel userProcessContainer, Ecosystem ecosystem) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.ecosystem = ecosystem;
+        populateNetworkTable();
+    }
+    private void populateNetworkTable() {
+        DefaultTableModel model = (DefaultTableModel) ntwrkJTbl.getModel();
+        model.setRowCount(0);
 
+        for (Network network : ecosystem.getNetworks()) {
+            Object[] row = new Object[1];
+            row[0] = network;
+            model.addRow(row);
+        }
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        ntwrkJTbl.setRowSorter(sorter);
     }
 
 
@@ -175,15 +199,63 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void sbmtJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sbmtJBtnActionPerformed
+        String name = nmJTxtField.getText();
 
+        ArrayList<String> names = new ArrayList<>();
+        for (Network n : ecosystem.getNetworks()) {
+            names.add(n.getNetworkName());
+        }
+
+        if (name == null || name.trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Network Name cannot be empty!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (names.contains(name)) {
+            JOptionPane.showMessageDialog(null, "Network already exists!");
+            nmJTxtField.setText("");
+            return;
+        }
+
+        Network network = ecosystem.createAddNetworks();
+        network.setNetworkName(name);
+
+        JOptionPane.showMessageDialog(null, "Network added successfully!");
+        nmJTxtField.setText("");
+
+        populateNetworkTable();
     }//GEN-LAST:event_sbmtJBtnActionPerformed
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
+        userProcessContainer.remove(this);
+        Component compArray[] = userProcessContainer.getComponents();
+        Component previous = compArray[compArray.length - 1];
 
+        UI.SystemAdmin.SystemAdminWorkAreaJPanel sysPanel =
+                (UI.SystemAdmin.SystemAdminWorkAreaJPanel) previous;
+
+        sysPanel.populateTree();
+
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);                                      
     }//GEN-LAST:event_backJButtonActionPerformed
 
     private void btnDltActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDltActionPerformed
+        int selectedRow = ntwrkJTbl.getSelectedRow();
 
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row to delete!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Network network = (Network) ntwrkJTbl.getValueAt(selectedRow, 0);
+
+        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure?");
+        if (confirm == JOptionPane.YES_OPTION) {
+            ecosystem.getNetworks().remove(network);
+            populateNetworkTable();
+            JOptionPane.showMessageDialog(null, "Network deleted!");
+        }
     }//GEN-LAST:event_btnDltActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

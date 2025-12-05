@@ -5,6 +5,12 @@
  */
 package UI.Doctor;
 
+import Business.Enterprise.Enterprise;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JPanel;
+
 
 
 /**
@@ -13,15 +19,39 @@ package UI.Doctor;
  */
 public class PatientDetailsJPanel extends javax.swing.JPanel {
 
-
+    private JPanel jPanel;
+    private UserAccount userAccount;
+    private Enterprise enterprise;
+    private PatientTreatmentWorkRequest request;
 
     /**
      * Creates new form ViewPatientJPanel
      */
 
-    public PatientDetailsJPanel() {
+    public PatientDetailsJPanel(JPanel userProcessContainer, UserAccount userAccount, Enterprise enterprise, PatientTreatmentWorkRequest workRequest) {
         initComponents();
         
+        this.jPanel = userProcessContainer;
+        this.userAccount = userAccount;
+        this.enterprise = enterprise;
+        this.request = workRequest;
+        
+        populate();
+        
+    }
+    
+    private void populate() {
+
+
+        fstNmTxt.setText(request.getPatientInfo().getPatientFirstName());
+        lstNmTxt.setText(request.getPatientInfo().getPatientLastName());
+        pntIdTxt.setText(String.valueOf(request.getPatientInfo().getPatientId()));
+        adrsTxt.setText(request.getPatientInfo().getAddress());
+        hmPhNoTxt.setText(request.getPatientInfo().getContactNo());
+        ageTxt.setText(String.valueOf(request.getPatientInfo().getPatientAge()));
+
+        txtMedicalCondition.setText(request.getVisitReason());
+        prescptnTxt.setText(request.getPrescribedMedication());
     }
 
     /**
@@ -255,7 +285,9 @@ public class PatientDetailsJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_ageTxtActionPerformed
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
-
+        jPanel.remove(this);
+        CardLayout layout = (CardLayout)jPanel.getLayout();
+        layout.previous(jPanel);
       
     }//GEN-LAST:event_backJButtonActionPerformed
 

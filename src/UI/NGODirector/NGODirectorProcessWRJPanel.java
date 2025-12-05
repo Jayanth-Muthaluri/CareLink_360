@@ -4,21 +4,33 @@
  * and open the template in the editor.
  */
 package UI.NGODirector;
-
+import Business.WorkQueue.NGOFundRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 
 /**
  *
  * @author MALLESH
  */
-public class DirectorProcessWAJPanel extends javax.swing.JPanel {
+public class NGODirectorProcessWRJPanel extends javax.swing.JPanel {
 
+    private JPanel containerPanel;
+    private NGOFundRequest ngoFundRequest;
 
     /**
      * Creates new form ProcessWorkRequestJPanel
      */
-    public DirectorProcessWAJPanel() {
-        
+    public NGODirectorProcessWRJPanel(JPanel panelContainer, NGOFundRequest selectedRequest) {
+        initComponents();
+        this.containerPanel = panelContainer;
+        this.ngoFundRequest = selectedRequest;
+        amountRequiredTxtBox.setText(String.valueOf(selectedRequest.getRequestedFundAmount()));
+        hospitalNameTxtBox.setText(selectedRequest.getHospitalName());
+        hospitalLocationTxtBox.setText(selectedRequest.getHospitalLocation());
+
     }
 
     /**
@@ -30,61 +42,61 @@ public class DirectorProcessWAJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        releaseAmountJBtn = new javax.swing.JButton();
-        backJBtn = new javax.swing.JButton();
-        cancelJBtn = new javax.swing.JButton();
+        disburseAmountJBtn = new javax.swing.JButton();
+        backJButton = new javax.swing.JButton();
+        rejectBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        commentsTxtBox = new javax.swing.JTextField();
+        messageTxtBox = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         hospitalNameTxtBox = new javax.swing.JTextField();
-        hospitalAddressTxtBox = new javax.swing.JTextField();
+        hospitalLocationTxtBox = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         amountRequiredTxtBox = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(0, 153, 204));
+        setBackground(new java.awt.Color(0, 153, 153));
 
-        releaseAmountJBtn.setBackground(new java.awt.Color(102, 255, 153));
-        releaseAmountJBtn.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        releaseAmountJBtn.setText("Release Amount");
-        releaseAmountJBtn.addActionListener(new java.awt.event.ActionListener() {
+        disburseAmountJBtn.setBackground(new java.awt.Color(102, 255, 153));
+        disburseAmountJBtn.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        disburseAmountJBtn.setText("Disburse Amount");
+        disburseAmountJBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                releaseAmountJBtnActionPerformed(evt);
+                disburseAmountJBtnActionPerformed(evt);
             }
         });
 
-        backJBtn.setBackground(new java.awt.Color(204, 204, 204));
-        backJBtn.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        backJBtn.setText("Back");
-        backJBtn.addActionListener(new java.awt.event.ActionListener() {
+        backJButton.setBackground(new java.awt.Color(204, 204, 204));
+        backJButton.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        backJButton.setText("Back");
+        backJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                backJBtnActionPerformed(evt);
+                backJButtonActionPerformed(evt);
             }
         });
 
-        cancelJBtn.setBackground(new java.awt.Color(255, 102, 102));
-        cancelJBtn.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        cancelJBtn.setText("Cancel");
-        cancelJBtn.addActionListener(new java.awt.event.ActionListener() {
+        rejectBtn.setBackground(new java.awt.Color(255, 102, 102));
+        rejectBtn.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        rejectBtn.setText("Reject");
+        rejectBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelJBtnActionPerformed(evt);
+                rejectBtnActionPerformed(evt);
             }
         });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel2.setText("Comments:");
+        jLabel2.setText("Message:");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setText("Hospital Name:");
 
         hospitalNameTxtBox.setEnabled(false);
 
-        hospitalAddressTxtBox.setEnabled(false);
+        hospitalLocationTxtBox.setEnabled(false);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel5.setText("Hospital Address:");
+        jLabel5.setText("Hospital Location:");
 
         amountRequiredTxtBox.setEnabled(false);
 
@@ -106,9 +118,9 @@ public class DirectorProcessWAJPanel extends javax.swing.JPanel {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                             .addGap(62, 62, 62)
-                            .addComponent(releaseAmountJBtn)
+                            .addComponent(disburseAmountJBtn)
                             .addGap(18, 18, 18)
-                            .addComponent(cancelJBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(rejectBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addGap(79, 79, 79)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -121,14 +133,14 @@ public class DirectorProcessWAJPanel extends javax.swing.JPanel {
                                         .addComponent(jLabel2))
                                     .addGap(25, 25, 25)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(commentsTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(hospitalAddressTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(messageTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(hospitalLocationTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(hospitalNameTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(amountRequiredTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGap(198, 198, 198)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(backJBtn)
+                        .addComponent(backJButton)
                         .addGap(176, 176, 176)))
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 630, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(66, Short.MAX_VALUE))
@@ -137,7 +149,7 @@ public class DirectorProcessWAJPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(backJBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(backJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(34, 34, 34)
@@ -155,39 +167,83 @@ public class DirectorProcessWAJPanel extends javax.swing.JPanel {
                             .addComponent(amountRequiredTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(hospitalAddressTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(hospitalLocationTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(commentsTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(messageTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
                         .addGap(55, 55, 55)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cancelJBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(releaseAmountJBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(rejectBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(disburseAmountJBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(85, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void releaseAmountJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseAmountJBtnActionPerformed
-        
-    }//GEN-LAST:event_releaseAmountJBtnActionPerformed
+    private void disburseAmountJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disburseAmountJBtnActionPerformed
+        String message = messageTxtBox.getText();
+        if (message.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Comments Required!");
+            return;
+    }
+       ngoFundRequest.setRequestNote(message);
 
-    private void backJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJBtnActionPerformed
+        int confirm = JOptionPane.showConfirmDialog(null, "Disburse funds?");
+        if (confirm == JOptionPane.YES_OPTION) {
+            ngoFundRequest.setRequestStatus("Accepted");
+            JOptionPane.showMessageDialog(null, "Funds Released Successfully!");
 
-    }//GEN-LAST:event_backJBtnActionPerformed
+            disburseAmountJBtn.setEnabled(false);
+            rejectBtn.setEnabled(false);
+            messageTxtBox.setText("");
+        }
 
-    private void cancelJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelJBtnActionPerformed
-   
-    }//GEN-LAST:event_cancelJBtnActionPerformed
+    }//GEN-LAST:event_disburseAmountJBtnActionPerformed
+
+    private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
+   containerPanel.remove(this);
+
+        Component[] components = containerPanel.getComponents();
+        Component previous = components[components.length - 1];
+
+        if (previous instanceof NGODirectorWAJPanel) {
+            NGODirectorWAJPanel directorPanel = (NGODirectorWAJPanel) previous;
+            directorPanel.populateDirectorRequestTable();
+        }
+
+        CardLayout layout = (CardLayout) containerPanel.getLayout();
+        layout.previous(containerPanel);
+
+    }//GEN-LAST:event_backJButtonActionPerformed
+    // reject button functionality
+    private void rejectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectBtnActionPerformed
+       String message = messageTxtBox.getText().trim();
+
+        if (message.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Message is mandatory!");
+            return;
+        }
+
+        ngoFundRequest.setRequestNote(message);
+
+        int confirm = JOptionPane.showConfirmDialog(null, "Reject this request?");
+        if (confirm == JOptionPane.YES_OPTION) {
+            ngoFundRequest.setRequestStatus("Rejected");
+            JOptionPane.showMessageDialog(null, "Request Rejected");
+
+            rejectBtn.setEnabled(false);
+            disburseAmountJBtn.setEnabled(false);
+            messageTxtBox.setText("");
+        }
+    }//GEN-LAST:event_rejectBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField amountRequiredTxtBox;
-    private javax.swing.JButton backJBtn;
-    private javax.swing.JButton cancelJBtn;
-    private javax.swing.JTextField commentsTxtBox;
-    private javax.swing.JTextField hospitalAddressTxtBox;
+    private javax.swing.JButton backJButton;
+    private javax.swing.JButton disburseAmountJBtn;
+    private javax.swing.JTextField hospitalLocationTxtBox;
     private javax.swing.JTextField hospitalNameTxtBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -195,6 +251,7 @@ public class DirectorProcessWAJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JButton releaseAmountJBtn;
+    private javax.swing.JTextField messageTxtBox;
+    private javax.swing.JButton rejectBtn;
     // End of variables declaration//GEN-END:variables
 }

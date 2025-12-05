@@ -5,6 +5,18 @@
  */
 package UI.HealthcareAccountant;
 
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.Enterprise.InsuranceEnterprise;
+import Business.Insurance.Insurance;
+import Business.CustomerInsurance.CustomerInsurance;
+import Business.Network.Network;
+import Business.Organization.AccountantOrg;
+import Business.Organization.InsuranceAgentOrg;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.AccountantBillingRequest;
+import Business.WorkQueue.InsuranceWorkRequest;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.text.DecimalFormat;
@@ -19,7 +31,27 @@ import javax.swing.JPanel;
  */
 public class AccountantProcessRequestJPanel extends javax.swing.JPanel {
 
-    
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private Enterprise enterprise;
+    private AccountantOrg organization;
+    private AccountantBillingRequest billingRequest;
+    private Ecosystem ecosystem;
+    private double payableAmount;
+
+    /**
+     * Creates new form AccountantProcessRequestJPanel
+     */
+    public AccountantProcessRequestJPanel(JPanel userProcessContainer, UserAccount account, AccountantBillingRequest request, Enterprise enterprise, Ecosystem ecosystem) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.enterprise = enterprise;
+        this.organization = organization;
+        this.billingRequest = request;
+        this.ecosystem = ecosystem;
+        populateFields();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -242,20 +274,111 @@ public class AccountantProcessRequestJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnInitiateClaimRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInitiateClaimRequestActionPerformed
+        String policyNumber = billingRequest.getPatientRecord().getCustomerInsurance().getInsurancePolicyNumber();
+        String ssn = billingRequest.getPatientRecord().getSsn();
+        String policyName = billingRequest.getPatientRecord().getCustomerInsurance().getInsurance().getPolicyName();
+        String insuranceCompany = billingRequest.getPatientRecord().getCustomerInsurance().getInsurance().getInsuranceCompany();
+        double claimAmount = Double.parseDouble(fieldInsuranceClaimAmount.getText());
+        double billAmount = billingRequest.getTotalBillAmount();
         
+        if (("Patient Transaction Completed").equals(billingRequest.getRequestStatus())) {
+            JOptionPane.showMessageDialog(null, "Insurance request sent for claim");
+            return;
+        }
+        
+        Insurance insurance = new Insurance(policyName, insuranceCompany, claimAmount);
+        insurance.setCoverage(billingRequest.getPatientRecord().getCustomerInsurance().getInsurance().getCoverage());
+        
+        CustomerInsurance customerInsurance = new CustomerInsurance(insurance, policyNumber);
+        customerInsurance.setCustomerFirstName(frstNmTxt.getText().trim());
+        customerInsurance.setCustomerLastName(fieldLastName.getText().trim());
 
+        InsuranceWorkRequest insuranceWorkRequest = new InsuranceWorkRequest();
+        insuranceWorkRequest.setInsuranceProvider(insuranceCompany);
+        insuranceWorkRequest.setPolicyNumber(policyNumber);
+        insuranceWorkRequest.setPolicyName(policyName);
+        insuranceWorkRequest.setPatientSSN(ssn);
+        insuranceWorkRequest.setClaimAmount(claimAmount);
+        insuranceWorkRequest.setTreatmentBill(billAmount);
+        insuranceWorkRequest.setMedicalCenter(enterprise.getName());
 
+        insuranceWorkRequest.setRequestSender(account);
+        insuranceWorkRequest.setRequestStatus("Sent");
+        insuranceWorkRequest.setInsuredPatient(customerInsurance);
+
+        Organization org = null;
+        InsuranceEnterprise matchedInsuranceCompany = null;
+
+        List<Network> networks = ecosystem.getNetworks();
+        for (Network network : networks) {
+            List<Enterprise> enterprises = network.getEnterpriseDirectory().getEnterpriseList();
+            for (Enterprise enterprise : enterprises) {
+                if (enterprise.getName().equalsIgnoreCase(billingRequest.getPatientRecord().getCustomerInsurance().getInsurance().getInsuranceCompany())) {
+                    matchedInsuranceCompany = (InsuranceEnterprise) enterprise;
+                }
+            }
+        }
+
+        for (Organization organization : matchedInsuranceCompany.getOrgDir().getOrganizations()) {
+            if (organization instanceof InsuranceAgentOrg) {
+                org = organization;
+                break;
+            }
+        }
+        
+        if (org != null) {
+            org.getWorkQueue().getWorkRequests().add(insuranceWorkRequest);
+            account.getWorkQueue().getWorkRequests().add(insuranceWorkRequest);
+            billingRequest.setRequestStatus("Patient Transaction Completed");
+            billingRequest.getPatientRecord().setIsTreatmentDone(true);
+            JOptionPane.showMessageDialog(null, "Money received from patient: $" + String.format("%.2f", payableAmount) + ". Insurance Claim Request Raised Successfully for amount: $" + claimAmount);
+            btnInitiateClaimRequest.setEnabled(false);
+        }
     }//GEN-LAST:event_btnInitiateClaimRequestActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-
-       
+        userProcessContainer.remove(this);
+        Component[] componentArray = userProcessContainer.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        ProcessMedicalBillingsJPanel processMedicalBillingsJPanel = (ProcessMedicalBillingsJPanel) component;
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnCompleteTransactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompleteTransactionActionPerformed
-        
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        userProcessContainer.add("EmailBillingInformationToPatientJPanel", new EmailBillingInformationToPatientJPanel(userProcessContainer, billingRequest));
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnCompleteTransactionActionPerformed
+        
+    private void populateFields() {
+        String policyNumber = billingRequest.getPatientRecord().getCustomerInsurance().getInsurancePolicyNumber();
+        DecimalFormat df2 = new DecimalFormat("#.##");
+        double coverage = billingRequest.getPatientRecord().getCustomerInsurance().getInsurance().getCoverage();
+        double billAmount = billingRequest.getTotalBillAmount();
+        String ssn = billingRequest.getPatientRecord().getSsn();
+        String policyName = billingRequest.getPatientRecord().getCustomerInsurance().getInsurance().getPolicyName();
+        String insuranceCompany = billingRequest.getPatientRecord().getCustomerInsurance().getInsurance().getInsuranceCompany();
+        double claimAmount = (coverage * billAmount) / 100;
+        payableAmount = billAmount - claimAmount;
 
+        fieldPolicyNumber.setText(policyNumber);
+        fieldSSN.setText(ssn);
+        frstNmTxt.setText(billingRequest.getPatientRecord().getPatientFirstName());
+        fieldLastName.setText(billingRequest.getPatientRecord().getPatientLastName());
+        fieldBillAmount.setText(String.valueOf(billAmount));
+        fieldInsurancePolicyName.setText(policyName);
+        fieldInsuranceClaimAmount.setText(String.valueOf(claimAmount));
+        fieldPayableAmount.setText(String.valueOf(df2.format(payableAmount)));
+
+        if (claimAmount > 0) {
+            btnInitiateClaimRequest.setEnabled(true);
+            btnCompleteTransaction.setEnabled(false);
+        } else {
+            btnCompleteTransaction.setEnabled(true);
+            btnInitiateClaimRequest.setEnabled(false);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;

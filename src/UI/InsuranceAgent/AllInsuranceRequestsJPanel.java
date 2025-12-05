@@ -6,22 +6,39 @@
 package UI.InsuranceAgent;
 
 import Business.Enterprise.Enterprise;
+import Business.Organization.InsuranceAgentOrg;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.InsuranceWorkRequest;
+import Business.WorkQueue.WorkRequest;
 import java.awt.CardLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
-
 /**
  *
 
  * @author jayan
 
  */
-
 public class AllInsuranceRequestsJPanel extends javax.swing.JPanel {
+    
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private Enterprise enterprise;
+    private InsuranceAgentOrg organization;
+    
+    /**
+     * Creates new form AllInsuranceRequestsJPanel
+     */
+    public AllInsuranceRequestsJPanel(JPanel userProcessContainer, UserAccount account, Enterprise enterprise, InsuranceAgentOrg organization) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.enterprise = enterprise;
+        this.organization = organization;
+        populateTable();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -151,15 +168,66 @@ public class AllInsuranceRequestsJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnProcessRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessRequestActionPerformed
-        
+        int selectedRow = tblInsuranceWorkRequest.getSelectedRow();
+        InsuranceWorkRequest request;
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row");
+            return;
+        } else {
+            request = (InsuranceWorkRequest) tblInsuranceWorkRequest.getValueAt(selectedRow, 0);
+            if (request.getRequestStatus().equals("Rejected")) {
+                JOptionPane.showMessageDialog(null, "Cannot process a Rejected Request", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (request.getRequestStatus().equalsIgnoreCase("Sent to Secretary")) {
+                JOptionPane.showMessageDialog(null, "Request already processed", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (request.getRequestStatus().equalsIgnoreCase("Sent")) {
+                JOptionPane.showMessageDialog(null, "Assign the request first");
+                return;
+            }
+            if (request.getRequestStatus().equalsIgnoreCase("Sent to Finance Department")) {
+                JOptionPane.showMessageDialog(null, "Request already sent to Finance department");
+                return;
+            }
+            if (request.getRequestStatus().equalsIgnoreCase("Insurance Claim Approved")) {
+                JOptionPane.showMessageDialog(null, "Insurance Claim is already Approved");
+                return;
+            }
+            if (!account.equals(request.getRequestReceiver())) {
+                JOptionPane.showMessageDialog(null, "Not Authorized", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            } else {
+                CardLayout cardLayout = (CardLayout) userProcessContainer.getLayout();
+                userProcessContainer.add("ProcessRequestJPanel", new ProcessRequestJPanel(userProcessContainer, account, enterprise, request));
+                cardLayout.next(userProcessContainer);
+            }
+        }
     }//GEN-LAST:event_btnProcessRequestActionPerformed
 
     private void btnAssignToMeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignToMeActionPerformed
-        
+        int selectedRow = tblInsuranceWorkRequest.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please Select a Row");
+            return;
+        } else {
+            InsuranceWorkRequest request = (InsuranceWorkRequest) tblInsuranceWorkRequest.getValueAt(selectedRow, 0);
+            if (request.getRequestStatus().equals("Sent")) {
+                request.setRequestReceiver(account);
+                request.setRequestStatus("Pending on Agent: " + account.getEmployee().getEmployeeName());
+                populateTable();
+                JOptionPane.showMessageDialog(null, "Success !! Request is assigned to you ");
+            } else {
+                JOptionPane.showMessageDialog(null, "Can't assign this request, as it is in " + request.getRequestStatus() + " status", "Warning!", JOptionPane.WARNING_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnAssignToMeActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
 
@@ -171,4 +239,24 @@ public class AllInsuranceRequestsJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JTable tblInsuranceWorkRequest;
     // End of variables declaration//GEN-END:variables
+
+    public void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblInsuranceWorkRequest.getModel();
+        model.setRowCount(0);
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequests()) {
+            Object[] row = new Object[8];
+            InsuranceWorkRequest insuranceRequest = (InsuranceWorkRequest) request;
+            row[0] = insuranceRequest;
+            row[1] = insuranceRequest.getInsuredPatient().getCustomerFirstName() + " " + insuranceRequest.getInsuredPatient().getCustomerLastName();
+            row[2] = insuranceRequest.getMedicalCenter();
+            row[3] = request.getRequestSender().getEmployee().getEmployeeName();
+            row[4] = request.getRequestReceiver();
+            row[5] = insuranceRequest.getTreatmentBill();
+            row[6] = insuranceRequest.getClaimAmount();
+            row[7] = request.getRequestStatus();
+            model.addRow(row);
+        }
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        tblInsuranceWorkRequest.setRowSorter(sorter);
+    }
 }

@@ -5,9 +5,9 @@
  */
 package UI.HealthcareAccountant;
 
-
 import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
+import Business.Enterprise.HealthCareEnterprise;
 import Business.Organization.AccountantOrg;
 import Business.Patient.Patient;
 import Business.UserAccount.UserAccount;
@@ -15,22 +15,35 @@ import java.awt.CardLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
-
-
 /**
  *
  * @author jayan
  */
 public class AccountantWorkAreaJPanel extends javax.swing.JPanel {
 
-    public AccountantWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, AccountantOrg par, Enterprise enterprise, Ecosystem ecosystem) {
-    }
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private AccountantOrg organization;
+    private Enterprise enterprise;
+    private Ecosystem ecosystem;
 
-    
+    /**
+     * Creates new form AccountantWorkAreaJPanel
+     */
+    public AccountantWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, AccountantOrg organization, Enterprise enterprise, Ecosystem ecosystem) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.organization = organization;
+        this.account = account;
+        this.enterprise = enterprise;
+        this.ecosystem = ecosystem;
+
+        populateAllPatientsTable();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -165,18 +178,42 @@ public class AccountantWorkAreaJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCreateAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateAppointmentActionPerformed
-
+        String patientId = UUID.randomUUID().toString().substring(0, 7);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        userProcessContainer.add("CreateAppointmentJPanel", new CreateAppointmentJPanel(userProcessContainer, account, enterprise, ecosystem, patientId));
+        layout.next(userProcessContainer);
         
     }//GEN-LAST:event_btnCreateAppointmentActionPerformed
 
     private void btnProcessMedicalBillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessMedicalBillingActionPerformed
-      
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        userProcessContainer.add("ProcessMedicalBillingsJPanel", new ProcessMedicalBillingsJPanel(userProcessContainer, account, enterprise, organization, ecosystem));
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnProcessMedicalBillingActionPerformed
 
     private void btnPatientReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPatientReportActionPerformed
+        List<Patient> underTreatmentPatients = new ArrayList<>();
+        List<Patient> treatedPatients = new ArrayList<>();
+        List<Patient> patients = ((HealthCareEnterprise) enterprise).getPatientDir().getPatients();
         
+        for (Patient patient : patients) {
+            if (patient.isIsTreatmentDone()) {
+                treatedPatients.add(patient);
+            } else {
+                underTreatmentPatients.add(patient);
+            }
+        }
+        
+        // Display patient statistics in a message dialog
+        String reportMessage = "=== Patient Status Report ===\n\n" +
+                              "Total Patients: " + patients.size() + "\n" +
+                              "Patients Under Treatment: " + underTreatmentPatients.size() + "\n" +
+                              "Patients Treated Successfully: " + treatedPatients.size() + "\n\n" +
+                              "Treatment Completion Rate: " + 
+                              String.format("%.2f", (treatedPatients.size() * 100.0 / patients.size())) + "%";
+        
+        JOptionPane.showMessageDialog(null, reportMessage, "Patient Status Report", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnPatientReportActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreateAppointment;
@@ -188,4 +225,24 @@ public class AccountantWorkAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JTable tblPatientDetails;
     // End of variables declaration//GEN-END:variables
 
+    public void populateAllPatientsTable() {
+        List<Patient> patients = ((HealthCareEnterprise) enterprise).getPatientDir().getPatients();
+        DefaultTableModel model = (DefaultTableModel) tblPatientDetails.getModel();
+        model.setRowCount(0);
+        
+        for (Patient patient : patients) {
+            Object[] row = new Object[7];
+            row[0] = patient;
+            row[1] = patient.getPatientFirstName() + " " + patient.getPatientLastName();
+            row[2] = patient.getContactNo();
+            row[3] = patient.getAddress();
+            row[4] = patient.isIsTreatmentDone() ? "Treatment Complete" : "Treatment In Progress";
+            row[5] = patient.getDateOfAppoitment();
+            row[6] = patient.getTypeOfDoctor();
+            model.addRow(row);
+        }
+        
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        tblPatientDetails.setRowSorter(sorter);
+    }
 }

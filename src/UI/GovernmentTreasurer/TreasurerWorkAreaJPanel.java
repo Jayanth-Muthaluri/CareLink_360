@@ -5,11 +5,37 @@
  */
 package UI.GovernmentTreasurer;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.Organization.TreasurerOrg;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.GovernmentFundRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 /**
  *
  * @author jayan
  */
 public class TreasurerWorkAreaJPanel extends javax.swing.JPanel {
+
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private TreasurerOrg organization;
+    private Enterprise enterprise;
+
+    public TreasurerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
+        initComponents();
+        this.enterprise = enterprise;
+        this.userProcessContainer = userProcessContainer;
+        this.organization = (TreasurerOrg) organization;
+        this.account = account;
+
+        populateTable();
+    }
 
 
 
@@ -125,15 +151,94 @@ public class TreasurerWorkAreaJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAssignToMeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignToMeActionPerformed
+        int selectedRow = tblTreasurerWorkArea.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row first from the table to view details");
+            return;
+        }
         
+        WorkRequest request = (GovernmentFundRequest) tblTreasurerWorkArea.getValueAt(selectedRow, 5);
+        if (request.getRequestStatus().equals("Sent to Treasurer")) {
+            request.setRequestReceiver(account);
+            request.setRequestStatus("Pending on " + request.getRequestReceiver().getEmployee().getEmployeeName());
+            populateTable();
+            JOptionPane.showMessageDialog(null, "Success! Request is assigned to you");
+        } else {
+            JOptionPane.showMessageDialog(null, 
+                "Can't assign this work request, as the work request is in " + request.getRequestStatus() + " status", 
+                "Warning!", 
+                JOptionPane.WARNING_MESSAGE);
+        }
 
     }//GEN-LAST:event_btnAssignToMeActionPerformed
 
     private void btnProcessRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessRequestActionPerformed
         // TODO add your handling code here:
+        int selectedRow = tblTreasurerWorkArea.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row first from the table to view details");
+            return;
+        }
         
+        GovernmentFundRequest request = (GovernmentFundRequest) tblTreasurerWorkArea.getValueAt(selectedRow, 5);
+        
+        if (request.getRequestStatus().equalsIgnoreCase("Sent to Treasurer")) {
+            JOptionPane.showMessageDialog(null, "Please assign selected request first");
+            return;
+        }
+        
+        if (request.getRequestStatus().equalsIgnoreCase("Accepted")) {
+            JOptionPane.showMessageDialog(null, "Request already completed", "Warning!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if (!account.equals(request.getRequestReceiver())) {
+            JOptionPane.showMessageDialog(null, "Not Authorized", "Warning!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if (!account.getEmployee().equals(request.getRequestReceiver().getEmployee())) {
+            JOptionPane.showMessageDialog(null, "Request assigned to other Officer", "Warning!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if (request.getRequestStatus().equals("Rejected")) {
+            JOptionPane.showMessageDialog(null, "Cannot process a Rejected Request", "Warning!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        TreasurerWorkRequestJPanel treasurerWorkRequestJPanel = new TreasurerWorkRequestJPanel(userProcessContainer, request, account, organization, enterprise);
+        userProcessContainer.add("TreasurerWorkRequestJPanel", treasurerWorkRequestJPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnProcessRequestActionPerformed
 
+    public void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblTreasurerWorkArea.getModel();
+        model.setRowCount(0);
+
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequests()) {
+            String status = request.getRequestStatus();
+            Object[] row = new Object[6];
+            row[0] = request.getRequestSender().getEmployee().getEmployeeName();
+            
+            if (status.equalsIgnoreCase("Sent to Treasurer") || status.equalsIgnoreCase("Sent to Secretary")) {
+                row[1] = null;
+            } else {
+                row[1] = request.getRequestReceiver() == null ? null : request.getRequestReceiver().getEmployee().getEmployeeName();
+            }
+
+            row[2] = status;
+            row[3] = ((GovernmentFundRequest) request).getRequiredFunding();
+            row[4] = request.getRequestNote();
+            row[5] = request;
+
+            model.addRow(row);
+        }
+        
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        tblTreasurerWorkArea.setRowSorter(sorter);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAssignToMe;

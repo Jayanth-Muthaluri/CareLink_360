@@ -6,20 +6,56 @@
 package UI.HealthcareAccountant;
 
 
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.Enterprise.HealthCareEnterprise;
+import Business.Enterprise.InsuranceEnterprise;
+import Business.Insurance.Insurance;
+import Business.CustomerInsurance.CustomerInsurance;
+import Business.Network.Network;
+import Business.Organization.DoctorOrg;
+import Business.Organization.Organization;
+import Business.Patient.Patient;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
 /**
  *
  * @author jayan
  */
 public class CreateAppointmentJPanel extends javax.swing.JPanel {
     
-    
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private Enterprise enterprise;
+    private Ecosystem ecosystem;
+    private String patientId;
 
+    /**
+     * Creates new form CreateAppointmentJPanel
+     */
+    public CreateAppointmentJPanel(JPanel userProcessContainer, UserAccount account, Enterprise enterprise, Ecosystem ecosystem, String patientId) {
+        initComponents();
+        this.account = account;
+        this.userProcessContainer = userProcessContainer;
+        this.enterprise = enterprise;
+        this.ecosystem = ecosystem;
+        this.patientId = patientId;
+        
+        populateField();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -518,6 +554,7 @@ public class CreateAppointmentJPanel extends javax.swing.JPanel {
 
     private void fieldPhoneNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldPhoneNumberActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_fieldPhoneNumberActionPerformed
 
     private void fieldAgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldAgeActionPerformed
@@ -533,37 +570,282 @@ public class CreateAppointmentJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_radioBtnFemaleActionPerformed
 
     private void radioBtnPatientInsuranceYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBtnPatientInsuranceYesActionPerformed
-        
+        lblInsurnacePolicyNo.setEnabled(true);
+        btnFindInsurancePolicy.setEnabled(true);
+        fieldInsurnacePolicyNo.setEnabled(true);
 
     }//GEN-LAST:event_radioBtnPatientInsuranceYesActionPerformed
 
     private void radioBtnPatientInsuranceNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBtnPatientInsuranceNoActionPerformed
-        
+        lblInsurnacePolicyNo.setEnabled(false);
+        btnFindInsurancePolicy.setEnabled(false);
+        fieldInsurnacePolicyNo.setEnabled(false);
+        fieldInsuranceCompany.setEnabled(false);
+        fieldPolicyName.setEnabled(false);
+        fieldInsuranceCoverage.setEnabled(false);
+        lblCoveragepercent.setEnabled(false);
+        lblInsuranceCompany.setEnabled(false);
+        lblPolicyName.setEnabled(false);
         
     }//GEN-LAST:event_radioBtnPatientInsuranceNoActionPerformed
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
+        if (fieldFirstName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide first name");
+            return;
+        }
+        if (fieldLastName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide last name");
+            return;
+        }
+        if (buttonGroup2.isSelected(null)) {
+            JOptionPane.showMessageDialog(null, "Please select gender");
+            return;
+        }
+        if (fieldPhoneNumber.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide phone");
+            return;
+        }
+        if (fieldSSN.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide SSN");
+            return;
+        }
+        if (fieldAge.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide age");
+            return;
+        }
+        if (fieldAddress.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide address");
+            return;
+        }
         
+        if (buttonGroup1.isSelected(null)) {
+            JOptionPane.showMessageDialog(null, "Please choose if Patient covered by Insurance");
+            return;
+        }
+        
+        if (fieldReasonForVisit.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide Reason for visit");
+            return;
+        }
+        
+        if (fieldPatientEmail.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide an Email ID");
+            return;
+        }
+        
+        if (!usernamePatternCorrect(fieldPatientEmail.getText().trim())) {
+            JOptionPane.showMessageDialog(null, "Please provide a valid email ID in the format xxxx@xx.xx");
+            return;
+        }
+        
+        String registrationDate = fieldDate.getText().trim();
+        String firstName = fieldFirstName.getText().trim();
+        String lastName = fieldLastName.getText().trim();
+        String gender = "Male";
+        
+        if (radioBtnFemale.isSelected()) {
+            gender = "Female";
+        } else if (radioBtnOther.isSelected()) {
+            gender = "Other";
+        }
+        
+        String phoneNo = fieldPhoneNumber.getText().trim();
+        
+        if (!phonePatternCorrect()) {
+            JOptionPane.showMessageDialog(null, "/* Following are valid phone number examples */             \n"
+                    + "              \"1234567890\", \"123-456-7890\", \"(123)4567890\", \"(123)456-7890\",\n"
+                    + "              /* Following are invalid phone numbers */ \n"
+                    + "              \"(1234567890)\",\"123)4567890\", \"12345678901\", \"(1)234567890\",");
+            fieldPhoneNumber.setBorder(BorderFactory.createLineBorder(Color.RED));
+            return;
+        }
+        
+        if (phonePatternCorrect()) {
+            fieldPhoneNumber.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        }
+        
+        String ssn = fieldSSN.getText().trim();
+        
+        if (!ssnPatternCheck()) {
+            JOptionPane.showMessageDialog(null, "/* United States Social Security numbers are nine-digit numbers in the format AAA-GG-SSSS with following rules. */             \n"
+                    + "              \"The first three digits called the area number. The area number cannot be 000, 666, or between 900 and 999\",\n"
+                    + "                \" Digits four and five are called the group number and range from 01 to 99\",\n"
+                    + "              \"The last four digits are serial numbers from 0001 to 9999.\"");
+            fieldSSN.setBorder(BorderFactory.createLineBorder(Color.RED));
+            return;
+        }
+        
+        if (ssnPatternCheck()) {
+            fieldSSN.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        }
+        
+        String age = fieldAge.getText().trim();
+        
+        try {
+            Integer.parseInt(age);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Please provide integer values in Age textfield");
+            return;
+        }
+        
+        String address = fieldAddress.getText().trim();
+        boolean hasInsurance = false;
+        
+        String policyNumber = fieldInsurnacePolicyNo.getText().trim();
+        if (radioBtnPatientInsuranceYes.isSelected()) {
+            if (policyNumber.equals("")) {
+                JOptionPane.showMessageDialog(null, "Provide policy number");
+                return;
+            }
+            
+            if (fieldPolicyName.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "No Policy found, please provide correct policy number");
+                return;
+            }
+        }
+        
+        String insuranceCompany = String.valueOf(fieldInsuranceCompany.getText());
+        String policyName = String.valueOf(fieldPolicyName.getText());
+        String coverString = fieldInsuranceCoverage.getText().trim();
+        double coverage = coverString.equals("") ? 0 : Double.parseDouble(fieldInsuranceCoverage.getText().trim());
+        
+        String reasonForVisit = fieldReasonForVisit.getText().trim();
+        
+        if (hasInsurance) {
+            if (fieldInsurnacePolicyNo.getText().equals("")) {
+                return;
+            }
+        }
+        
+        Insurance insurance = new Insurance(policyName, insuranceCompany, coverage);
+        CustomerInsurance customerInsurance = new CustomerInsurance(insurance, policyNumber);
+        
+        HealthCareEnterprise healthCareEnterprise = (HealthCareEnterprise) enterprise;
+        Patient patient = new Patient();
+        
+        patient.setDateOfAppoitment(fieldDate.getText());
+        patient.setPatientId(patientId);
+        patient.setPatientFirstName(firstName);
+        patient.setPatientLastName(lastName);
+        patient.setGender(gender);
+        patient.setPatientEmail(fieldPatientEmail.getText().trim());
+        patient.setContactNo(phoneNo);
+        patient.setPatientAge(age);
+        patient.setSsn(ssn);
+        patient.setAddress(address);
+        patient.setTypeOfDoctor(jcomboBoxDoctorType.getSelectedItem().toString());
+        patient.setCustomerInsurance(customerInsurance);
+        
+        healthCareEnterprise.getPatientDir().getPatients().add(patient);
+        
+        PatientTreatmentWorkRequest patientTreatmentWorkRequest = new PatientTreatmentWorkRequest(registrationDate, reasonForVisit, patient);
+        patientTreatmentWorkRequest.setRequestStatus("Waiting for Doctor");
+        
+        Organization org = null;
+        for (Organization organization : enterprise.getOrgDir().getOrganizations()) {
+            if (organization instanceof DoctorOrg) {
+                org = organization;
+                break;
+            }
+        }
+        
+        if (org != null) {
+            org.getWorkQueue().getWorkRequests().add(patientTreatmentWorkRequest);
+            account.getWorkQueue().getWorkRequests().add(patientTreatmentWorkRequest);
+            refresh();
+            JOptionPane.showMessageDialog(null, "Patient Registered Successfully");
+        }
         
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        
+        userProcessContainer.remove(this);
+        Component[] componentArray = userProcessContainer.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        AccountantWorkAreaJPanel accountantWorkAreaJPanel = (AccountantWorkAreaJPanel) component;
+        accountantWorkAreaJPanel.populateAllPatientsTable();
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnFindPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindPatientActionPerformed
+        boolean isPatientFound = false;
+        String ssn = fieldPatientSSN.getText().trim();
+        List<Network> networks = ecosystem.getNetworks();
+        List<HealthCareEnterprise> healthCareEnterprises = new ArrayList<>();
         
-       
+        for (Network network : networks) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (enterprise instanceof HealthCareEnterprise) {
+                    healthCareEnterprises.add((HealthCareEnterprise) enterprise);
+                }
+            }
+        }
+        
+        for (HealthCareEnterprise healthCareEnterprise : healthCareEnterprises) {
+            List<Patient> patients = healthCareEnterprise.getPatientDir().getPatients();
+            for (Patient patient : patients) {
+                if (ssn.equals(patient.getSsn())) {
+                    autopopulateFields(patient);
+                    isPatientFound = true;
+                }
+            }
+        }
+        
+        if (!isPatientFound) {
+            JOptionPane.showMessageDialog(null, "No patient Found");
+        }
     }//GEN-LAST:event_btnFindPatientActionPerformed
 
     private void btnFindInsurancePolicyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindInsurancePolicyActionPerformed
+        String insurancePolicyNumber = fieldInsurnacePolicyNo.getText().trim();
+        String ssn = fieldSSN.getText().trim();
+        List<InsuranceEnterprise> insuranceEnterprises = new ArrayList<>();
+        CustomerInsurance matchedCustomer = null;
         
+        List<Network> networks = ecosystem.getNetworks();
+        for (Network network : networks) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (enterprise instanceof InsuranceEnterprise) {
+                    insuranceEnterprises.add((InsuranceEnterprise) enterprise);
+                }
+            }
+        }
+        
+        for (InsuranceEnterprise insuranceEnterprise : insuranceEnterprises) {
+            List<CustomerInsurance> customerInsurances = insuranceEnterprise.getcustInsDir().getInsuranceCustomers();
+            for (CustomerInsurance customerInsurance : customerInsurances) {
+                if (insurancePolicyNumber.equals(customerInsurance.getInsurancePolicyNumber()) && ssn.equals(customerInsurance.getSSN())) {
+                    matchedCustomer = customerInsurance;
+                }
+            }
+        }
+        
+        if (matchedCustomer != null) {
+            fieldInsuranceCompany.setText(matchedCustomer.getInsurance().getInsuranceCompany());
+            fieldPolicyName.setText(matchedCustomer.getInsurance().getPolicyName());
+            fieldInsuranceCoverage.setText(String.valueOf(matchedCustomer.getInsurance().getCoverage()));
+            fieldInsurnacePolicyNo.setEnabled(false);
+            fieldSSN.setEnabled(false);
+        } else {
+            JOptionPane.showMessageDialog(null, "Policy number does not match with provided SSN");
+            fieldInsuranceCompany.setText("");
+            fieldPolicyName.setText("");
+            fieldInsuranceCoverage.setText("");
+            fieldInsurnacePolicyNo.setText("");
+            return;
+        }
     }//GEN-LAST:event_btnFindInsurancePolicyActionPerformed
 
     private void btnResetPolicyNumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetPolicyNumActionPerformed
-        
+        fieldInsurnacePolicyNo.setEnabled(true);
+        fieldSSN.setEnabled(true);
+        fieldInsurnacePolicyNo.setText("");
+        fieldPolicyName.setText("");
+        fieldInsuranceCompany.setText("");
+        fieldInsuranceCoverage.setText("");
     }//GEN-LAST:event_btnResetPolicyNumActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
@@ -623,4 +905,102 @@ public class CreateAppointmentJPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtPatientId11;
     // End of variables declaration//GEN-END:variables
 
+    private void populateField() {
+        LocalDateTime localTimeUpdate = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss");
+        fieldDate.setText(localTimeUpdate.format(dateTimeFormat));
+        
+        fieldPatientID.setText(patientId);
+        
+        lblInsurnacePolicyNo.setEnabled(false);
+        btnFindInsurancePolicy.setEnabled(false);
+        fieldInsurnacePolicyNo.setEnabled(false);
+        fieldInsuranceCompany.setEnabled(false);
+        fieldPolicyName.setEnabled(false);
+        fieldInsuranceCoverage.setEnabled(false);
+        lblCoveragepercent.setEnabled(false);
+        lblInsuranceCompany.setEnabled(false);
+        lblPolicyName.setEnabled(false);
+    }
+    
+    private void refresh() {
+        fieldPatientID.setText(UUID.randomUUID().toString().substring(0, 7));
+        fieldFirstName.setText("");
+        fieldLastName.setText("");
+        fieldPhoneNumber.setText("");
+        fieldAge.setText("");
+        fieldSSN.setText("");
+        fieldAddress.setText("");
+        fieldReasonForVisit.setText("");
+        fieldPatientEmail.setText("");
+        fieldPolicyName.setText("");
+        fieldInsurnacePolicyNo.setText("");
+        fieldInsuranceCoverage.setText("");
+        fieldInsuranceCompany.setText("");
+    }
+    
+    private boolean phonePatternCorrect() {
+        Pattern pattern = Pattern.compile("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}");
+        Matcher matcher = pattern.matcher(fieldPhoneNumber.getText());
+        return matcher.matches();
+    }
+    
+    private boolean ssnPatternCheck() {
+        Pattern pattern = Pattern.compile("^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$");
+        Matcher matcher = pattern.matcher(fieldSSN.getText());
+        return matcher.matches();
+    }
+    
+    private void autopopulateFields(Patient patient) {
+        fieldFirstName.setText(patient.getPatientFirstName());
+        fieldLastName.setText(patient.getPatientLastName());
+        fieldPatientID.setText(patient.getPatientId());
+        fieldPhoneNumber.setText(patient.getContactNo());
+        fieldSSN.setText(patient.getSsn());
+        fieldAge.setText(patient.getPatientAge());
+        fieldAddress.setText(patient.getAddress());
+        fieldPatientEmail.setText(patient.getPatientEmail());
+        
+        String sex = patient.getGender();
+        
+        if (sex.equals("Male")) {
+            radioBtnMale.setSelected(true);
+        } else if (sex.equals("Female")) {
+            radioBtnFemale.setSelected(true);
+        } else if (sex.equals("Other")) {
+            radioBtnOther.setSelected(true);
+        }
+    }
+    
+    private boolean usernamePatternCorrect(String username) {
+        Pattern p = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
+        Matcher m = p.matcher(username);
+        return m.matches();
+    }
+    
+    private boolean checkEmailDuplication(String patientEmail) {
+        boolean isPatientFound = false;
+        String ssn = fieldPatientSSN.getText().trim();
+        List<Network> networks = ecosystem.getNetworks();
+        List<HealthCareEnterprise> healthCareEnterprises = new ArrayList<>();
+        
+        for (Network network : networks) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (enterprise instanceof HealthCareEnterprise) {
+                    healthCareEnterprises.add((HealthCareEnterprise) enterprise);
+                }
+            }
+        }
+        
+        for (HealthCareEnterprise healthCareEnterprise : healthCareEnterprises) {
+            List<Patient> patients = healthCareEnterprise.getPatientDir().getPatients();
+            for (Patient patient : patients) {
+                if (patientEmail.equals(patient.getPatientEmail())) {
+                    isPatientFound = true;
+                    break;
+                }
+            }
+        }
+        return isPatientFound;
+    }
 }

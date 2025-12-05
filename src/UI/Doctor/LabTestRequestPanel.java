@@ -4,19 +4,39 @@
  */
 package UI.Doctor;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.LabOrg;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.PatientTreatmentWorkRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gaganaananda
  */
 public class LabTestRequestJPanel extends javax.swing.JPanel {
 
-
+    private JPanel jPanel;
+    private Enterprise enterprise;
+    private UserAccount userAccount;
+    private PatientTreatmentWorkRequest patientTreatmentWorkRequest;
 
     /**
      * Creates new form RequestLabTestJPanel
      */
-    public LabTestRequestJPanel() {
+    public LabTestRequestJPanel(JPanel userProcessContainer, UserAccount account, Enterprise enterprise, PatientTreatmentWorkRequest patientTreatmentWorkRequest) {
         initComponents();
+        
+        this.jPanel = userProcessContainer;
+        this.enterprise = enterprise;
+        this.userAccount = account;
+        this.patientTreatmentWorkRequest = patientTreatmentWorkRequest;
+        valueLabel.setText(enterprise.getName());
+        btnReqTest.setEnabled(true);
 
     }
 
@@ -29,7 +49,7 @@ public class LabTestRequestJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnReq = new javax.swing.JButton();
+        btnReqTest = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtLabMessage = new javax.swing.JTextField();
         btnBack = new javax.swing.JButton();
@@ -43,15 +63,15 @@ public class LabTestRequestJPanel extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 153, 204));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnReq.setBackground(new java.awt.Color(255, 102, 102));
-        btnReq.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        btnReq.setText("Request Test");
-        btnReq.addActionListener(new java.awt.event.ActionListener() {
+        btnReqTest.setBackground(new java.awt.Color(255, 102, 102));
+        btnReqTest.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        btnReqTest.setText("Request Test");
+        btnReqTest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReqActionPerformed(evt);
+                btnReqTestActionPerformed(evt);
             }
         });
-        add(btnReq, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 240, 130, 30));
+        add(btnReqTest, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 240, 130, 30));
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel1.setText("Message:");
@@ -90,20 +110,61 @@ public class LabTestRequestJPanel extends javax.swing.JPanel {
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 1460, 810));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReqActionPerformed
+    private void btnReqTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReqTestActionPerformed
+        String labType = txtLabType.getText().trim();
+        String message = txtLabMessage.getText().trim();
 
+        if (labType.equals("")) {
+            JOptionPane.showMessageDialog(null, "Lap type is mandatory!");
+            return;
+        }
+        if (message.equals("")) {
+            JOptionPane.showMessageDialog(null, "Message is mandatory");
+            return;
+        }
+
+
+        patientTreatmentWorkRequest.setLabNotes(message);
+        patientTreatmentWorkRequest.setRequestSender(userAccount);
+        patientTreatmentWorkRequest.setRequestStatus("SentToLab");
+        patientTreatmentWorkRequest.setRequestReceiver(null);
+
+        Organization org = null;
+        for (Organization organization : enterprise.getOrgDir().getOrganizations()) {
+
+            if (organization instanceof LabOrg) {
+                org = organization;
+                break;
+            }
+        }
+        if (org != null) {
+
+            org.getWorkQueue().getWorkRequests().add(patientTreatmentWorkRequest);
+            userAccount.getWorkQueue().getWorkRequests().add(patientTreatmentWorkRequest);
+
+            JOptionPane.showMessageDialog(null, "Lab request sent");
+            txtLabMessage.setText("");
+            txtLabType.setText("");
+            btnReqTest.setEnabled(false);
+        }
        
 
-    }//GEN-LAST:event_btnReqActionPerformed
+    }//GEN-LAST:event_btnReqTestActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
 
-      
+        jPanel.remove(this);
+        Component[] componentArray = jPanel.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        DoctorWorkAreaJPanel dwjp = (DoctorWorkAreaJPanel) component;
+        dwjp.populateTable();
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
     }//GEN-LAST:event_btnBackActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnReq;
+    private javax.swing.JButton btnReqTest;
     private javax.swing.JLabel enterpriseLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

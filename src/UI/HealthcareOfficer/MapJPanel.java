@@ -1,22 +1,66 @@
 
 package UI.HealthcareOfficer;
 
+import Business.Ecosystem;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
-import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
-
-
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.input.PanMouseInputListener;
+import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.TileFactoryInfo;
 /**
  *
  * @author jayan
  */
 public class MapJPanel extends javax.swing.JPanel {
     
-
-
-
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private Ecosystem ecosystem;
+    private JXMapViewer actualMapViewer;  // ADD THIS LINE
+     
+    public MapJPanel(JPanel userProcessContainer, UserAccount account, Ecosystem ecosystem) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.ecosystem = ecosystem;
+        initMap();  // CHANGED from init() to initMap()
+    }
+    
+    public MapJPanel(JPanel userProcessContainer) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        initMap();  // CHANGED from init() to initMap()
+    }
+    
+    private void initMap() {
+        // Create the actual JXMapViewer
+        actualMapViewer = new JXMapViewer();
+        
+        TileFactoryInfo info = new OSMTileFactoryInfo();
+        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        actualMapViewer.setTileFactory(tileFactory);
+        
+        // Default location: Boston, MA
+        GeoPosition geo = new GeoPosition(42.3398, -71.0892);
+        actualMapViewer.setAddressLocation(geo);
+        actualMapViewer.setZoom(12);
+        
+        // Add mouse controls
+        MouseInputListener mm = new PanMouseInputListener(actualMapViewer);
+        actualMapViewer.addMouseListener(mm);
+        actualMapViewer.addMouseMotionListener(mm);
+        actualMapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(actualMapViewer));
+        
+        // Replace the JPanel with the actual map viewer
+        jXMapViewer.setLayout(new java.awt.BorderLayout());
+        jXMapViewer.add(actualMapViewer, java.awt.BorderLayout.CENTER);
+    }
    
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,9 +71,15 @@ public class MapJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jXMapViewer = new org.netbeans.modules.form.InvalidComponent();
+        jXMapViewer = new javax.swing.JPanel();
         btnBack = new javax.swing.JButton();
 
+        jXMapViewer.setBackground(new java.awt.Color(0, 153, 204));
+        jXMapViewer.setMaximumSize(new java.awt.Dimension(783, 554));
+        jXMapViewer.setMinimumSize(new java.awt.Dimension(783, 554));
+        jXMapViewer.setPreferredSize(new java.awt.Dimension(783, 554));
+
+        btnBack.setBackground(new java.awt.Color(255, 102, 102));
         btnBack.setText("Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -42,43 +92,40 @@ public class MapJPanel extends javax.swing.JPanel {
         jXMapViewerLayout.setHorizontalGroup(
             jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jXMapViewerLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(23, 23, 23)
                 .addComponent(btnBack)
-                .addContainerGap(691, Short.MAX_VALUE))
+                .addContainerGap(895, Short.MAX_VALUE))
         );
         jXMapViewerLayout.setVerticalGroup(
             jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jXMapViewerLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
                 .addComponent(btnBack)
-                .addGap(0, 517, Short.MAX_VALUE))
+                .addContainerGap(600, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jXMapViewer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jXMapViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 990, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jXMapViewer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jXMapViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private org.netbeans.modules.form.InvalidComponent jXMapViewer;
+    private javax.swing.JPanel jXMapViewer;
     // End of variables declaration//GEN-END:variables
 }

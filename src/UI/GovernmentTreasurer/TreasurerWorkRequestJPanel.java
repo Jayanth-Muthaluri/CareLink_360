@@ -5,6 +5,14 @@
  */
 package UI.GovernmentTreasurer;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.TreasurerOrg;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.GovernmentFundRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -12,8 +20,28 @@ package UI.GovernmentTreasurer;
  */
 public class TreasurerWorkRequestJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private GovernmentFundRequest request;
+    private UserAccount account;
+    private TreasurerOrg organization;
+    private Enterprise enterprise;
 
-
+    /**
+     * Creates new form TreasurerWorkRequestJPanel
+     */
+    public TreasurerWorkRequestJPanel(JPanel userProcessContainer, GovernmentFundRequest request, UserAccount account, TreasurerOrg organization, Enterprise enterprise) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.request = request;
+        this.account = account;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        
+        // Populate fields with request data
+        fieldAmount.setText(String.valueOf(request.getRequiredFunding()));
+        fieldLocation.setText(request.getRegionName());
+        fieldPopulation.setText(String.valueOf(request.getPatientCount()));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -168,17 +196,57 @@ public class TreasurerWorkRequestJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDisburseAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisburseAmountActionPerformed
-       
+        btnDisburseAmount.setEnabled(true);
+        String message = fieldMessage.getText();
+        
+        if (message.equals("")) {
+            JOptionPane.showMessageDialog(null, "Message is mandatory!");
+            return;
+        }
+        
+        request.setRequestNote(message);
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+        
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            request.setRequestStatus("Accepted");
+            JOptionPane.showMessageDialog(null, "Funds Disbursed Successfully!");
+            btnDisburseAmount.setEnabled(false);
+            fieldMessage.setText("");
+            btnReject.setEnabled(false);
+        }
+        fieldMessage.setText("");
 
     }//GEN-LAST:event_btnDisburseAmountActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-
+        userProcessContainer.remove(this);
+        Component[] componentArray = userProcessContainer.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        TreasurerWorkAreaJPanel treasurerWorkAreaJPanel = (TreasurerWorkAreaJPanel) component;
+        treasurerWorkAreaJPanel.populateTable();
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
      
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
+        String message = fieldMessage.getText();
         
+        if (message.equals("")) {
+            JOptionPane.showMessageDialog(null, "Message is mandatory!");
+            return;
+        }
+        
+        request.setRequestNote(message);
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to proceed?");
+        
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            request.setRequestStatus("Rejected");
+            fieldMessage.setText("");
+            btnReject.setEnabled(false);
+            btnDisburseAmount.setEnabled(false);
+        }
+        fieldMessage.setText("");
     }//GEN-LAST:event_btnRejectActionPerformed
 
 
