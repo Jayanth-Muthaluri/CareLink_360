@@ -6,6 +6,7 @@ import Business.Enterprise.GovtEnterprise;
 import Business.Enterprise.InsuranceEnterprise;
 import Business.Enterprise.NGOEnterprise;
 import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 
@@ -178,28 +179,45 @@ public class EnterpriseAdminDashboardPanel extends javax.swing.JPanel {
 
     private void btnmngUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmngUserActionPerformed
         // TODO add your handling code here:
-        
+        UserAccountManagementJPanel uamjp = new UserAccountManagementJPanel(jPanel, enterpz);
+        jPanel.add("UserAccountManagementJPanel", uamjp);
+
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.next(jPanel);
     }//GEN-LAST:event_btnmngUserActionPerformed
 
     private void btnmngEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmngEmpActionPerformed
+        EmployeeManagementPanel emjp = new EmployeeManagementPanel(jPanel, enterpz.getOrgDir());
+        jPanel.add("EmployeeManagementJPanel", emjp);
 
+
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.next(jPanel);
 
         
     }//GEN-LAST:event_btnmngEmpActionPerformed
 
     private void btnmngOrgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmngOrgActionPerformed
-
+        OrganizationManagementJPanel omjp = new OrganizationManagementJPanel(jPanel, enterpz.getOrgDir(), enterpz);
+        jPanel.add("OrganizationManagementJPanel", omjp);
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.next(jPanel);
 
     }//GEN-LAST:event_btnmngOrgActionPerformed
 
 
     private void btnGovtFundReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGovtFundReqActionPerformed
-       
+       CardLayout layout = (CardLayout) jPanel.getLayout();
+       jPanel.add("FundsRequestJPanel", new FundsRequestJPanel(jPanel, enterpz, userAcc, ecosys));
+       layout.next(jPanel);
     }//GEN-LAST:event_btnGovtFundReqActionPerformed
 
     private void btnNGOFundReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNGOFundReqActionPerformed
         // TODO add your handling code here:
-      
+        
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        jPanel.add("NGOFundRequestJPanel", new NGOFundRequestJPanel(jPanel, enterpz, userAcc, ecosys));
+        layout.next(jPanel);
     }//GEN-LAST:event_btnNGOFundReqActionPerformed
 
 
