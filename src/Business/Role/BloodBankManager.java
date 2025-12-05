@@ -10,7 +10,7 @@ import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import UI.BloodBankManager.BloodBankManagerDashboardJPanel;
 import javax.swing.JPanel;
-import userinterface.BloodBankManagerRole.BloodBankManagerWorkAreaJPanel;
+import UI.BloodBankManager.BloodBankManagerDashboardJPanel;
 
 /**
  *
