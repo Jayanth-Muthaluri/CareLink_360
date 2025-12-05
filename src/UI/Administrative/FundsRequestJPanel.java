@@ -7,9 +7,15 @@ package UI.Administrative;
 
 import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
+import Business.Network.Network;
+import Business.Organization.HealthCareOfficerOrg;
+import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.GovernmentFundRequest;
 import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
+import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -62,10 +68,6 @@ public class FundsRequestJPanel extends javax.swing.JPanel {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         workRequestJTable.setRowSorter(sorter);
     }
-    
-
-
-     
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -234,11 +236,60 @@ public class FundsRequestJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_txtAmountActionPerformed
 
     private void btnSendFundRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendFundRequestActionPerformed
+        String location = txtLocation.getText().trim();
+        String population = txtpopulation.getText();
+        String amount = txtAmount.getText();
+        if (location.equals("") || population.equals("") || amount.equals("")) {
+            JOptionPane.showMessageDialog(null, "All fields are mandatory");
+        } else {
+            try {
+                Integer.parseInt(population);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please type an Integer for population");
+                return;
+            }
+            try {
+                Double.parseDouble(amount);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please type an Integer value for amount");
+                return;
+            }
+            GovernmentFundRequest governmentFundRequest = new GovernmentFundRequest(location, Integer.parseInt(population), Double.parseDouble(amount));
+            governmentFundRequest.setRequestSender(userAcc);
+            governmentFundRequest.setRequestStatus("Sent");
 
+            Organization org = null;
+
+            List<Network> networks = ecosys.getNetworks();
+
+            for (Network network : networks) {
+
+                List<Enterprise> enterprises = network.getEnterpriseDirectory().getEnterpriseList();
+                for (Enterprise enterprise : enterprises) {
+                    List<Organization> organizations = enterprise.getOrgDir().getOrganizations();
+                    for (Organization organization : organizations) {
+                        if (organization instanceof HealthCareOfficerOrg) {
+                            org = organization;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (org != null) {
+
+                org.getWorkQueue().getWorkRequests().add(governmentFundRequest);
+                userAcc.getWorkQueue().getWorkRequests().add(governmentFundRequest);
+
+            }
+            pplTbl();
+        }
     }//GEN-LAST:event_btnSendFundRequestActionPerformed
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
-     
+        jPanel.remove(this);
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
     }//GEN-LAST:event_backJButtonActionPerformed
 
 
