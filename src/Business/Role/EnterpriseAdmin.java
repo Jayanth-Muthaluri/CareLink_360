@@ -10,7 +10,7 @@ import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import UI.Administrative.EnterpriseAdminDashboardPanel;
 import javax.swing.JPanel;
-import userinterface.AdministrativeRole.EnterpriseAdminWorkAreaJPanel;
+import UI.Administrative.EnterpriseAdminDashboardPanel;
 
 /**
  *
