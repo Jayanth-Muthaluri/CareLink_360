@@ -21,16 +21,17 @@ import javax.swing.JPanel;
 public class BloodBankManagerJPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form BloodBankManagerJPanel fixing
+     * Creates new form BloodBankManagerJPanel
      */
     
     private JPanel jPanel;
     private Enterprise enterprise;
     private UserAccount userAccount;
     private PatientTreatmentWorkRequest patientTreatmentWorkRequest;
-
+    
     public BloodBankManagerJPanel(JPanel userProcessContainer, UserAccount account, Enterprise enterprise, PatientTreatmentWorkRequest patientTreatmentWorkRequest) {
         initComponents();
+      
         
         this.jPanel = userProcessContainer;
         this.enterprise = enterprise;
@@ -39,7 +40,7 @@ public class BloodBankManagerJPanel extends javax.swing.JPanel {
         txtValue.setText(enterprise.getName());
         btnRequest.setEnabled(true);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -92,13 +93,9 @@ public class BloodBankManagerJPanel extends javax.swing.JPanel {
         add(btnRequest, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtLabTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLabTypeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtLabTypeActionPerformed
-
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        
+
         jPanel.remove(this);
         Component[] componentArray = jPanel.getComponents();
         Component component = componentArray[componentArray.length - 1];
@@ -108,10 +105,14 @@ public class BloodBankManagerJPanel extends javax.swing.JPanel {
         layout.previous(jPanel);
     }//GEN-LAST:event_btnBackActionPerformed
 
+    private void txtLabTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLabTypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtLabTypeActionPerformed
+
     private void btnRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRequestActionPerformed
         // TODO add your handling code here:
-        
-        String  bloodUnits = txtLabType.getText().trim();            
+
+  String  bloodUnits = txtLabType.getText().trim();            
             try {
                 Integer.parseInt(bloodUnits);
             } catch (NumberFormatException e) {
