@@ -10,8 +10,11 @@ import Business.Organization.Organization;
 import Business.Organization.PatientOrg;
 import Business.Role.Roles;
 import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.management.relation.Role;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
@@ -82,7 +85,7 @@ public class UserAccountManagementJPanel extends javax.swing.JPanel {
 
                 Object row[] = new Object[2];
                 row[0] = ua;
-                row[1] = ua.getRole();
+                row[1] = ua.getUserRole();
                 ((DefaultTableModel) jTableUser.getModel()).addRow(row);
             }
         }
@@ -366,7 +369,7 @@ public class UserAccountManagementJPanel extends javax.swing.JPanel {
         Employee employee = (Employee) employeeJComboBox.getSelectedItem();
         Role role = (Role) roleJComboBox.getSelectedItem();
         String doctorType = "";
-        if (role instanceof DoctorRole) {
+        if (role instanceof Doctor) {
             doctorType = (String) doctorTypeJComboBox1.getSelectedItem();
 
         }
@@ -406,7 +409,7 @@ public class UserAccountManagementJPanel extends javax.swing.JPanel {
                     return;
                 }
             }
-            if (role instanceof DoctorRole) {
+            if (role instanceof Doctor{
 
                 organization.getUserAccountDirectory().createUserAccount(userName, password, employee, role,
                         doctorType);
@@ -423,15 +426,28 @@ public class UserAccountManagementJPanel extends javax.swing.JPanel {
         }
         
     }
+    
+    private boolean passwordPatternCorrect() {
+        Pattern p = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[$+_])(?=\\S+$).{6,}$");
+        Matcher m = p.matcher(String.valueOf(txtPass.getPassword()));
+        boolean b = m.matches();
+        return b;
+    }
  
 
     private void backjButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-    
+        jPanel.remove(this);
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
     }
         
         
     private void organizationJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        
+        Organization organization = (Organization) organizationJComboBox.getSelectedItem();
+        if (organization != null) {
+            pplEmpCmbx(organization);
+            popRoleCmbx(organization);
+        }
     }
 
     private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_nameJTextFieldActionPerformed
@@ -471,7 +487,7 @@ public class UserAccountManagementJPanel extends javax.swing.JPanel {
 
     private void doctorType() {
         Role role = (Role) roleJComboBox.getSelectedItem();
-        if (role instanceof DoctorRole) {
+        if (role instanceof Doctor) {
             doctorTypeJComboBox1.setEnabled(true);
             doctorTypeJComboBox1.setVisible(true);
             jLabel9.setVisible(true);
