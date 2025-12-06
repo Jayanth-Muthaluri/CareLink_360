@@ -7,6 +7,7 @@ package UI.Administrative;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.Organization.OrganizationDirectory;
+import java.awt.CardLayout;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -229,12 +230,25 @@ public class OrganizationManagementJPanel extends javax.swing.JPanel {
 
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {
-       
+        jPanel.remove(this);
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
     }
     
     private void btnDeleteOrgActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-       
+       int selectedRow = jTableOrg.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row first from the table to view details", "Warning!",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        } else {
+            Organization organization = (Organization) jTableOrg.getValueAt(selectedRow, 1);
+
+            enterpz.getOrgDir().getOrganizations().remove(organization);
+            pplTbl();
+
+        }
 
     }
 
