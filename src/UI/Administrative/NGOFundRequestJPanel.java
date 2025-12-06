@@ -4,6 +4,16 @@
  */
 package UI.Administrative;
 
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.NGOFundRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 
 
 /**
@@ -15,9 +25,20 @@ package UI.Administrative;
      * Creates new form NGORequestFunds
      */
 public class NGOFundRequestJPanel extends javax.swing.JPanel {
-
-    public NGOFundRequestJPanel() {
-        
+    
+    private JPanel userProcessContainer;
+    private Enterprise enterprise;
+    private UserAccount userAccount;
+    private Ecosystem ecosystem;
+    
+    
+    public NGOFundRequestJPanel(JPanel jPanel, Enterprise enterprise, UserAccount userAccount, Ecosystem ecosystem) {
+        initComponents();
+        this.userProcessContainer = jPanel;
+        this.enterprise = enterprise;
+        this.userAccount = userAccount;
+        this.ecosystem = ecosystem;
+        populateNGORequestTable();
     }
         
         
@@ -210,7 +231,9 @@ public class NGOFundRequestJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
-        
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_backJButtonActionPerformed
 
     private void requestbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requestbuttonActionPerformed
@@ -239,4 +262,28 @@ public class NGOFundRequestJPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtNgoFundsReceived;
     // End of variables declaration//GEN-END:variables
 
+    
+    
+        private void populateNGORequestTable() {
+        DefaultTableModel model = (DefaultTableModel) NGORequestJTable.getModel();
+        int totalreqFunds = 0;
+        model.setRowCount(0);
+        for (WorkRequest request : userAccount.getWorkQueue().getWorkRequests()) {
+            if(request instanceof NGOFundRequest){
+            Object[] row = new Object[4];
+            row[0] = String.valueOf(((NGOFundRequest) request).getHospitalName());
+            row[1] = String.valueOf(((NGOFundRequest) request).getHospitalLocation());
+            row[2] = String.valueOf(((NGOFundRequest) request).getRequestedFundAmount());
+            row[3] = request.getRequestStatus();
+            model.addRow(row);
+            if (request.getRequestStatus().equalsIgnoreCase("Accepted")) {
+                totalreqFunds += ((NGOFundRequest) request).getRequestedFundAmount();
+            }
+            }
+        }
+
+        txtNgoFundsReceived.setText(String.valueOf(totalreqFunds));
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        NGORequestJTable.setRowSorter(sorter);
+    }
 }
