@@ -35,8 +35,8 @@ public class db4o {
     private ObjectContainer buildConnection() {
         try {
 
-            EmbeddedConfiguration config = db4oEmbedded.newConfiguration();
-            ObjectContainer db = db4oEmbedded.openFile(config, FILENAME);
+            EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+            ObjectContainer db = Db4oEmbedded.openFile(config, FILENAME);
             config.common().add(new TransparentPersistenceSupport());
             //Controls the number of objects in memory
             config.common().activationDepth(Integer.MAX_VALUE);
@@ -55,14 +55,14 @@ public class db4o {
     }
 
     public synchronized void storeSystem(Ecosystem ecosystem) {
-        ObjectContainer conn = createConnection();
+        ObjectContainer conn = buildConnection();
         conn.store(ecosystem);
         conn.commit();
         conn.close();
     }
     
     public Ecosystem retrieveSystem(){
-        ObjectContainer conn = createConnection();
+        ObjectContainer conn = buildConnection();
         ObjectSet<Ecosystem> ecosystems = conn.query(Ecosystem.class); // Change to the object you want to save
         Ecosystem ecosystem;
         if (ecosystems.isEmpty()){
