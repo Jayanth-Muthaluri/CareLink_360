@@ -6,10 +6,15 @@ package UI.Administrative;
 
 import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
+import Business.Network.Network;
+import Business.Organization.AdminOrgNGO;
+import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.NGOFundRequest;
 import Business.WorkQueue.WorkRequest;
 import java.awt.CardLayout;
+import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -239,7 +244,48 @@ public class NGOFundRequestJPanel extends javax.swing.JPanel {
     private void requestbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requestbuttonActionPerformed
      // TODO add your handling code here:
 
-        
+        String hospname = hospitalName.getText();
+        String hospaddress = hospitalAddr.getText();
+        String neededamtreq = hospitalAmt.getText();
+
+        if(hospname.equals("") || hospaddress.equals("")||neededamtreq.equals("")){
+            JOptionPane.showMessageDialog(null, "All fields are mandatory");
+        }else {
+            try {
+                Integer.parseInt(neededamtreq);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please type an Integer value for contribution");
+                return;
+            }
+
+            NGOFundRequest ngoFundRequest = new NGOFundRequest(hospname,hospaddress, Integer.parseInt(neededamtreq));
+            ngoFundRequest.setRequestSender(userAccount);
+            ngoFundRequest.setRequestStatus("Sent");
+            Organization org = null;
+
+            List<Network> networks = ecosystem.getNetworks();
+
+            for (Network network : networks) {
+
+                List<Enterprise> enterprises = network.getEnterpriseDirectory().getEnterpriseList();
+                for (Enterprise enterprise : enterprises) {
+                    List<Organization> organizations = enterprise.getOrgDir().getOrganizations();
+                    for (Organization organization : organizations) {
+                        if (organization instanceof AdminOrgNGO) {
+                            org = organization;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (org != null) {
+                org.getWorkQueue().getWorkRequests().add(ngoFundRequest);
+                userAccount.getWorkQueue().getWorkRequests().add(ngoFundRequest);
+            }
+            populateNGORequestTable();
+        }
+
 
     }//GEN-LAST:event_requestbuttonActionPerformed
 
