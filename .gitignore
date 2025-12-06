@@ -45,3 +45,6 @@ Thumbs.db
 # virtual machine crash logs
 hs_err_pid*
 replay_pid*
+.DS_Store
+src/.DS_Store
+src/UI/.DS_Store
