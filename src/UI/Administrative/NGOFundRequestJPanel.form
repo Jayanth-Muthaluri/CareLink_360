@@ -69,7 +69,6 @@
                       <EmptySpace min="-2" pref="246" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel2" pref="618" max="32767" attributes="0"/>
           </Group>
       </Group>
