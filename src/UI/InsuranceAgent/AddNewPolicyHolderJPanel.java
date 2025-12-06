@@ -8,9 +8,9 @@ package UI.InsuranceAgent;
 import Business.Enterprise.Enterprise;
 import Business.Enterprise.InsuranceEnterprise;
 import Business.Insurance.Insurance;
+import Business.CustomerInsurance.CustomerInsurance;
 import Business.UserAccount.UserAccount;
 import com.toedter.calendar.JDateChooser;
-import Business.CustomerInsurance.CustomerInsurance;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
@@ -227,9 +227,9 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(fieldPolicyNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(fieldSSN, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(fieldSSN, javax.swing.GroupLayout.Alignment.LEADING))
                                             .addGap(28, 28, 28)
                                             .addComponent(lblLastName))))
                                 .addGap(18, 18, 18)
@@ -444,7 +444,6 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
             resetFields();
             JOptionPane.showMessageDialog(null, "Customer is added");
         }
-
             
     }//GEN-LAST:event_btnAddCustomerActionPerformed
 
@@ -495,7 +494,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
     private javax.swing.JTable tblCustomers;
     // End of variables declaration//GEN-END:variables
 
-   private boolean validatePhone() {
+    private boolean validatePhone() {
         Pattern pattern = Pattern.compile("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}");
         Matcher matcher = pattern.matcher(fieldPhone.getText());
         return matcher.matches();

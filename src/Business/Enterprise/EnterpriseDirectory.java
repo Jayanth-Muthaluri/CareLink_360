@@ -35,14 +35,14 @@ public class EnterpriseDirectory {
         
         else if(type == Enterprise.EnterpriseType.Government)
         {
-            enterprise =  new GovernmentEnterprise(name);
+            enterprise =  new GovtEnterprise(name);
             enterpriseList.add(enterprise);
             
         }
         
         else if(type == Enterprise.EnterpriseType.InsuranceCompany)
         {
-            enterprise = new InsuranceCompanyEnterprise(name);
+            enterprise = new InsuranceEnterprise(name);
             enterpriseList.add(enterprise);
             
             

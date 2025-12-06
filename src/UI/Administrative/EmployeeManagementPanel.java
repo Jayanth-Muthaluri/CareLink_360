@@ -65,10 +65,10 @@ public class EmployeeManagementPanel extends javax.swing.JPanel {
         model.setRowCount(0);
 
       
-        for (Employee emp : organization.getEmpDir().getEmpList()) {
+        for (Employee emp : organization.getEmployeeDirectory().getEmployeeList()) {
             Object[] row = new Object[2];
-            row[0] = emp.getEmpId()-5;
-            row[1] = emp.getEmpName();
+            row[0] = emp.getEmployeeId()-5;
+            row[1] = emp.getEmployeeName();
 
             model.addRow(row);
         }
@@ -263,7 +263,7 @@ public class EmployeeManagementPanel extends javax.swing.JPanel {
             return;
         }
 
-        organization.getEmpDir().createEmployee(name);
+        organization.getEmployeeDirectory().createEmployee(name);
         populateTable(organization);
 
         txtName.setText("");
@@ -272,12 +272,17 @@ public class EmployeeManagementPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddEmpActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-
+        jPanel.remove(this);
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
      
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void comboBoxOrgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOrgActionPerformed
-        
+        Organization organization = (Organization) comboBoxOrg.getSelectedItem();
+        if (organization != null) {
+            populateTable(organization);
+        }
     }//GEN-LAST:event_comboBoxOrgActionPerformed
 
     private void comboBoxOrgdropdownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOrgdropdownActionPerformed

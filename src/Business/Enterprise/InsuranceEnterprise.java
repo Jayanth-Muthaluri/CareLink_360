@@ -19,7 +19,7 @@ public class InsuranceEnterprise extends Enterprise {
 
     private InsurancePolicyDirectory insPlcyDir;
 
-    public CompanyInsuranceEnterprise(String name) {
+    public InsuranceEnterprise(String name) {
         super(name, EnterpriseType.InsuranceCompany);
         custInsDir = new CustomerInsuranceDirectory();
         insPlcyDir = new InsurancePolicyDirectory();

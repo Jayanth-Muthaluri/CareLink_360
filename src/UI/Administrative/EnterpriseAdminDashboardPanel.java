@@ -2,7 +2,11 @@ package UI.Administrative;
 
 import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
+import Business.Enterprise.GovtEnterprise;
+import Business.Enterprise.InsuranceEnterprise;
+import Business.Enterprise.NGOEnterprise;
 import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 
@@ -12,16 +16,34 @@ import javax.swing.JPanel;
  * @author gaganaananda
  */
 public class EnterpriseAdminDashboardPanel extends javax.swing.JPanel {
-
+    JPanel jPanel;
+    Enterprise enterpz;
+    UserAccount userAcc;
+    Ecosystem ecosys;
     
 
     /**
      * Creates new form AdminWorkAreaJPanel
      */
-    public EnterpriseAdminDashboardPanel(JPanel userProcessContainer, Enterprise enterprise, UserAccount account, Ecosystem ecosystem) {
+    public EnterpriseAdminDashboardPanel(JPanel userProcessContainer, Enterprise enterprise, UserAccount userAccount, Ecosystem ecosystem) {
         initComponents();
+        this.jPanel = userProcessContainer;
+        this.enterpz = enterprise;
+        this.userAcc = userAccount;
+        this.ecosys = ecosystem;
+        valueLabel.setText(enterprise.getName());
+
+        if (enterprise instanceof GovtEnterprise || enterprise instanceof InsuranceEnterprise
+            || enterprise instanceof NGOEnterprise ) {
+            btnGovtFundReq.setVisible(false);
+        }
         
+        if (enterprise instanceof GovtEnterprise || enterprise instanceof InsuranceEnterprise
+            || enterprise instanceof NGOEnterprise ) {
+            btnGovtFundReq.setVisible(false);
+        }
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -157,28 +179,45 @@ public class EnterpriseAdminDashboardPanel extends javax.swing.JPanel {
 
     private void btnmngUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmngUserActionPerformed
         // TODO add your handling code here:
-        
+        UserAccountManagementJPanel uamjp = new UserAccountManagementJPanel(jPanel, enterpz);
+        jPanel.add("UserAccountManagementJPanel", uamjp);
+
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.next(jPanel);
     }//GEN-LAST:event_btnmngUserActionPerformed
 
     private void btnmngEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmngEmpActionPerformed
+        EmployeeManagementPanel emjp = new EmployeeManagementPanel(jPanel, enterpz.getOrgDir());
+        jPanel.add("EmployeeManagementJPanel", emjp);
 
+
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.next(jPanel);
 
         
     }//GEN-LAST:event_btnmngEmpActionPerformed
 
     private void btnmngOrgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmngOrgActionPerformed
-
+        OrganizationManagementJPanel omjp = new OrganizationManagementJPanel(jPanel, enterpz.getOrgDir(), enterpz);
+        jPanel.add("OrganizationManagementJPanel", omjp);
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.next(jPanel);
 
     }//GEN-LAST:event_btnmngOrgActionPerformed
 
 
     private void btnGovtFundReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGovtFundReqActionPerformed
-       
+       CardLayout layout = (CardLayout) jPanel.getLayout();
+       jPanel.add("FundsRequestJPanel", new FundsRequestJPanel(jPanel, enterpz, userAcc, ecosys));
+       layout.next(jPanel);
     }//GEN-LAST:event_btnGovtFundReqActionPerformed
 
     private void btnNGOFundReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNGOFundReqActionPerformed
         // TODO add your handling code here:
-      
+        
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        jPanel.add("NGOFundRequestJPanel", new NGOFundRequestJPanel(jPanel, enterpz, userAcc, ecosys));
+        layout.next(jPanel);
     }//GEN-LAST:event_btnNGOFundReqActionPerformed
 
 

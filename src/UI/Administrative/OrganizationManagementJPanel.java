@@ -4,24 +4,60 @@
  */
 package UI.Administrative;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.Organization.OrganizationDirectory;
+import java.awt.CardLayout;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 
 /**
  *
  * @author gaganaananda
  */
 public class OrganizationManagementJPanel extends javax.swing.JPanel {
-
+    private OrganizationDirectory orgdir;
+    private JPanel jPanel;
+    private Enterprise enterpz;
 
     /**
      * Creates new form OrganizationManagementJPanel
      */
-    public OrganizationManagementJPanel() {
+    public OrganizationManagementJPanel(JPanel userProcessContainer, OrganizationDirectory directory, Enterprise enterprise) {
         initComponents();
-       
+        this.jPanel = userProcessContainer;
+        this.orgdir = directory;
+        this.enterpz = enterprise;
 
-    
+        pplTbl();
+        pplCmbx();
     }
+    private void pplCmbx() {
+        jComboBoxOrg.removeAllItems();
+        for (Organization.Type orgType : enterpz.getAllOrganizationTypes()) {
+            jComboBoxOrg.addItem(orgType);
+        }
+    }
+    
+    private void pplTbl() {
+        DefaultTableModel model = (DefaultTableModel) jTableOrg.getModel();
 
+        model.setRowCount(0);
+
+        for (Organization organization : orgdir.getOrganizations()) {
+            Object[] row = new Object[2];
+            row[0] = organization.getOrganizationId()-4;
+            row[1] = organization;
+
+            model.addRow(row);
+        }
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTableOrg.setRowSorter(sorter);
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -173,16 +209,46 @@ public class OrganizationManagementJPanel extends javax.swing.JPanel {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+        Organization.Type type = (Organization.Type) jComboBoxOrg.getSelectedItem();
+        // populateTable();
+        ArrayList<String> orgName = new ArrayList<String>();
+        DefaultTableModel model = (DefaultTableModel) jTableOrg.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            orgName.add(model.getValueAt(i, 1).toString());
+        }
+
+        if (orgName.contains(type.getValue())) {
+            JOptionPane.showMessageDialog(null, "Organization already exists!! ");
+            return;
+        } else {
+            orgdir.createOrganization(type);
+        }
+
+        pplTbl();
+        
     }//GEN-LAST:event_btnAddActionPerformed
 
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {
-       
+        jPanel.remove(this);
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
     }
     
     private void btnDeleteOrgActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-       
+       int selectedRow = jTableOrg.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select a row first from the table to view details", "Warning!",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        } else {
+            Organization organization = (Organization) jTableOrg.getValueAt(selectedRow, 1);
+
+            enterpz.getOrgDir().getOrganizations().remove(organization);
+            pplTbl();
+
+        }
 
     }
 

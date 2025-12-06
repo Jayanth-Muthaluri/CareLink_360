@@ -4,6 +4,23 @@
  */
 package UI.Administrative;
 
+import Business.Employee.Employee;
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.Organization.PatientOrg;
+import Business.Role.Roles;
+import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.management.relation.Role;
+import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
 
 
 /**
@@ -11,17 +28,70 @@ package UI.Administrative;
  * @author gaganaananda
  */
 public class UserAccountManagementJPanel extends javax.swing.JPanel {
-
+    private JPanel jPanel;
+    private Enterprise enterpz;
     /**
      * Creates new form UserAccountManagementJPanel
      */
    
 
-    public UserAccountManagementJPanel() {
+    public UserAccountManagementJPanel(JPanel container, Enterprise enterprise) {
         initComponents();
-        
+        this.enterpz = enterprise;
+        this.jPanel = container;
+
+        popOrgCmbx();
+        popData();
 
     }
+    
+    public void popOrgCmbx() {
+        organizationJComboBox.removeAllItems();
+
+
+        for (Organization organization : enterpz.getOrgDir().getOrganizations()) {
+
+            if (!(organization instanceof PatientOrg)) {
+                organizationJComboBox.addItem(organization);
+            }
+        }
+    }
+
+    public void pplEmpCmbx(Organization organization) {
+        employeeJComboBox.removeAllItems();
+
+        for (Employee employee : organization.getEmployeeDirectory().getEmployeeList()) {
+            employeeJComboBox.addItem(employee);
+        }
+    }
+
+    private void popRoleCmbx(Organization organization) {
+        roleJComboBox.removeAllItems();
+        for (Roles role : organization.getSupportedRole()) {
+            roleJComboBox.addItem(role);
+        }
+        doctorType();
+    }
+
+    public void popData() {
+
+        DefaultTableModel model = (DefaultTableModel) jTableUser.getModel();
+
+        model.setRowCount(0);
+
+
+        for (Organization organization : enterpz.getOrgDir().getOrganizations()) {
+            for (UserAccount ua : organization.getUserAccountDirectory().getUserAccountList()) {
+
+                Object row[] = new Object[2];
+                row[0] = ua;
+                row[1] = ua.getUserRole();
+                ((DefaultTableModel) jTableUser.getModel()).addRow(row);
+            }
+        }
+    }
+
+    
 
     
    
@@ -292,16 +362,92 @@ public class UserAccountManagementJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_employeeJComboBoxActionPerformed
 
     private void createUserJButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        String userName = txtName.getText();
+        String password = String.valueOf(txtPass.getPassword());
+        String rePassword = String.valueOf(txtRePass.getPassword());
+        Organization organization = (Organization) organizationJComboBox.getSelectedItem();
+        Employee employee = (Employee) employeeJComboBox.getSelectedItem();
+        Role role = (Role) roleJComboBox.getSelectedItem();
+        String doctorType = "";
+        if (role instanceof Doctor) {
+            doctorType = (String) doctorTypeJComboBox1.getSelectedItem();
+
+        }
+        if (userName == null || userName.equals("")) {
+            txtName.setBorder(BorderFactory.createLineBorder(Color.RED));
+            JOptionPane.showMessageDialog(null, "Username cannot be empty");
+            return;
+        }
+
+        if (password == null || password.equals("")) {
+            txtName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            txtPass.setBorder(BorderFactory.createLineBorder(Color.RED));
+            JOptionPane.showMessageDialog(null, "Password cannot be empty");
+            return;
+        }
+
+        if (!passwordPatternCorrect()) {
+            JOptionPane.showMessageDialog(null, "Password should be at least 6 Characters "
+                    + "digits and a combination of number , uppercase letter, "
+                    + "lowercase letter and Special characters are not allowed other than $, +, _");
+            txtPass.setBorder(BorderFactory.createLineBorder(Color.RED));
+            return;
+        }
+
+        if (!password.equals(rePassword)) {
+            JOptionPane.showMessageDialog(null, "Passwords don't match");
+            txtPass.setBorder(BorderFactory.createLineBorder(Color.RED));
+            txtRePass.setBorder(BorderFactory.createLineBorder(Color.RED));
+            return;
+        } else {
+
+            List<UserAccount> userAccountList = organization.getUserAccountDirectory().getUserAccountList();
+            for (UserAccount userAccount : userAccountList) {
+                if (userAccount.getUsername().equals(userName)) {
+                    JOptionPane.showMessageDialog(null, "username already taken!!");
+                    txtName.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    return;
+                }
+            }
+            if (role instanceof Doctor{
+
+                organization.getUserAccountDirectory().createUserAccount(userName, password, employee, role,
+                        doctorType);
+            } else {
+                organization.getUserAccountDirectory().createUserAccount(userName, password, employee, role);
+            }
+            popData();
+            txtName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            txtPass.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            txtRePass.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            txtPass.setText("");
+            txtRePass.setText("");
+            txtName.setText("");
+        }
+        
+    }
+    
+    private boolean passwordPatternCorrect() {
+        Pattern p = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[$+_])(?=\\S+$).{6,}$");
+        Matcher m = p.matcher(String.valueOf(txtPass.getPassword()));
+        boolean b = m.matches();
+        return b;
     }
  
 
     private void backjButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-    
+        jPanel.remove(this);
+        CardLayout layout = (CardLayout) jPanel.getLayout();
+        layout.previous(jPanel);
     }
         
         
     private void organizationJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        
+        Organization organization = (Organization) organizationJComboBox.getSelectedItem();
+        if (organization != null) {
+            pplEmpCmbx(organization);
+            popRoleCmbx(organization);
+        }
     }
 
     private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_nameJTextFieldActionPerformed
@@ -339,6 +485,18 @@ public class UserAccountManagementJPanel extends javax.swing.JPanel {
     private javax.swing.JPasswordField txtRePass;
     // End of variables declaration//GEN-END:variables
 
-    
+    private void doctorType() {
+        Role role = (Role) roleJComboBox.getSelectedItem();
+        if (role instanceof Doctor) {
+            doctorTypeJComboBox1.setEnabled(true);
+            doctorTypeJComboBox1.setVisible(true);
+            jLabel9.setVisible(true);
+        } else {
+            doctorTypeJComboBox1.setEnabled(false);
+            doctorTypeJComboBox1.setVisible(false);
+            jLabel9.setVisible(false);
+        }
+
+    }
 
     }
