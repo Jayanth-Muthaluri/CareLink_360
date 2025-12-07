@@ -232,7 +232,7 @@ public class AccountantWorkAreaJPanel extends javax.swing.JPanel {
         
         for (Patient patient : patients) {
             Object[] row = new Object[7];
-            row[0] = patient;
+            row[0] = patient.getPatientId();
             row[1] = patient.getPatientFirstName() + " " + patient.getPatientLastName();
             row[2] = patient.getContactNo();
             row[3] = patient.getAddress();

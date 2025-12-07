@@ -61,7 +61,6 @@ public class MainJFrame extends javax.swing.JFrame {
         imageLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new java.awt.BorderLayout());
 
         jSplitPane1.setBackground(new java.awt.Color(255, 255, 255));
 

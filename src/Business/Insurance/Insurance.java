@@ -61,4 +61,8 @@ public class Insurance {
         this.monthlyPremium = monthlyPremium;
     }
     
+    @Override
+    public String toString() {
+    return this.getPolicyName();   // or whatever method returns the policy name
+}
 }

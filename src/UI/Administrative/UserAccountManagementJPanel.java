@@ -164,7 +164,7 @@ public class UserAccountManagementJPanel extends javax.swing.JPanel {
         passwordjLabel.setText("Password");
         add(passwordjLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 430, -1, -1));
 
-        doctorTypeJComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        doctorTypeJComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cardiologist", "Physician", "Neurologist", "Pediatrician", "Orthopedic" }));
         doctorTypeJComboBox1.addActionListener(this::doctorTypeJComboBox1ActionPerformed);
         add(doctorTypeJComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 500, 160, -1));
 

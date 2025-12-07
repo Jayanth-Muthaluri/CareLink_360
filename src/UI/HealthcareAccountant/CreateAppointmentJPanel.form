@@ -734,15 +734,13 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="jcomboBoxDoctorType">
       <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Physician"/>
-            <StringItem index="1" value="Neurologist"/>
-            <StringItem index="2" value="Pediatrician"/>
-            <StringItem index="3" value="Orthopedic"/>
-          </StringArray>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new javax.swing.DefaultComboBoxModel(new String[] { &quot;Cardiologist&quot;, &quot;Physician&quot;, &quot;Neurologist&quot;, &quot;Pediatrician&quot;, &quot;Orthopedic&quot; })" type="code"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcomboBoxDoctorTypeActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>

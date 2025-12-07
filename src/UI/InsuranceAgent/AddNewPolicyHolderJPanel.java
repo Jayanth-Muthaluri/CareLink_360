@@ -89,6 +89,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         lblAllCustomers = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
+        fieldFirstName1 = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(0, 153, 204));
 
@@ -222,14 +223,15 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(27, 27, 27)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblGender)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(36, 36, 36)
+                                        .addComponent(lblGender))
                                     .addComponent(lblPhone)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(fieldPolicyNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(fieldSSN, javax.swing.GroupLayout.Alignment.LEADING))
+                                            .addComponent(fieldSSN, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(28, 28, 28)
                                             .addComponent(lblLastName))))
                                 .addGap(18, 18, 18)
@@ -286,6 +288,11 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                 .addGap(258, 258, 258)
                 .addComponent(lblInsuranceInfo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(215, 215, 215)
+                    .addComponent(fieldFirstName1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(608, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,14 +311,14 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(fieldLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblFirstName)
                         .addComponent(lblLastName)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(comboBoxGender, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblGender))
+                        .addComponent(lblGender)
+                        .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(lblDOB)))
@@ -347,6 +354,11 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(373, 373, 373))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(172, 172, 172)
+                    .addComponent(fieldFirstName1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(1175, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -470,6 +482,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox comboBoxInsurancePolicyName;
     private javax.swing.JTextField fieldAddress;
     private javax.swing.JTextField fieldFirstName;
+    private javax.swing.JTextField fieldFirstName1;
     private javax.swing.JTextField fieldInsuranceCoverage;
     private javax.swing.JTextField fieldLastName;
     private javax.swing.JTextField fieldPhone;
