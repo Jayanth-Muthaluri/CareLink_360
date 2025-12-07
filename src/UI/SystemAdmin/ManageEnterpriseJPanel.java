@@ -284,7 +284,25 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_submitJBtnActionPerformed
 
     private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
-        int selectedRow = entJTbl.getSelectedRow();
+        userProcessContainer.remove(this);
+        Component[] components = userProcessContainer.getComponents();
+        Component previous = components[components.length - 1];
+
+        SystemAdminWorkAreaJPanel sysPanel = (SystemAdminWorkAreaJPanel) previous;
+        sysPanel.populateTree();
+
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+    }//GEN-LAST:event_backJButtonActionPerformed
+
+    private void netwrkJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netwrkJComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_netwrkJComboBoxActionPerformed
+
+    private void btnDlt2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDlt2ActionPerformed
+
+        
+                int selectedRow = entJTbl.getSelectedRow();
 
         if (selectedRow < 0) {
             JOptionPane.showMessageDialog(null, "Select row to delete!", "Warning!", JOptionPane.WARNING_MESSAGE);
@@ -301,22 +319,6 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
             populateEnterpriseTable();
             JOptionPane.showMessageDialog(null, "Enterprise deleted successfully.");
         }
-    }//GEN-LAST:event_backJButtonActionPerformed
-
-    private void netwrkJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netwrkJComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_netwrkJComboBoxActionPerformed
-
-    private void btnDlt2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDlt2ActionPerformed
-        userProcessContainer.remove(this);
-        Component[] components = userProcessContainer.getComponents();
-        Component previous = components[components.length - 1];
-
-        SystemAdminWorkAreaJPanel sysPanel = (SystemAdminWorkAreaJPanel) previous;
-        sysPanel.populateTree();
-
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.previous(userProcessContainer);
 
     }//GEN-LAST:event_btnDlt2ActionPerformed
 
