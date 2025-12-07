@@ -8,9 +8,8 @@ import Business.Ecosystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
-import UI.Administrative.EnterpriseAdminDashboardPanel;
+import UI.SystemAdmin.SystemAdminWorkAreaJPanel;
 import javax.swing.JPanel;
-import UI.Administrative.EnterpriseAdminDashboardPanel;
 
 /**
  *
@@ -21,7 +20,7 @@ public class Admin extends Roles{
     
      @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, Ecosystem ecosystem) {
-        return new EnterpriseAdminDashboardPanel(userProcessContainer, enterprise, account,ecosystem);
+        return new SystemAdminWorkAreaJPanel(userProcessContainer, ecosystem);
     }
     
 }

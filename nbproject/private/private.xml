@@ -7,7 +7,6 @@
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/Business/Employee/Employee.java</file>
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/NGODirector/NGODirectorProcessWRJPanel.java</file>
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/NGOAdmin/NGOAdminWAJPanel.java</file>
-            <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/HealthcareOfficer/MapJPanel.java</file>
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/InsuranceAgent/AllInsuranceRequestsJPanel.java</file>
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/NGOAdmin/NGOAdminProcessWRJPanel.java</file>
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/LabAssistant/LabAssistantWAJPanel.java</file>
@@ -20,10 +19,14 @@
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/SystemAdmin/ManageNetworkJPanel.java</file>
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/SystemAdmin/SystemAdminWorkAreaJPanel.java</file>
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/Patient/PatientWAJPanel.java</file>
-            <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/Business/db4o/db4o.java</file>
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/InsurancePolicyPlanner/InsurancePolicyPlannerWAJPanel.java</file>
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/BloodBankManager/BloodRequestProcessingJPanel.java</file>
             <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/Doctor/DoctorWorkAreaJPanel.java</file>
+            <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/Administrative/EmployeeManagementPanel.java</file>
+            <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/Administrative/UserAccountManagementJPanel.java</file>
+            <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/HealthcareAccountant/EmailBillingInformationToPatientJPanel.java</file>
+            <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/UI/MainJFrame.java</file>
+            <file>file:/Users/malleshm/Desktop/github/Group_15_Final_Project_CareLink_360/src/Business/SystemConfiguration.java</file>
         </group>
     </open-files>
 </project-private>
