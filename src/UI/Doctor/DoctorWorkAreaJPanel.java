@@ -457,7 +457,7 @@ public class DoctorWorkAreaJPanel extends javax.swing.JPanel {
                         jPanel.add("RequestLabTestJPanel", new BloodBankManagerJPanel(jPanel, userAccount, enterprise, wrkReq));
                         layout.next(jPanel);
                     } else {
-                        JOptionPane.showMessageDialog(null, "Can not create the Lab request as the current status is " + wrkReq.getRequestStatus());
+                        JOptionPane.showMessageDialog(null, "Can not create the Blood bank request as the current status is " + wrkReq.getRequestStatus());
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Not Authorised");

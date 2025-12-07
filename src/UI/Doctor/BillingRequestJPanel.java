@@ -290,7 +290,7 @@ public class BillingRequestJPanel extends javax.swing.JPanel {
 
                 }
 
-                JOptionPane.showMessageDialog(null, "Prescription submitted successfully");
+                JOptionPane.showMessageDialog(null, "Billing request submitted successfully");
                 btnSendBillReq.setEnabled(false);
             }
         }

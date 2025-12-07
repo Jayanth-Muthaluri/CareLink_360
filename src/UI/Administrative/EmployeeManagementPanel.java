@@ -67,7 +67,7 @@ public class EmployeeManagementPanel extends javax.swing.JPanel {
       
         for (Employee emp : organization.getEmployeeDirectory().getEmployeeList()) {
             Object[] row = new Object[2];
-            row[0] = emp.getEmployeeId()-5;
+            row[0] = emp.getEmployeeId();
             row[1] = emp.getEmployeeName();
 
             model.addRow(row);

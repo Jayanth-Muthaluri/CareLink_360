@@ -35,15 +35,16 @@
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="lblGender" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="fieldFirstName" min="-2" pref="137" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                                      <Component id="lblGender" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <Component id="lblPhone" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" alignment="1" groupAlignment="0" attributes="0">
                                       <Component id="fieldPolicyNumber" min="-2" pref="190" max="-2" attributes="0"/>
                                       <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                              <Component id="fieldFirstName" alignment="1" min="-2" pref="137" max="-2" attributes="0"/>
-                                              <Component id="fieldSSN" alignment="0" max="32767" attributes="0"/>
-                                          </Group>
+                                          <Component id="fieldSSN" min="-2" pref="137" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                                           <Component id="lblLastName" min="-2" max="-2" attributes="0"/>
                                       </Group>
@@ -124,6 +125,13 @@
               <Component id="lblInsuranceInfo" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
+          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="215" max="-2" attributes="0"/>
+                  <Component id="fieldFirstName1" min="-2" pref="137" max="-2" attributes="0"/>
+                  <EmptySpace pref="608" max="32767" attributes="0"/>
+              </Group>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -145,7 +153,6 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="fieldLastName" alignment="0" min="-2" pref="28" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="fieldFirstName" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="lblFirstName" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblLastName" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -155,6 +162,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="comboBoxGender" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                       <Component id="lblGender" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="fieldFirstName" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
@@ -199,6 +207,13 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel13" min="-2" pref="311" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="373" max="-2" attributes="0"/>
+          </Group>
+          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="172" max="-2" attributes="0"/>
+                  <Component id="fieldFirstName1" min="-2" pref="28" max="-2" attributes="0"/>
+                  <EmptySpace pref="1175" max="32767" attributes="0"/>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -483,6 +498,8 @@
           <Image iconType="3" name="/Images/patient details.gif"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldFirstName1">
     </Component>
   </SubComponents>
 </Form>

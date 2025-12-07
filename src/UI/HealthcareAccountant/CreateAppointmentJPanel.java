@@ -293,7 +293,12 @@ public class CreateAppointmentJPanel extends javax.swing.JPanel {
         lblDoctorType.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         lblDoctorType.setText("Doctor Type");
 
-        jcomboBoxDoctorType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Physician", "Neurologist", "Pediatrician", "Orthopedic" }));
+        jcomboBoxDoctorType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Cardiologist", "Physician", "Neurologist", "Pediatrician", "Orthopedic" }));
+        jcomboBoxDoctorType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcomboBoxDoctorTypeActionPerformed(evt);
+            }
+        });
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/patient details.gif"))); // NOI18N
 
@@ -846,6 +851,10 @@ public class CreateAppointmentJPanel extends javax.swing.JPanel {
         fieldInsuranceCompany.setText("");
         fieldInsuranceCoverage.setText("");
     }//GEN-LAST:event_btnResetPolicyNumActionPerformed
+
+    private void jcomboBoxDoctorTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcomboBoxDoctorTypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcomboBoxDoctorTypeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
