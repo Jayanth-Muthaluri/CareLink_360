@@ -297,7 +297,7 @@ public class AccountantProcessRequestJPanel extends javax.swing.JPanel {
         insuranceWorkRequest.setInsuranceProvider(insuranceCompany);
         insuranceWorkRequest.setPolicyNumber(policyNumber);
         insuranceWorkRequest.setPolicyName(policyName);
-        insuranceWorkRequest.setPatientSSN(ssn);
+        insuranceWorkRequest.setPatientSsn(ssn);
         insuranceWorkRequest.setClaimAmount(claimAmount);
         insuranceWorkRequest.setTreatmentBill(billAmount);
         insuranceWorkRequest.setMedicalCenter(enterprise.getName());

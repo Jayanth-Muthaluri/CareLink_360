@@ -31,17 +31,26 @@ public class EnterpriseAdminDashboardPanel extends javax.swing.JPanel {
         this.enterpz = enterprise;
         this.userAcc = userAccount;
         this.ecosys = ecosystem;
-        valueLabel.setText(enterprise.getName());
 
-        if (enterprise instanceof GovtEnterprise || enterprise instanceof InsuranceEnterprise
-            || enterprise instanceof NGOEnterprise ) {
-            btnGovtFundReq.setVisible(false);
-        }
-        
-        if (enterprise instanceof GovtEnterprise || enterprise instanceof InsuranceEnterprise
-            || enterprise instanceof NGOEnterprise ) {
-            btnGovtFundReq.setVisible(false);
-        }
+    valueLabel.setText(enterprise.getName());
+
+    // Correct button visibility logic
+    if (enterprise instanceof GovtEnterprise) {
+        btnGovtFundReq.setVisible(false);
+        btnNGOFundReq.setVisible(true);
+    }
+    else if (enterprise instanceof NGOEnterprise) {
+        btnGovtFundReq.setVisible(false);
+        btnNGOFundReq.setVisible(false);
+    }
+    else if (enterprise instanceof InsuranceEnterprise) {
+        btnGovtFundReq.setVisible(false);
+        btnNGOFundReq.setVisible(false);
+    }
+    else {
+        btnGovtFundReq.setVisible(true);
+        btnNGOFundReq.setVisible(true);
+    }
     }
     
 

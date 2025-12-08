@@ -82,15 +82,15 @@ public class BloodBankManagerJPanel extends javax.swing.JPanel {
 
         jLabel5.setText("Unit of Blood");
         add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 170, -1, -1));
-        add(txtLabMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 210, -1, -1));
+        add(txtLabMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 210, 150, -1));
 
         txtLabType.addActionListener(this::txtLabTypeActionPerformed);
-        add(txtLabType, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 170, -1, -1));
+        add(txtLabType, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 170, 150, -1));
 
         btnRequest.setBackground(new java.awt.Color(255, 102, 102));
         btnRequest.setText("Request Button");
         btnRequest.addActionListener(this::btnRequestActionPerformed);
-        add(btnRequest, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, -1, -1));
+        add(btnRequest, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, 180, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
@@ -139,10 +139,7 @@ public class BloodBankManagerJPanel extends javax.swing.JPanel {
         patientTreatmentWorkRequest.setRequestReceiver(null);
         patientTreatmentWorkRequest.setRequiredBloodUnits(Integer.valueOf(bloodUnits));
         
-//        bloodBankWorkRequest.setMessage(message);
-//        bloodBankWorkRequest.setSender(userAccount);
-//        bloodBankWorkRequest.setStatus("SentToBloodBank");
-//        bloodBankWorkRequest.setReceiver(null);
+
 
         Organization org = null;
 

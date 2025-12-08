@@ -14,7 +14,7 @@ import Business.CustomerInsurance.CustomerInsurance;
 public class InsuranceWorkRequest extends WorkRequest {
 
     private String policyNumber;
-    private String patientSSN;
+    private String patientSsn;
     private String policyName;
     private String insuranceProvider;
     private double claimAmount;
@@ -32,12 +32,12 @@ public class InsuranceWorkRequest extends WorkRequest {
         this.policyNumber = policyNumber;
     }
 
-    public String getPatientSSN() {
-        return patientSSN;
+    public String getPatientSsn() {
+        return patientSsn;
     }
 
-    public void setPatientSSN(String patientSSN) {
-        this.patientSSN = patientSSN;
+    public void setPatientSsn(String patientSsn) {
+        this.patientSsn = patientSsn;
     }
 
     public String getPolicyName() {

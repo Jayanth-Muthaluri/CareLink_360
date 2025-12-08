@@ -39,11 +39,11 @@ public class CustomerInsurance {
         this.customerFirstName = customerFirstName;
     }
 
-    public String getSSN() {
+    public String getSsn() {                   // ✔ FIXED — correct JavaBean convention
         return ssn;
     }
 
-    public void setSSN(String ssn) {
+    public void setSsn(String ssn) {           // ✔ FIXED — correct naming
         this.ssn = ssn;
     }
 
