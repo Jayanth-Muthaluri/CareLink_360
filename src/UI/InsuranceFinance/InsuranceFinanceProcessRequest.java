@@ -239,7 +239,7 @@ public class InsuranceFinanceProcessRequest extends javax.swing.JPanel {
 
     private void populateFields() {
         fieldPolicyNumber.setText(request.getPolicyNumber());
-        fieldSSN.setText(request.getPatientSSN());
+        fieldSSN.setText(request.getPatientSsn());
         fieldPolicyName.setText(request.getPolicyName());
         fieldClaimAmount.setText(String.valueOf(request.getClaimAmount()));
         fieldBillingAmount.setText(String.valueOf(request.getTreatmentBill()));

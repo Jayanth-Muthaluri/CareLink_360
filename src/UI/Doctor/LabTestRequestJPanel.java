@@ -125,6 +125,7 @@ public class LabTestRequestJPanel extends javax.swing.JPanel {
 
 
         patientTreatmentWorkRequest.setLabNotes(message);
+        patientTreatmentWorkRequest.setDiagnosticType(labType); 
         patientTreatmentWorkRequest.setRequestSender(userAccount);
         patientTreatmentWorkRequest.setRequestStatus("SentToLab");
         patientTreatmentWorkRequest.setRequestReceiver(null);

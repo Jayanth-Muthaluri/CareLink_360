@@ -51,7 +51,6 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblWorkRequest = new javax.swing.JTable();
         btnProcessRequest = new javax.swing.JButton();
-        btnVerificationOnMap = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         btnAssignToMe = new javax.swing.JButton();
 
@@ -99,15 +98,6 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnVerificationOnMap.setBackground(new java.awt.Color(255, 102, 102));
-        btnVerificationOnMap.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        btnVerificationOnMap.setText("Verification on Map");
-        btnVerificationOnMap.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerificationOnMapActionPerformed(evt);
-            }
-        });
-
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/emp2.gif"))); // NOI18N
 
         btnAssignToMe.setBackground(new java.awt.Color(255, 102, 102));
@@ -131,16 +121,11 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jScrollPane1))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addComponent(btnAssignToMe)
-                        .addGap(193, 193, 193)
-                        .addComponent(btnVerificationOnMap))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(208, 208, 208)
-                        .addComponent(btnProcessRequest)))
-                .addGap(50, 50, 50)
+                .addGap(92, 92, 92)
+                .addComponent(btnAssignToMe)
+                .addGap(18, 18, 18)
+                .addComponent(btnProcessRequest)
+                .addGap(252, 252, 252)
                 .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(59, 59, 59))
         );
@@ -153,13 +138,9 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnVerificationOnMap)
-                            .addComponent(btnAssignToMe))
-                        .addGap(18, 18, 18)
-                        .addComponent(btnProcessRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAssignToMe)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnProcessRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -201,15 +182,6 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnProcessRequestActionPerformed
     
-    private void btnVerificationOnMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerificationOnMapActionPerformed
-        // TODO add your handling code here:
-        MapJPanel mapJPanel = new MapJPanel(userProcessContainer, account, null);
-        userProcessContainer.add("MapJPanel", mapJPanel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-
-    }//GEN-LAST:event_btnVerificationOnMapActionPerformed
-
     private void btnAssignToMeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignToMeActionPerformed
         // TODO add your handling code here:
         int selectedRow = tblWorkRequest.getSelectedRow();
@@ -233,7 +205,6 @@ public class OfficerWorkAreaJPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAssignToMe;
     private javax.swing.JButton btnProcessRequest;
-    private javax.swing.JButton btnVerificationOnMap;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTitle;

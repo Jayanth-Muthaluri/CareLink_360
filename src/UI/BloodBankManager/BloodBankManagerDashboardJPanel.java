@@ -120,7 +120,7 @@ public class BloodBankManagerDashboardJPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTableWorkReq);
 
         add(jScrollPane1);
-        jScrollPane1.setBounds(10, 20, 730, 90);
+        jScrollPane1.setBounds(10, 20, 940, 90);
 
         btnAssign.setBackground(new java.awt.Color(255, 102, 102));
         btnAssign.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
@@ -161,7 +161,7 @@ public class BloodBankManagerDashboardJPanel extends javax.swing.JPanel {
         if (request.getBloodBankOfficer() == null) {
             if (request.getRequestStatus().equalsIgnoreCase("SentToBloodBank")) {
                 request.setBloodBankOfficer(userAccount);
-                request.setRequestNote("Pending on Blood Bank");
+                request.setRequestStatus("Pending on Blood Bank");
                 //  request.setReceiver(userAccount);
                 populateTable();
                 JOptionPane.showMessageDialog(null, "The request is assigned to You!");

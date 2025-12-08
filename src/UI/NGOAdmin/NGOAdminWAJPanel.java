@@ -84,7 +84,6 @@ private Enterprise enterprise;
         assignJBtn = new javax.swing.JButton();
         processRequestJBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        verificationMapJBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
 
@@ -141,15 +140,6 @@ private Enterprise enterprise;
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("NGO Admin Panel");
 
-        verificationMapJBtn.setBackground(new java.awt.Color(102, 102, 255));
-        verificationMapJBtn.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        verificationMapJBtn.setText("Verification on Map");
-        verificationMapJBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                verificationMapJBtnActionPerformed(evt);
-            }
-        });
-
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Ngo.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -164,14 +154,9 @@ private Enterprise enterprise;
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(231, 231, 231)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(assignJBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(processRequestJBtn))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(verificationMapJBtn)
-                        .addGap(61, 61, 61)))
+                .addComponent(assignJBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(processRequestJBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -190,9 +175,7 @@ private Enterprise enterprise;
                         .addGap(47, 47, 47)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(processRequestJBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(assignJBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(30, 30, 30)
-                        .addComponent(verificationMapJBtn))
+                            .addComponent(assignJBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(66, 66, 66)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -273,15 +256,6 @@ private Enterprise enterprise;
     layout.next(userContainer);
     }//GEN-LAST:event_processRequestJBtnActionPerformed
 
-    private void verificationMapJBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verificationMapJBtnActionPerformed
-        // TODO add your handling code here:
-    MapJPanel mapPanel = new MapJPanel(userContainer);
-    userContainer.add("MapJPanel", mapPanel);
-
-    CardLayout layout = (CardLayout) userContainer.getLayout();
-    layout.next(userContainer); 
-    }//GEN-LAST:event_verificationMapJBtnActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton assignJBtn;
@@ -290,7 +264,6 @@ private Enterprise enterprise;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton processRequestJBtn;
-    private javax.swing.JButton verificationMapJBtn;
     private javax.swing.JTable workRequestJTable;
     // End of variables declaration//GEN-END:variables
 

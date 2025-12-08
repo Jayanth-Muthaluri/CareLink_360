@@ -33,7 +33,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
     private UserAccount account;
     private InsuranceEnterprise enterprise;
     private String policyNumber;
-    private JDateChooser dateChooserDOB;
+    //private JDateChooser dateChooserDOB1;
     
     /**
      * Creates new form CreateNewUserJPanel
@@ -46,8 +46,8 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         this.policyNumber = policyNumber;
         
         // Add JDateChooser for DOB
-        dateChooserDOB = new JDateChooser();
-        dateChooserDOB.setDateFormatString("MM-dd-yyyy");
+       // dateChooserDOB1 = new JDateChooser();
+       // dateChooserDOB1.setDateFormatString("MM-dd-yyyy");
         
         populateFields();
         populateTable();
@@ -65,7 +65,6 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         lblPolicyNumber = new javax.swing.JLabel();
         fieldPolicyNumber = new javax.swing.JTextField();
         lblFirstName = new javax.swing.JLabel();
-        fieldFirstName = new javax.swing.JTextField();
         lblLastName = new javax.swing.JLabel();
         fieldLastName = new javax.swing.JTextField();
         lblSSN = new javax.swing.JLabel();
@@ -89,7 +88,8 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         lblAllCustomers = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
-        fieldFirstName1 = new javax.swing.JTextField();
+        fieldFirstName = new javax.swing.JTextField();
+        dateChooserDOB1 = new com.toedter.calendar.JDateChooser();
 
         setBackground(new java.awt.Color(0, 153, 204));
 
@@ -112,6 +112,12 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         lblSSN.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblSSN.setForeground(new java.awt.Color(0, 51, 51));
         lblSSN.setText("SSN");
+
+        fieldSSN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldSSNActionPerformed(evt);
+            }
+        });
 
         lblDOB.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblDOB.setForeground(new java.awt.Color(0, 51, 51));
@@ -221,19 +227,27 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                             .addComponent(lblFirstName))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(27, 27, 27)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(36, 36, 36)
-                                        .addComponent(lblGender))
-                                    .addComponent(lblPhone)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(fieldPolicyNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(fieldSSN, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(28, 28, 28)
-                                            .addComponent(lblLastName))))
+                                        .addGap(27, 27, 27)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblPhone)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(fieldPolicyNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                            .addComponent(fieldSSN, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                            .addGap(28, 28, 28))
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                            .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                            .addGap(18, 18, 18)))
+                                                    .addComponent(lblLastName)))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(35, 35, 35)
+                                        .addComponent(dateChooserDOB1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblGender)))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(fieldLastName)
@@ -288,11 +302,6 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                 .addGap(258, 258, 258)
                 .addComponent(lblInsuranceInfo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(215, 215, 215)
-                    .addComponent(fieldFirstName1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(608, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -312,16 +321,18 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                     .addComponent(fieldLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lblFirstName)
-                        .addComponent(lblLastName)))
+                        .addComponent(lblLastName)
+                        .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(comboBoxGender, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblGender)
-                        .addComponent(fieldFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblGender))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(lblDOB)))
+                        .addGap(4, 4, 4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(dateChooserDOB1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDOB))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPhone)
@@ -354,11 +365,6 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(373, 373, 373))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(172, 172, 172)
-                    .addComponent(fieldFirstName1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(1175, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -372,7 +378,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Please provide last name");
             return;
         }
-        if (dateChooserDOB.getDate() == null) {
+        if (dateChooserDOB1.getDate() == null) {
             JOptionPane.showMessageDialog(null, "Please provide Date of birth");
             return;
         }
@@ -401,7 +407,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
             SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
             String dateOfBirth = "";
             try {
-                dateOfBirth = sdf.format(dateChooserDOB.getDate());
+                dateOfBirth = sdf.format(dateChooserDOB1.getDate());
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Please select customer's dob");
             }
@@ -446,7 +452,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
             customer.setCustomerLastName(lastName);
             customer.setDateOfBirth(dateOfBirth);
             customer.setGender(gender);
-            customer.setSSN(ssn);
+            customer.setSsn(ssn);
             customer.setPhoneNumber(phone);
             customer.setAddress(address);
             customer.setInsurance(insurance);
@@ -474,15 +480,19 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
+    private void fieldSSNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldSSNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldSSNActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddCustomer;
     private javax.swing.JButton btnBack;
     private javax.swing.JComboBox comboBoxGender;
     private javax.swing.JComboBox comboBoxInsurancePolicyName;
+    private com.toedter.calendar.JDateChooser dateChooserDOB1;
     private javax.swing.JTextField fieldAddress;
     private javax.swing.JTextField fieldFirstName;
-    private javax.swing.JTextField fieldFirstName1;
     private javax.swing.JTextField fieldInsuranceCoverage;
     private javax.swing.JTextField fieldLastName;
     private javax.swing.JTextField fieldPhone;
@@ -525,7 +535,7 @@ public class AddNewPolicyHolderJPanel extends javax.swing.JPanel {
         fieldLastName.setText("");
         fieldPhone.setText("");
         fieldSSN.setText("");
-        dateChooserDOB.setDate(null);
+        dateChooserDOB1.setDate(null);
         fieldAddress.setText("");
     }
     
