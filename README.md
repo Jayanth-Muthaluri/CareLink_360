@@ -1,7 +1,7 @@
 # CareLink 360: Integrated Healthcare Ecosystem
 ### Application Engineering and Development (AED) Final Project | Group 15
 
-CareLink 360 is a multi-enterprise healthcare management platform designed to unify disparate entities—including hospitals, insurance providers, NGOs, donation centers, and government agencies—into a single, streamlined workflow. Built using a modular Java architecture, the system leverages a role-based access control (RBAC) model and WorkQueue-driven processes to facilitate seamless inter-enterprise communication.
+CareLink 360 is a multi-enterprise healthcare management platform designed to unify disparate entities including hospitals, insurance providers, NGOs, donation centers, and government agencies into a single, streamlined workflow. Built using a modular Java architecture, the system leverages a role-based access control (RBAC) model and WorkQueue-driven processes to facilitate seamless inter-enterprise communication.
 
 ---
 
