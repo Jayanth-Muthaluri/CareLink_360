@@ -1,79 +1,63 @@
-# Group_15_Final_Project_CareLink_360
+# CareLink 360: Integrated Healthcare Ecosystem
+### Application Engineering and Development (AED) Final Project | Group 15
 
-CareLink 360 – Application Engineering and Development (AED) Final Project
+CareLink 360 is a multi-enterprise healthcare management platform designed to unify disparate entities—including hospitals, insurance providers, NGOs, donation centers, and government agencies—into a single, streamlined workflow. Built using a modular Java architecture, the system leverages a role-based access control (RBAC) model and WorkQueue-driven processes to facilitate seamless inter-enterprise communication.
 
-CareLink 360 is a multi-enterprise healthcare ecosystem integrating hospitals, insurance companies, NGOs, donation units, and government organizations under a unified workflow. The system uses a modular architecture with Java Swing for UI, DB4O for persistence, and a role-based workflow powered by WorkQueues.
+---
 
-**👥 Collaborators (Group 15)
-**
+## Project Overview
+The primary objective of CareLink 360 is to bridge communication gaps within the healthcare sector. By centralizing patient requests, insurance verifications, laboratory logistics, and financial assistance programs, the platform ensures data integrity and operational efficiency.
 
-Gagana Ananda
+The system is engineered following a rigorous hierarchical structure:
+**EcoSystem → Networks → Enterprises → Organizations → Roles → WorkQueues**
 
-Syed Hameed Uddin
+---
 
-Jayanth Muthaluri
+## Key Features
+* **Multi-Enterprise Integration:** Comprehensive modules for Hospital, Insurance, NGO, and Government enterprises.
+* **Role-Based Dashboards:** Custom interfaces for diverse stakeholders, including Doctors, Lab Assistants, Patients, Insurance Agents, Accountants, and NGO Coordinators.
+* **Workflow Orchestration:** A robust WorkQueue system for request routing, multi-stage approvals, and task processing.
+* **Object Persistence:** Implementation of DB4O for efficient storage of networks, enterprises, user credentials, and transactional data.
+* **Modular Architecture:** A decoupled design separating the Java Swing UI from core Business Layer logic.
+* **Comprehensive Documentation:** Includes detailed UML class diagrams, sequence diagrams, and architectural maps.
 
-Mallesh Mallikarjunaiah
+---
 
+## Technical Stack
+* **Language:** Java
+* **Framework:** Java Swing (UI)
+* **Persistence:** DB4O (Object-Oriented Database)
+* **Design Pattern:** Model-View-Controller (MVC)
 
+---
 
-**📌 Project Overview
-**
+## Repository Structure
+* **/Business:** Core business logic, domain models, role definitions, and workflow management classes.
+* **/userinterface:** Java Swing components and UI panels categorized by user role.
+* **/db4o:** Database utility classes and persistence configurations.
+* **/diagrams:** UML class diagrams and system architecture documentation.
+* **/assets:** Project proposals, milestone reports, and presentation materials.
 
-CareLink 360 addresses communication gaps across hospitals, insurance agencies, government units, and NGOs by creating a centralized platform for managing patient requests, insurance verifications, lab workflows, donations, and financial assistance.
+---
 
-The system follows a structured hierarchy:
-EcoSystem → Networks → Enterprises → Organizations → Roles → WorkQueues
-This design enables smooth inter-enterprise communication and coordinated workflow management.
+## Development Roadmap
+The project was executed over a four-week lifecycle to ensure systematic implementation and testing:
 
-**🧩 Key Features
-**
+1. **Week 1:** Architectural design, UML modeling, and repository initialization.
+2. **Week 2:** Development of the Business Layer and core logic.
+3. **Week 3:** UI development and cross-enterprise workflow integration.
+4. **Week 4:** System testing, bug optimization, and final packaging.
 
-Multi-enterprise ecosystem supporting Hospital, Insurance, NGO, Government modules
+---
 
-Role-specific dashboards (Doctor, Lab Assistant, Patient, Insurance Agent, Accountant, NGO Coordinator, etc.)
+## Collaborators
+**Northeastern University | Group 15**
+* Gagana Ananda
+* Syed Hameed Uddin
+* Jayanth Muthaluri
+* Mallesh Mallikarjunaiah
 
-WorkQueue-driven workflow for request routing, approvals, and multi-step processing
+---
 
-DB4O-based object persistence for storing networks, enterprises, users, and requests
-
-Swing UI panels connected to modular Business Layer classes
-
-UML diagrams, class models, and complete architecture documentation
-
-**📁 Repository Structure
-**
-
-/Business – Core logic, models, roles, and workflow classes
-
-/userinterface – Java Swing UI panels for all roles
-
-/db4o – DB4OUtil for persistence
-
-/diagrams – UML class diagrams and architecture maps
-
-/assets – Proposal, milestone updates, presentations
-
-**🔧 Development Workflow
-**
-
-Each member works on an individual branch
-
-Changes are merged into main through pull requests
-
-This prevents merge conflicts, especially with .form files
-
-Repository aligns with the 4-week implementation timeline:
-
-Week 1: Architecture, UML, repo setup
-
-Week 2: Business Layer development
-
-Week 3: UI development & workflow integration
-
-Week 4: Testing, fixes, final packaging
-
-**📄 License
-**
-
-Academic project submitted for Application Engineering and Development (AED) at Northeastern University.
+## License
+This repository contains an academic project submitted for the Application Engineering and Development (AED) course at Northeastern University. All rights reserved.
